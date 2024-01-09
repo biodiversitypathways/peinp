@@ -1,0 +1,38 @@
+---
+title: "Report on the State of Birds in Prince Edward Island National Park"
+format: html
+editor: visual
+---
+
+```{r}
+#| label: load-packages
+#| include: false
+#| echo: false
+#| warning: false
+#| message: false
+
+library(tidyverse)
+library(wildRtrax)
+
+Sys.setenv(WT_USERNAME = "agmacpha@ualberta.ca", WT_PASSWORD = "N371164bjghK!")
+
+wt_auth()
+```
+
+## Introduction
+
+Prince Edward Island National Park
+
+## Methods
+
+![](peinpheader.png){style="float:right;" fig-alt="Photo of the ocean" fig-align="center"}
+
+Data was collected using WildTrax
+
+```{r}
+#| label: plot-penguins
+#| warning: false
+#| echo: false
+
+wt_get_download_summary(sensor = 'ARU')
+```

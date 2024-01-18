@@ -6,7 +6,7 @@ bibliography: references.bib
 ---
 
 ```{r}
-#| label: load-packages
+#| label: load-packages and authenticate
 #| include: false
 #| echo: false
 #| warning: false
@@ -14,6 +14,10 @@ bibliography: references.bib
 
 library(tidyverse)
 library(wildRtrax)
+library(unmarked)
+library(sf)
+library(terra)
+library(ggridges)
 
 wt_auth()
 ```
@@ -22,21 +26,274 @@ wt_auth()
 
 ## Introduction
 
-Prince Edward Island National Park
+Prince Edward Island National Park is... 
 
 ## Methods
 
-Data was collected using WildTrax
+### Community 
 
-```{r}
-#| label: plot-penguins
-#| warning: false
-#| echo: false
+### Visual scanning
 
-wt_get_download_summary(sensor = 'ARU')
+### Automated recognition
+
+```{r, eval=F}
+wt_songscope_tags()
+
 ```
 
 ## Results 
+
+### Avian species
+
+```{r}
+#| warning: false
+#| message: false
+#| echo: false
+#| eval: false
+#| include: false
+
+pei_data <- wt_get_download_summary(sensor = 'ARU') %>%
+  filter(grepl('^Prince Edward Island National Park Forest Songbird',project)) %>%
+  select(project_id) %>%
+  pull()
+
+pei_main <- map_dfr(.x = pei_data, .f = ~wt_download_report(project_id = .x, sensor_id = "ARU", weather_cols = F, reports = "main"))
+```
+
+```{r}
+#| warning: false
+#| echo: false
+#| eval: true
+#| include: false
+
+load('pei.RData')
+```
+
+```{r}
+#| warning: false
+#| echo: false
+#| eval: true
+#| include: true
+
+pei_tasks <- pei_main %>%
+  as_tibble() %>%
+  select(project_id, location, recording_date_time, task_duration, task_method, observer_id) %>%
+  distinct()
+
+  
+```
+
+```{r}
+#| warning: false
+#| echo: false
+#| eval: true
+#| message: false
+#| include: true
+
+pei_locs <- pei_main %>%
+  select(location, latitude, longitude) %>%
+  distinct() %>%
+  sf::st_as_sf(., coords = c("longitude","latitude"), crs = 4326)
+
+pei_shp <- read_sf('PEI.shp')
+#coast <- read_sf('coastline_polygon.shp') 
+#coast <- st_transform(coast, st_crs(pei_locs)) %>% st_make_valid()
+#nearest_feature <- st_nearest_feature(oneloc, coast)
+
+# Make up siteCovs for now
+site_covariates <- pei_main %>%
+  wt_tidy_species(remove = c("mammal","amphibian","abiotic","insect","unknown"), zerofill = T) %>%
+  wt_replace_tmtt() %>%
+  select(location) %>% 
+  unique() %>% 
+  mutate(tree = runif(n(), 0, 1)) %>% 
+  arrange(location)
+
+ggplot() +
+  geom_sf(data = pei_shp, fill = "lightgreen") +
+  #geom_sf(data = coast, fill = "darkblue") +
+  geom_point(data = pei_locs, aes(x = st_coordinates(geometry)[,1], y = st_coordinates(geometry)[,2])) +
+  ggtitle("Locations surveyed all years") +
+  xlab("Longitude") +
+  ylab("Latitude") +
+  theme_void()
+
+```
+
+
+We also verified everything that was tagged
+
+```{r}
+#| warning: false
+#| echo: false
+#| message: false
+#| eval: true
+#| include: true
+
+all_tags <- pei_main %>% tally() %>% pull()
+
+pei_main %>%
+  group_by(tag_is_verified) %>%
+  tally() %>%
+  mutate(proportion = round(n / all_tags,4)*100)
+
+```
+
+#### Species richness
+
+```{r}
+#| warning: false
+#| echo: false
+#| eval: true
+#| include: true
+
+spp_rich_location <- pei_main %>%
+  as_tibble() %>%
+  wt_tidy_species(remove = c("mammal","amphibian","abiotic","insect","unknown"), zerofill = T) %>%
+  mutate(year = lubridate::year(recording_date_time)) %>%
+  filter(!(location == 'PENP-BS-6' & task_method != "1SPT")) %>%
+  select(location, year, species_code) %>% 
+  distinct() %>%
+  group_by(location, year) %>%
+  summarise(species_count = n_distinct(species_code)) %>%
+  ungroup()
+
+spp_rich_location %>%
+  ggplot(., aes(x=year, y=species_count, fill=year)) +
+  geom_bar(stat='identity') +
+  facet_wrap(~location) +
+  theme_bw() +
+  scale_fill_viridis_c() +
+  xlab('Year') + ylab('Species richness') +
+  ggtitle('Species richness at each location surveyed for each year')
+
+```
+
+For each year
+
+```{r}
+#| warning: false
+#| echo: false
+#| eval: true
+#| include: true
+
+spp_rich_annual <- pei_main %>%
+  as_tibble() %>%
+  wt_tidy_species(remove = c("mammal","amphibian","abiotic","insect","unknown"), zerofill = T) %>%
+  mutate(year = lubridate::year(recording_date_time)) %>%
+  filter(!(location == 'PENP-BS-6' & task_method != "1SPT")) %>%
+  select(year, species_code) %>% 
+  distinct() %>%
+  group_by(year) %>%
+  summarise(species_count = n_distinct(species_code)) %>%
+  ungroup()
+```
+
+```{r}
+#| warning: false
+#| echo: false
+#| eval: true
+#| include: true
+
+spp_rich_annual %>%
+  ggplot(., aes(x=year, y=species_count, fill=year)) +
+  geom_bar(stat='identity') +
+  theme_bw() +
+  scale_fill_viridis_c() +
+  xlab('Year') + ylab('Species richness') +
+  ggtitle('Species richness for each year surveyed')
+
+
+```
+
+```{r}
+
+pei_main %>%
+  wt_tidy_species(remove = c("mammal","amphibian","abiotic","insect","unknown"), zerofill = T) %>%
+  select(location, recording_date_time, species_code, individual_count) %>%
+  group_by(species_code) %>%
+  add_tally() %>%
+  ungroup() %>%
+  filter(!n < 100) %>%
+  select(-n) %>%
+  mutate(julian = lubridate::yday(recording_date_time)) %>%
+  ggplot(.,
+       aes(x = julian, y = species_code, fill = species_code)) + 
+  geom_density_ridges() + 
+  scale_fill_viridis_d() +
+  labs(title = "Activity per location", x = "Location", y = "Species") +
+  theme_bw()
+
+```
+
+
+
+#### Location occupancy
+
+```{r}
+#| warning: false
+#| echo: false
+#| eval: false
+#| include: true
+
+pei_occu <- pei_main %>%
+  wt_tidy_species(., remove = c("mammal","amphibian","abiotic","insect","unknown")) %>%
+  wt_replace_tmtt() %>%
+  mutate(year = as.factor(lubridate::year(recording_date_time))) %>%
+  
+  # Setup for single vs multi-season occupancy
+  group_by(year) %>%
+  mutate(data = map(~wt_format_occupancy(siteCovs = site_covariates, species = "all")))
+
+pei_wide <- pei_main %>%
+  wt_tidy_species(., remove = c("mammal","amphibian","abiotic","insect","unknown")) %>%
+  wt_replace_tmtt() %>%
+  wt_make_wide(sound = "all")  
+
+offstz <- pei_main %>%
+  wt_tidy_species(., remove = c("mammal","amphibian","abiotic","insect","unknown")) %>%
+  wt_replace_tmtt() %>%
+  wt_make_wide(sound = "all") %>%
+  
+
+  
+  
+  wt_qpad_offsets(species = "all", version = 3, together = F)
+
+
+my_qpad_model <- lm(OVEN ~ 1, offset=my_offset_data$WTSP, data=my_wide_data)
+
+```
+
+
+#### Species-at-risk
+
+A project was completed to automatically detect species-at-risk on recordings using an automated recognizer.
+
+### Visual scanning
+
+### Amphibians
+
+```{r}
+
+spp_table <- wt_get_species()
+
+amphs <- spp_table %>%
+  filter(species_class == "AMPHIBIA")
+
+pei_main %>%
+  filter(species_code %in% amphs$species_code) %>%
+  select(location, recording_date_time, species_code, individual_count) %>%
+  mutate(individual_count = as.numeric(gsub('CI ','',individual_count)),
+         julian = lubridate::yday(recording_date_time)) %>%
+  ggplot(.,
+       aes(x = julian, y = species_code, fill = species_code)) + 
+  geom_density_ridges() + 
+  scale_fill_viridis_d() +
+  labs(title = "Activity per location", x = "Location", y = "Species") +
+  theme_bw()
+```
+
 
 ## Discussion
 

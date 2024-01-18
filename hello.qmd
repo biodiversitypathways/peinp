@@ -2,6 +2,7 @@
 title: "Report on the State of Birds in Prince Edward Island National Park"
 format: html
 editor: visual
+bibliography: references.bib
 ---
 
 ```{r}
@@ -14,18 +15,16 @@ editor: visual
 library(tidyverse)
 library(wildRtrax)
 
-Sys.setenv(WT_USERNAME = "agmacpha@ualberta.ca", WT_PASSWORD = "N371164bjghK!")
-
 wt_auth()
 ```
+
+![](peinpheader.png){style="float:right;" fig-alt="Photo of the ocean" fig-align="center"}
 
 ## Introduction
 
 Prince Edward Island National Park
 
 ## Methods
-
-![](peinpheader.png){style="float:right;" fig-alt="Photo of the ocean" fig-align="center"}
 
 Data was collected using WildTrax
 
@@ -36,3 +35,8 @@ Data was collected using WildTrax
 
 wt_get_download_summary(sensor = 'ARU')
 ```
+
+## Results 
+
+## Discussion
+

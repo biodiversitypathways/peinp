@@ -611,6 +611,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="species-occupancy" class="level3">
 <h3 class="anchored" data-anchor-id="species-occupancy">Species occupancy</h3>
+<p>We chose locations that had at least 4 dawn visits and that were visited in all five years. We then chose only forest obligate species.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>guilds <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"bird_guilds.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 110 Columns: 8
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr (8): species_common_name, general_type, migration, feeding, breeding_sub...
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+</div>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
 <pre><code>
@@ -1090,7 +1103,7 @@ Downloading: 630 kB
 Downloading: 630 kB     </code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="hello_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid" width="672"></p>
+<p><img src="hello_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 </section>
@@ -1106,7 +1119,7 @@ Downloading: 630 kB     </code></pre>
 <h2 class="anchored" data-anchor-id="amphibians">Amphibians</h2>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="hello_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="672"></p>
+<p><img src="hello_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <hr>

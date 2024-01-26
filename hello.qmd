@@ -71,9 +71,9 @@ The general objectives of this report are to:
 
 ## Data collection
 
-Data were collected during the spring and summer seasons from 2019 to 2023. A total of 30 locations were surveyed over the five-year period: 21 locations as part of the forest songbird monitoring program (code: `PENP-*`), 6 for Bank Swallow Monitoring (code: `PENP-BS-*`), 2 locations deployed in First Nations communities (`ASC-1,LXI-1`), and one location for events (`PENP-E1`). Nine locations were surveyed each year, as detailed in Table 1 (@tbl-loc-summary) and illustrated in Figure 1 (@fig-locs).
+Data were collected during the spring and summer seasons from 2019 to 2023. A total of 30 locations were surveyed over the five-year period: 21 locations as part of the forest songbird monitoring program (code: `PENP-*`), 6 for Bank Swallow Monitoring (code: `PENP-BS-*`), 2 locations deployed in First Nations communities (`ASC-1,LXI-1`), and one location for events (`PENP-E1`). Nine locations were surveyed each year, while the remaining locations were surveyed on rotation as best as possible. Details can be found in Table 1 (@tbl-loc-summary) and illustrated in Figure 1 (@fig-locs).
 
-ARUs were deployed at the beginning of the breeding season in April and May. These ARUs rotated through locations during the spring and summer until their final retrieval in July and August. At each location, the ARUs were set to record for 30 minutes continuously every hour for four hours, starting one hour before dawn and ending three hours after dawn. For Bank Swallow Monitoring locations, recordings were made every 5 minutes for a duration of 3 minutes each. On average, each ARU recorded for `r average_deployment$mean` +/- `r average_deployment$sd`.
+ARUs were deployed at the beginning of the breeding season in April and May. These ARUs rotated through locations during the spring and summer until their final retrieval in July and August. At each location, the ARUs were set to record for 30 minutes continuously every hour for four hours, starting one hour before dawn and ending three hours after dawn. For Bank Swallow Monitoring locations, recordings were made every 5 minutes for a duration of 3 minutes each. On average, each ARU recorded for `r average_deployment$mean` +/- `r average_deployment$sd` days.
 
 ```{r Geospatial assets}
 #| warning: false
@@ -88,13 +88,6 @@ pei_shp <- read_sf('PEI.shp')
 coast <- read_sf('coastline_polygon.shp') 
 coast <- st_transform(coast, st_crs(pei_locs)) %>% st_make_valid()
 #nearest_feature <- st_nearest_feature(oneloc, coast)
-
-# Make up siteCovs for now
-site_covariates <- pei_main %>% 
-  select(location) %>% 
-  unique() %>% 
-  mutate(coast_dist = runif(n(), 10, 673)) %>% 
-  arrange(location)
 
 ```
 
@@ -192,9 +185,9 @@ cirrus_recs <- cirrus_penp_recs %>%
          month= month(recording_date_time, label = T))
 
 recs_plot <- cirrus_recs |>
-  rename("Month" = month) |>
   rename("Location" = location) |>
-  ggplot(aes(x = Month, y = Location, fill = Location)) +
+  rename("Day of Year" = julian) |>
+  ggplot(aes(x = `Day of Year`, y = Location, fill = Location)) +
   geom_density_ridges() +
   facet_wrap(~ year) +
   theme_minimal() +
@@ -304,9 +297,11 @@ all_tags <- pei_main %>% tally() %>% pull()
 verified_tags <- pei_main %>%
   group_by(tag_is_verified) %>%
   tally() %>%
-  mutate(proportion = round(n / all_tags,4)*100)
+  mutate(Proportion = round(n / all_tags,4)*100) |>
+  rename("Count" = n) |>
+  rename("Tag is verified" = tag_is_verified)
 
-verified_tags |> DT::datatable(rownames=F, filter="top")
+kable(verified_tags)
 ```
 
 ## Visual scanning
@@ -427,9 +422,10 @@ spp_rich_annual %>%
 
 ```{r}
 #| warning: false
+#| message: false
 #| echo: false
 #| eval: true
-#| include: true
+#| include: false
 #| results: hide
 
 pei_main %>%
@@ -456,10 +452,8 @@ pei_main %>%
 ```{r}
 #| warning: false
 #| echo: false
-#| eval: false
-#| include: false
-#| results: hide
-#| message: false
+#| eval: true
+#| include: true
 
 pei_occu <- pei_main %>%
   as_tibble() %>%
@@ -470,36 +464,50 @@ pei_occu <- pei_main %>%
   filter(!task_duration > 180, !(grepl('PENP-BS-*',location) & task_method != '1SPT')) %>%
   mutate(hour = lubridate::hour(recording_date_time),
          year = lubridate::year(recording_date_time)) %>%
-  filter(hour %in% c(4:7)) %>%
-  group_by(location) %>%
-  mutate(ct = n_distinct(year)) %>%
-  ungroup() %>%
-  filter(ct == 5) %>%
-  select(-ct) %>%
+  filter(hour %in% c(4:7),
+         year == 2019) %>%
+  #group_by(location) %>%
+  #mutate(ct = n_distinct(year)) %>%
+  #ungroup() %>%
+  #filter(ct == 5) %>%
+  #select(-ct) %>%
   group_by(species_code) %>%
   add_tally() %>%
   ungroup()
 
-occu_one <- wt_format_occupancy(pei_occu, siteCovs = site_covariates, species = "BTBW")
-occu_model <- occu(~ doy + hr + observer ~ 1, occu_one)
-occ_fit <- predict(occu_model, data = site_covariates, type="det")
-occ_graph <- occ_fit %>%
-  as_tibble() %>%
-  bind_cols(., occu_one@obsCovs) %>%
-  arrange(doy)
+# Make up siteCovs for now
+site_covariates <- pei_occu %>% 
+  select(location) %>% 
+  mutate(coast_dist = runif(n(), 10, 673)) %>%
+  unique() %>% 
+  distinct(location, .keep_all = T)
 
-ggplot(occ_graph, aes(x = doy, y = Predicted)) +
+occu_one <- wt_format_occupancy(pei_occu, siteCovs = site_covariates, species = "OVEN")
+occu_model <- occu(~ doy + hr + observer ~ coast_dist, occu_one)
+occ_fit <- predict(occu_model, data = site_covariates, type="state",interval="confidence")
+
+occ_graph <- occ_fit %>%
+   as_tibble() %>%
+   bind_cols(., site_covariates)
+
+ggplot(occ_graph %>% arrange(location), aes(x = location, y = Predicted)) +
   geom_point() +
-  geom_smooth() +
-  labs(title = "Predicted Detection Probabilities with Confidence Intervals",
-       x = "Day of year",
-       y = "Predicted occupancy") +
-  theme_minimal() +
-  ylim(0,1)
+  geom_errorbar(aes(ymin = lower, ymax = upper), width = 0.2) +
+  labs(title = "Predicted occupancy at locations with confidence intervals",
+       x = "Location",
+       y = "Predicted Occupancy") +
+  theme_bw() +
+  coord_flip()
 
 ```
 
 ```{r}
+#| warning: false
+#| echo: false
+#| eval: false
+#| include: false
+#| results: hide
+#| message: false
 
 pei_wide <- pei_main %>%
   wt_tidy_species(., remove = c("mammal","amphibian","abiotic","insect","unknown")) %>%
@@ -513,13 +521,16 @@ offstz <- pei_main %>%
   wt_qpad_offsets(species = "all", version = 3, together = F)
 
 
-#my_qpad_model <- lm(OVEN ~ 1, offset=my_offset_data$WTSP, data=my_wide_data)
+my_qpad_model <- lm(OVEN ~ 1, offset=offstz$OVEN, data=pei_wide)
 
 ```
 
 ### Species-at-risk
 
 
+## Visual scanning
+
+---
 
 ## Amphibians
 
@@ -550,14 +561,13 @@ pei_main %>%
   theme_bw()
 ```
 
-## Visual scanning
-
 ---
 
 # Discussion
 
+---
+
 
 ### References
 
-::: {#refs}
-:::
+---

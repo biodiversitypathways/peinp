@@ -498,9 +498,7 @@ site_covariates <- pei_occu %>%
   unique() %>%
   distinct(location, .keep_all = T)
 
-coast_model <- glm(COYE ~ recording_date_time + coast_dist, offset=offstz$COYE.off, data=pei_wide_plus)
-
-occu_one <- wt_format_occupancy(pei_occu, siteCovs = site_covariates, species = "NOPA")
+occu_one <- wt_format_occupancy(pei_occu, siteCovs = site_covariates, species = "BTNW")
 occu_model <- occu(~ doy + hr + observer ~ coast_dist, occu_one)
 occ_fit <- predict(occu_model, data = site_covariates, type="state",interval="confidence")
 
@@ -508,15 +506,15 @@ occ_graph <- occ_fit %>%
    as_tibble() %>%
    bind_cols(., site_covariates)
 
-occ_graph_all <- bind_rows(occ_graph2019, occ_graph2020, occ_graph2021, occ_graph2022, occ_graph2023) %>%
+occ_graph_all <- bind_rows(occ19, occ20, occ21, occ22, occ23) %>%
   mutate(year = factor(year(recording_date_time))) %>%
   select(Predicted:upper,year)
 
-ggplot(occ_graph, aes(x = year, y = Predicted, group = year, fill=year)) +
+ggplot(occ_graph_all, aes(x = year, y = Predicted, fill=year)) +
   geom_boxplot(alpha = 0.3) +
-  labs(title = "Predicted Change Across Years with Boxplot and Line",
+  labs(title = "Predicted Occupancy change of BTNW",
        x = "Year",
-       y = "Predicted") +
+       y = "Predicted Occupancy") +
   theme_bw()
 ```
 
@@ -527,6 +525,8 @@ ggplot(occ_graph, aes(x = year, y = Predicted, group = year, fill=year)) +
 #| include: false
 #| results: hide
 #| message: false
+
+oast_model <- glm(COYE ~ recording_date_time + coast_dist, offset=offstz$COYE.off, data=pei_wide_plus)
 
 pei_wide <- pei_main %>%
   wt_tidy_species(., remove = c("mammal","amphibian","abiotic","insect","unknown")) %>%

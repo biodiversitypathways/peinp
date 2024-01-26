@@ -52,7 +52,7 @@ load('pei.RData')
 
 Human activities are known to be causing global declines in forest wildlife. Direct and indirect effects of habitat fragmentation and loss, climate change, and increased access to sensitive areas are pressures that affect forest biodiversity in managed areas. 
 
-In 2019, Prince Edward Island National Park engaged in a program to utilize autonomous recording units (ARUs) for passive acoustic monitoring (PAM) of wildlife to help utilize these technologies to report on biodiversity changes by the way of ecological integrity metrics. 
+In 2019, Prince Edward Island National Park engaged in a program to utilize autonomous recording units (ARUs) for passive acoustic monitoring (PAM) of wildlife to help utilize these technologies to report on biodiversity changes by the way of ecological integrity metrics.
 
 Maintaining data integrity is of the utmost importance to ensure that data interoperability and sharing can be facilitated in the future. Therefore, inaugurating this program is the use of WildTrax, an online platform designed to allow users of environmental sensors to store, manage, process, share, and discover data from these sensors. 
 
@@ -87,6 +87,8 @@ ARUs were deployed at the beginning of the breeding season in April and May. The
 pei_shp <- read_sf('PEI.shp')
 coast <- read_sf('coastline_polygon.shp') 
 coast <- st_transform(coast, st_crs(pei_locs)) %>% st_make_valid()
+# Make up siteCovs for now
+distance_to_coast <- read_csv("penp_coastline_distance.csv")
 #nearest_feature <- st_nearest_feature(oneloc, coast)
 
 ```
@@ -449,6 +451,20 @@ pei_main %>%
 
 ### Species occupancy
 
+We chose locations that had at least 4 dawn visits and that were visited in all five years. We then chose only forest obligate species.
+
+
+```{r}
+
+guilds <- read_csv("bird_guilds.csv")
+
+```
+
+
+
+
+
+
 ```{r}
 #| warning: false
 #| echo: false
@@ -459,13 +475,15 @@ pei_occu <- pei_main %>%
   as_tibble() %>%
   filter(aru_task_status == "Transcribed") %>%
   wt_tidy_species(., remove = c("mammal","amphibian","abiotic","insect","unknown")) %>%
+  left_join(., guilds %>% select(species_common_name, habitat_nesting)) %>%
+  filter(habitat_nesting %in% c("CW","MW","OW","TSS")) %>%
   wt_replace_tmtt() %>%
   mutate(task_duration = gsub('s','',task_duration) %>% as.numeric()) %>%
   filter(!task_duration > 180, !(grepl('PENP-BS-*',location) & task_method != '1SPT')) %>%
   mutate(hour = lubridate::hour(recording_date_time),
          year = lubridate::year(recording_date_time)) %>%
   filter(hour %in% c(4:7),
-         year == 2019) %>%
+         year == 2023) %>%
   #group_by(location) %>%
   #mutate(ct = n_distinct(year)) %>%
   #ungroup() %>%
@@ -475,14 +493,14 @@ pei_occu <- pei_main %>%
   add_tally() %>%
   ungroup()
 
-# Make up siteCovs for now
-site_covariates <- pei_occu %>% 
-  select(location) %>% 
-  mutate(coast_dist = runif(n(), 10, 673)) %>%
-  unique() %>% 
+site_covariates <- pei_occu %>%
+  inner_join(., distance_to_coast) %>%
+  unique() %>%
   distinct(location, .keep_all = T)
 
-occu_one <- wt_format_occupancy(pei_occu, siteCovs = site_covariates, species = "OVEN")
+coast_model <- glm(COYE ~ recording_date_time + coast_dist, offset=offstz$COYE.off, data=pei_wide_plus)
+
+occu_one <- wt_format_occupancy(pei_occu, siteCovs = site_covariates, species = "NOPA")
 occu_model <- occu(~ doy + hr + observer ~ coast_dist, occu_one)
 occ_fit <- predict(occu_model, data = site_covariates, type="state",interval="confidence")
 
@@ -490,15 +508,16 @@ occ_graph <- occ_fit %>%
    as_tibble() %>%
    bind_cols(., site_covariates)
 
-ggplot(occ_graph %>% arrange(location), aes(x = location, y = Predicted)) +
-  geom_point() +
-  geom_errorbar(aes(ymin = lower, ymax = upper), width = 0.2) +
-  labs(title = "Predicted occupancy at locations with confidence intervals",
-       x = "Location",
-       y = "Predicted Occupancy") +
-  theme_bw() +
-  coord_flip()
+occ_graph_all <- bind_rows(occ_graph2019, occ_graph2020, occ_graph2021, occ_graph2022, occ_graph2023) %>%
+  mutate(year = factor(year(recording_date_time))) %>%
+  select(Predicted:upper,year)
 
+ggplot(occ_graph, aes(x = year, y = Predicted, group = year, fill=year)) +
+  geom_boxplot(alpha = 0.3) +
+  labs(title = "Predicted Change Across Years with Boxplot and Line",
+       x = "Year",
+       y = "Predicted") +
+  theme_bw()
 ```
 
 ```{r}
@@ -512,16 +531,33 @@ ggplot(occ_graph %>% arrange(location), aes(x = location, y = Predicted)) +
 pei_wide <- pei_main %>%
   wt_tidy_species(., remove = c("mammal","amphibian","abiotic","insect","unknown")) %>%
   wt_replace_tmtt() %>%
-  wt_make_wide(sound = "all")  
-
-offstz <- pei_main %>%
-  wt_tidy_species(., remove = c("mammal","amphibian","abiotic","insect","unknown")) %>%
-  wt_replace_tmtt() %>%
-  wt_make_wide(sound = "all") %>%
+  wt_make_wide(sound = "all")
+  
+offstz <- pei_wide %>%
   wt_qpad_offsets(species = "all", version = 3, together = F)
 
+pei_wide_plus <- pei_wide %>%
+  mutate(recording_date_time = yday(recording_date_time)) %>%
+  inner_join(., distance_to_coast)
 
-my_qpad_model <- lm(OVEN ~ 1, offset=offstz$OVEN, data=pei_wide)
+my_qpad_model <- glm(OVEN ~ recording_date_time, offset=offstz$OVEN.off, data=pei_wide_plus)
+
+# Create a data frame for predictions
+predictions <- data.frame(
+  recording_date_time = seq(min(pei_wide_plus$recording_date_time), 
+                            max(pei_wide_plus$recording_date_time), length.out = 464))
+
+# Make predictions using the model
+predictions$predicted_abundance <- predict(my_qpad_model, data = predictions, type = "response")
+
+# Create the ggplot
+ggplot(pei_wide_plus, aes(x = recording_date_time, y = COYE)) +
+  geom_point(alpha = 0.5) +  # Scatter plot of actual data
+  geom_line(data = predictions, aes(x = recording_date_time, y = predicted_abundance), color = "blue", size = 1) +
+  labs(title = "Abundance vs. Recording Date Time",
+       x = "Recording Date Time",
+       y = "Abundance") +
+  theme_minimal()
 
 ```
 

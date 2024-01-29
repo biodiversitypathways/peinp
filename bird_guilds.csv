@@ -1,12 +1,12 @@
 ﻿species_common_name,general_type,migration,feeding,breeding_substrate,foraging_type,substrate_nesting,habitat_nesting
 Alder Flycatcher,S,NM,In,Air,Sal,Sh,TSS
-American Crow,,,,,,,Ur
+American Crow,G,,,,,,Ur
 American Goldfinch,,,,,,,
 American Redstart,,,,,,,MW
 American Robin,G,SDM,Om,LCS,Fo,TNs,Ur
 American Woodcock,,,,,,,
 Bald Eagle,,,,,,,
-Baltimore Oriole,,,,,,,
+Baltimore Oriole,,,,,,,OW
 Bay-breasted Warbler,,,,,,,CW
 Belted Kingfisher,,,,,,,
 Black-and-white Warbler,,,,,,,MW
@@ -16,11 +16,11 @@ Black-throated Blue Warbler,,,,,,,MW
 Black-throated Green Warbler,,,,,,,CW
 Blackburnian Warbler,,,,,,,CW
 Blackpoll Warbler,,,,,,,CW
-Blue Jay,,,,,,,OW
+Blue Jay,G,,,,,,OW
 Blue-headed Vireo,S,SDM,In,LCS,Gl,CT,MW
 Boreal Chickadee,S,R,In,LCS,Gl,Sn,CW
 Brown Creeper,,,,,,,CW
-Brown-headed Cowbird,,,,,,,
+Brown-headed Cowbird,,,,,,,Ag
 Canada Goose,,,,,,,
 Canada Jay,G,R,Om,UC,Fo,CT,CW
 Canada Warbler,,,,,,,MW
@@ -36,16 +36,16 @@ Common Raven,,,,,,,
 Common Tern,,,,,,,
 Common Yellowthroat,S,NM,In,LCS,Gl,Gr,Ma
 Dark-eyed Junco,G,SDM,Om,Gr,Fo,Gr,CW
-Downy Woodpecker,,,,,,,MW
+Downy Woodpecker,G,,,,,,MW
 Eastern Kingbird,,,,,,,
 Eastern Phoebe,,,,,,,
-Eastern Wood-Pewee,,,,,,,OW
-European Starling,,,,,,,Ur
+Eastern Wood-Pewee,S,,,,,,OW
+European Starling,G,,,,,,Ur
 Evening Grosbeak,,,,,,,
 Fox Sparrow,G,SDM,Om,Gr,Fo,Gr,OW
 Gadwall,,,,,,,
-Golden-crowned Kinglet,,,,,,,CW
-Gray Catbird,,,,,,,MW
+Golden-crowned Kinglet,S,,,,,,CW
+Gray Catbird,S,,,,,,MW
 Greater Yellowlegs,S,SDM,Pi,Wa,Am,Gr,Bo
 Hairy Woodpecker,,,,,,,MW
 Hermit Thrush,S,SDM,In,Gr,Gl,Gr,CW
@@ -79,7 +79,7 @@ Pine Warbler,,,,,,,CW
 Purple Finch,,,,,,,
 Red-breasted Nuthatch,,,,,,,
 Red-eyed Vireo,,,,,,,MW
-Red-necked Pheasant,,,,,,,
+Red-necked Pheasant,,,,,,,Ag
 Red-winged Blackbird,S,SDM,Om,Gr,Fo,Gs,Ma
 Ring-billed Gull,,,,,,,
 Ruby-crowned Kinglet,S,SDM,In,UC,Gl,CT,CW

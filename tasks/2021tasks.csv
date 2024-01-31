@@ -1,0 +1,160 @@
+﻿location,recordingDate,method,taskLength,status,transcriber,rain,wind,industryNoise,otherNoise,audioQuality,taskComments,internal_task_id
+PENP-BS-3, 2021-05-07 20:46:03,None,180,Transcribed,Kayley Burke,,,,,,,302886
+PENP-BS-5, 2021-08-07 20:19:00,None,180,Transcribed,Kayley Burke,,,,,,,302902
+PENP-BS-1, 2021-08-12 20:56:03,None,180,Transcribed,Kayley Burke,,,,,,,302908
+PENP-BS-1, 2021-08-03 20:55:02,None,180,Transcribed,Kayley Burke,,,,,,,302899
+PENP-BS-5, 2021-08-14 20:23:02,None,180,Transcribed,Kayley Burke,,,,,,,302910
+PENP-BS-2, 2021-05-10 19:43:00,None,180,Transcribed,Kayley Burke,,,,,,,302893
+PENP-BS-4, 2021-08-13 20:55:03,None,180,Transcribed,Kayley Burke,,,,,,,302909
+PENP-BS-2, 2021-05-09 19:22:00,None,180,Transcribed,Kayley Burke,,,,,,,302889
+PENP-BS-3, 2021-05-10 21:34:05,None,180,Transcribed,Kayley Burke,,,,,,,302894
+PENP-BS-3, 2021-05-10 22:54:05,None,180,Transcribed,Kayley Burke,,,,,,,302896
+PENP-BS-1, 2021-08-07 20:34:02,None,180,Transcribed,Kayley Burke,,,,,,,302903
+PENP-BS-5, 2021-08-12 20:11:00,None,180,Transcribed,Kayley Burke,,,,,,,302907
+PENP-BS-4, 2021-08-10 20:59:02,None,180,Transcribed,Kayley Burke,,,,,,,302905
+PENP-BS-3, 2021-05-09 21:38:04,None,180,Transcribed,Kayley Burke,,,,,,,302890
+PENP-BS-1, 2021-08-14 20:53:02,None,180,Transcribed,Kayley Burke,,,,,,,302911
+PENP-BS-1, 2021-05-10 19:17:38,None,180,Transcribed,Kayley Burke,,,,,,,302891
+PENP-BS-3, 2021-05-08 19:17:03,None,180,Transcribed,Kayley Burke,,,,,,,302888
+PENP-BS-4, 2021-08-03 20:40:02,None,180,Transcribed,Kayley Burke,,,,,,,302897
+PENP-BS-2, 2021-05-04 18:26:02,None,180,Transcribed,Kayley Burke,,,,,,,302884
+PENP-BS-4, 2021-08-11 20:58:02,None,180,Transcribed,Kayley Burke,,,,,,,302906
+PENP-BS-5, 2021-08-04 20:38:02,None,180,Transcribed,Kayley Burke,,,,,,,302901
+PENP-BS-1, 2021-08-10 20:29:03,None,180,Transcribed,Kayley Burke,,,,,,,302904
+PENP-BS-2, 2021-05-10 21:43:00,None,180,Transcribed,Kayley Burke,,,,,,,302895
+PENP-BS-4, 2021-08-14 20:53:02,None,180,Transcribed,Kayley Burke,,,,,,,302912
+PENP-BS-2, 2021-05-07 21:39:00,None,180,Transcribed,Kayley Burke,,,,,,,302887
+PENP-BS-5, 2021-08-03 20:40:02,None,180,Transcribed,Kayley Burke,,,,,,,302898
+PENP-1-2, 2021-05-15 02:40:00,1SPM,180,Transcribed,Steve Enid,None,Light,None,Light,None,,221752
+ASC-1, 2021-07-07 02:27:00,1SPM,180,Bad Weather,Steve Enid,,,,,,,221745
+PENP-1-4, 2021-06-17 02:20:00,1SPM,180,Transcribed,Steve Enid,None,None,None,None,None,,221738
+ASC-1, 2021-06-26 01:21:00,1SPM,180,Bad Weather,Steve Enid,,,,,,,221729
+ASC-1, 2021-06-22 03:20:00,1SPM,180,Transcribed,Steve Enid,None,Moderate,None,Moderate,None,,221737
+PENP-1-1, 2021-06-09 02:21:00,1SPM,180,Transcribed,Steve Enid,None,Light,Light,Light,None,,221730
+PENP-1-6, 2021-07-13 01:34:00,1SPM,180,Transcribed,Steve Enid,Light,Light,None,Moderate,None,,221751
+PENP-1-1, 2021-06-07 01:22:00,1SPM,180,Transcribed,Steve Enid,None,Light,None,Moderate,None,,221744
+LXI-1, 2021-07-23 05:43:00,1SPM,180,Transcribed,Steve Enid,Light,Moderate,None,Moderate,None,,221749
+PENP-1-4, 2021-06-22 01:21:00,1SPM,180,Transcribed,Steve Enid,Moderate,Moderate,None,Moderate,None,,221739
+PENP-1-5, 2021-07-05 02:27:00,1SPM,180,Transcribed,Steve Enid,Moderate,Light,Light,Moderate,None,,221743
+PENP-1-5, 2021-06-29 05:24:00,1SPM,180,Transcribed,Steve Enid,None,Light,None,Moderate,None,,221736
+PENP-1-2, 2021-05-20 05:34:00,1SPM,180,Transcribed,Steve Enid,Light,Light,None,Light,None,,221754
+PENP-1-4, 2021-06-19 02:20:00,1SPM,180,Transcribed,Steve Enid,None,Light,None,Light,None,,221726
+PENP-1-3, 2021-05-29 02:26:00,1SPM,180,Transcribed,Steve Enid,None,None,None,None,None,,221732
+LXI-1, 2021-07-28 01:48:00,1SPM,180,Transcribed,Steve Enid,Light,Light,None,Light,Unbalanced Channels,left louder than right,221731
+PENP-1-6, 2021-07-14 04:35:00,1SPM,180,Transcribed,Steve Enid,None,Light,Moderate,Moderate,None,lawn mower,221742
+PENP-1-1, 2021-06-07 03:22:00,1SPM,180,Transcribed,Steve Enid,None,Light,None,Light,None,,221740
+PENP-1-4, 2021-06-18 05:20:00,1SPM,180,Transcribed,Steve Enid,None,None,Light,Light,None,,221734
+PENP-1-2, 2021-05-22 04:32:00,1SPM,180,Bad Weather,Steve Enid,,,,,,,221728
+PENP-1-3, 2021-05-30 03:26:00,1SPM,180,Transcribed,Steve Enid,None,None,None,None,None,,221746
+ASC-1, 2021-07-12 03:32:00,1SPM,180,Bad Weather,Steve Enid,,,,,,,221725
+PENP-1-5, 2021-06-30 05:24:00,1SPM,180,Transcribed,Steve Enid,Moderate,Light,None,Moderate,None,,221753
+PENP-1-3, 2021-05-26 02:29:00,1SPM,180,Transcribed,Steve Enid,None,Light,None,Light,None,good recording !,221748
+LXI-1, 2021-07-26 05:46:00,1SPM,180,Bad Weather,Steve Enid,,,,,,,221727
+PENP-1-1, 2021-06-11 03:20:00,1SPM,180,Transcribed,Steve Enid,None,None,None,None,None,,221733
+PENP-1-5, 2021-07-04 05:27:00,1SPM,180,Bad Weather,Steve Enid,,,,,,,221750
+PENP-1-3, 2021-05-31 05:25:00,1SPM,180,Transcribed,Steve Enid,None,Light,Light,Light,None,good recording !,221741
+PENP-1-2, 2021-05-21 02:33:00,1SPM,180,Transcribed,Steve Enid,None,Moderate,None,Moderate,None,windy,221735
+LXI-1, 2021-07-27 05:47:00,1SPM,180,Transcribed,Steve Enid,None,Moderate,None,Moderate,None,,221747
+PENP-3-5, 2021-05-31 05:24:00,1SPM,180,Transcribed,Christopher Moser-Purdy,None,None,None,Moderate,None,,221802
+PENP-4-1, 2021-06-16 01:18:00,1SPM,180,Transcribed,Bronwyn Robinson,None,Light,None,None,None,,221794
+PENP-BS-4, 2021-08-14 17:23:02,1SPM,180,Transcribed,Steve Enid,None,Light,Moderate,Moderate,None,"traffic, horns, beeping, off-road vehicles ",221774
+PENP-5-1, 2021-06-25 02:22:00,1SPM,180,Transcribed,Christopher Moser-Purdy,None,Light,None,None,None,,221833
+PENP-5-1, 2021-06-23 02:21:00,1SPM,180,Transcribed,Steve Enid,None,Moderate,None,Moderate,None,,221771
+PENP-BS-1, 2021-05-09 15:32:02,1SPM,180,Transcribed,Christopher Moser-Purdy,None,Light,None,Moderate,None,,221818
+PENP-3-5, 2021-05-29 01:25:00,1SPM,180,Transcribed,Christopher Moser-Purdy,None,None,None,Moderate,None,,221822
+PENP-3-7, 2021-06-09 01:20:00,1SPM,180,Bad Weather,Christopher Moser-Purdy,Heavy,Moderate,None,None,None,,221835
+PENP-BS-2, 2021-05-05 17:52:02,1SPM,180,Transcribed,Steve Enid,None,Light,None,Light,None,some traffic,221759
+PENP-3-6, 2021-07-01 03:24:00,1SPM,180,Transcribed,Christopher Moser-Purdy,Light,Light,None,None,None,,221825
+PENP-3-4, 2021-05-27 04:27:00,1SPM,180,Transcribed,Steve Enid,Light,Moderate,None,Moderate,None,,221766
+PENP-2-3, 2021-05-19 03:35:00,1SPM,180,Transcribed,Christopher Moser-Purdy,None,None,None,Moderate,None,,221816
+PENP-3-8, 2021-07-20 05:40:00,1SPM,180,Transcribed,Christopher Moser-Purdy,None,None,None,Light,None,,221836
+PENP-4-3, 2021-06-15 04:18:00,1SPM,180,Transcribed,Bronwyn Robinson,None,None,None,None,Both Sides Extra Static,,221783
+PENP-5-1, 2021-06-29 02:24:00,1SPM,180,Transcribed,Steve Enid,None,Light,None,Light,None,,221760
+PENP-1-6, 2021-07-17 05:38:00,1SPM,180,Transcribed,Bronwyn Robinson,None,None,None,Light,None,,221787
+PENP-BS-1, 2021-05-10 19:17:38,1SPM,180,Transcribed,Brandon Law,None,None,None,None,None,,221801
+PENP-3-6, 2021-07-04 04:26:00,1SPM,180,Transcribed,Bronwyn Robinson,None,Moderate,None,Moderate,None,,221792
+PENP-BS-2, 2021-05-04 18:26:02,1SPM,180,Transcribed,Brandon Law,None,None,None,None,None,,221796
+PENP-BS-2, 2021-05-04 17:01:02,1SPM,180,Transcribed,Steve Enid,None,Light,Moderate,Moderate,None,traffic noise,221764
+PENP-BS-1, 2021-05-04 19:30:03,1SPM,180,Transcribed,Steve Enid,None,Light,None,Light,None,very good SPPE recording !,221761
+PENP-4-6, 2021-07-18 02:36:00,1SPM,180,Transcribed,Christopher Moser-Purdy,None,Light,None,None,None,,221821
+PENP-3-8, 2021-07-14 02:34:00,1SPM,180,Transcribed,Christopher Moser-Purdy,None,Light,None,None,None,,221826
+PENP-BS-4, 2021-08-09 18:01:03,1SPM,180,Transcribed,Christopher Moser-Purdy,None,None,None,Moderate,None,,221814
+PENP-4-1, 2021-06-24 02:19:00,1SPM,180,Transcribed,Steve Enid,None,Light,None,Light,None,,221778
+PENP-3-2, 2021-05-21 04:32:00,1SPM,180,Transcribed,Steve Enid,None,Moderate,None,Moderate,None,windy,221770
+PENP-4-2, 2021-05-27 05:25:00,1SPM,180,Transcribed,Christopher Moser-Purdy,None,None,None,Moderate,None,,221832
+PENP-3-4, 2021-05-26 04:28:00,1SPM,180,Transcribed,Christopher Moser-Purdy,None,None,None,Moderate,None,,221804
+PENP-BS-4, 2021-08-05 18:07:02,1SPM,180,Transcribed,Bronwyn Robinson,None,Light,None,Light,None,,221789
+PENP-3-6, 2021-07-03 05:25:00,1SPM,180,Transcribed,Steve Enid,None,Moderate,None,Moderate,None,,221773
+PENP-1-6, 2021-07-21 01:42:00,1SPM,180,Bad Weather,Steve Enid,,,,,,,221768
+PENP-5-1, 2021-06-22 04:21:00,1SPM,180,Transcribed,Bronwyn Robinson,None,Moderate,None,Light,Other issues,Odd quality,221785
+PENP-4-4, 2021-06-01 03:22:00,1SPM,180,Transcribed,Brandon Law,Light,None,None,None,None,,221798
+PENP-BS-4, 2021-08-14 03:25:02,1SPM,180,Transcribed,Christopher Moser-Purdy,None,None,None,Moderate,None,,221820
+PENP-3-2, 2021-05-18 01:35:00,1SPM,180,Transcribed,Steve Enid,None,None,None,None,None,,221762
+PENP-4-3, 2021-06-06 02:19:00,1SPM,180,Transcribed,Christopher Moser-Purdy,None,Moderate,None,Moderate,None,,221815
+PENP-BS-3, 2021-05-10 19:39:06,1SPM,180,Transcribed,Christopher Moser-Purdy,None,None,None,Light,None,,221811
+PENP-4-2, 2021-05-28 03:24:00,1SPM,180,Transcribed,Christopher Moser-Purdy,None,None,None,Moderate,None,,221803
+PENP-3-6, 2021-07-03 03:25:00,1SPM,180,Transcribed,Steve Enid,None,Moderate,None,Moderate,None,,221799
+PENP-4-4, 2021-06-01 01:22:00,1SPM,180,Transcribed,Steve Enid,Moderate,Light,None,Moderate,None,raining,221772
+PENP-4-2, 2021-06-02 05:21:00,1SPM,180,Transcribed,Steve Enid,None,None,None,None,None,,221769
+PENP-4-6, 2021-07-20 01:38:00,1SPM,180,Transcribed,Bronwyn Robinson,Light,None,None,None,None,,221795
+PENP-3-8, 2021-07-20 01:40:00,1SPM,180,Transcribed,Steve Enid,Light,Light,None,Light,None,,221763
+PENP-4-4, 2021-05-27 01:25:00,1SPM,180,Transcribed,Steve Enid,None,Moderate,None,Moderate,None,poor recording,221776
+PENP-2-3, 2021-05-16 03:38:00,1SPM,180,Transcribed,Bronwyn Robinson,None,None,None,None,Other issues,Quality is fuzzy,221784
+PENP-3-1, 2021-06-19 03:19:00,1SPM,180,Transcribed,Steve Enid,None,None,None,None,None,good recording,221780
+PENP-4-2, 2021-05-26 01:26:00,1SPM,180,Transcribed,Bronwyn Robinson,None,Light,None,Light,None,,221788
+PENP-BS-2, 2021-05-04 16:26:02,1SPM,180,Transcribed,Christopher Moser-Purdy,None,None,None,Moderate,None,,221809
+PENP-4-1, 2021-06-16 02:18:00,1SPM,180,Transcribed,Christopher Moser-Purdy,None,Light,None,Light,None,,221817
+PENP-BS-1, 2021-05-04 15:25:02,1SPM,180,Transcribed,Steve Enid,None,Light,None,Light,None,,221767
+PENP-3-1, 2021-06-22 03:20:00,1SPM,180,Transcribed,Christopher Moser-Purdy,None,Moderate,None,None,None,,221824
+PENP-3-7, 2021-06-05 01:21:00,1SPM,180,Transcribed,Christopher Moser-Purdy,None,Light,None,Light,None,,221805
+PENP-3-8, 2021-07-20 03:40:00,1SPM,180,Transcribed,Christopher Moser-Purdy,None,None,None,Light,None,,221819
+PENP-3-5, 2021-06-02 03:23:00,1SPM,180,Transcribed,Christopher Moser-Purdy,None,None,None,Light,None,,221831
+PENP-4-4, 2021-05-23 12:00:00,1SPM,180,Transcribed,Christopher Moser-Purdy,None,None,None,Heavy,None,Sounds like an office setting?,221810
+PENP-3-1, 2021-06-18 03:19:00,1SPM,180,Transcribed,Christopher Moser-Purdy,None,None,None,Light,None,,221812
+PENP-BS-3, 2021-05-05 17:23:03,1SPM,180,Transcribed,Christopher Moser-Purdy,None,Light,None,Moderate,None,,221834
+PENP-3-4, 2021-06-02 04:23:00,1SPM,180,Transcribed,Christopher Moser-Purdy,None,Light,None,None,None,,221827
+PENP-BS-3, 2021-05-08 16:32:02,1SPM,180,Transcribed,Bronwyn Robinson,None,Moderate,None,None,None,,221791
+PENP-3-5, 2021-05-28 05:26:00,1SPM,180,Transcribed,Steve Enid,None,Moderate,None,Moderate,None,,221781
+PENP-3-7, 2021-06-11 04:19:00,1SPM,180,Transcribed,Christopher Moser-Purdy,None,None,None,Light,None,,221828
+PENP-2-3, 2021-05-21 03:33:00,1SPM,180,Transcribed,Steve Enid,None,None,None,None,None,,221779
+PENP-BS-1, 2021-08-04 20:23:02,None,180,Transcribed,Kayley Burke,,,,,,,302900
+PENP-BS-3, 2021-05-10 19:39:06,None,180,Transcribed,Kayley Burke,,,,,,,302892
+PENP-3-2, 2021-05-21 01:32:00,1SPM,180,Transcribed,Steve Enid,None,Moderate,None,Moderate,None,,221782
+PENP-BS-1, 2021-05-04 19:30:03,None,180,Transcribed,Kayley Burke,,,,,,,302885
+PENP-BS-3, 2021-05-07 16:51:03,1SPM,180,Transcribed,Christopher Moser-Purdy,None,None,None,Light,None,,221808
+PENP-3-2, 2021-05-14 01:40:00,1SPM,180,Transcribed,Steve Enid,None,None,None,None,None,,221765
+PENP-4-1, 2021-06-17 04:18:00,1SPM,180,Transcribed,Christopher Moser-Purdy,None,None,None,Light,None,,221830
+PENP-3-7, 2021-06-06 03:21:00,1SPM,180,Transcribed,Christopher Moser-Purdy,None,None,None,Light,None,,221813
+PENP-4-3, 2021-06-10 03:18:00,1SPM,180,Transcribed,Brandon Law,None,None,None,None,None,,221797
+PENP-4-6, 2021-07-20 05:38:00,1SPM,180,Transcribed,Bronwyn Robinson,None,Moderate,None,None,None,,221790
+PENP-4-3, 2021-06-08 02:19:00,1SPM,180,Transcribed,Christopher Moser-Purdy,None,Light,None,Light,None,,221807
+PENP-4-6, 2021-07-19 03:37:00,1SPM,180,Transcribed,Bronwyn Robinson,None,None,None,None,None,,221793
+ASC-1, 2021-06-27 05:21:00,1SPT,180,Transcribed,Alex MacPhail,None,Moderate,None,Heavy,None,,967903
+PENP-3-1, 2021-06-22 04:20:00,1SPM,180,Transcribed,Steve Enid,None,Moderate,None,Moderate,None,,221777
+PENP-2-3, 2021-05-21 04:33:00,1SPM,180,Transcribed,Christopher Moser-Purdy,None,None,None,Light,None,,221823
+PENP-2-3, 2021-05-23 05:31:00,1SPT,180,New,Not Assigned,,,,,,,967889
+PENP-1-4, 2021-06-20 05:21:00,1SPT,180,New,Not Assigned,,,,,,,967891
+PENP-1-3, 2021-05-29 05:26:00,1SPT,180,New,Not Assigned,,,,,,,967890
+LXI-1, 2021-07-25 05:45:00,1SPT,180,New,Not Assigned,,,,,,,967892
+PENP-2-3, 2021-05-21 05:33:00,1SPT,180,New,Not Assigned,,,,,,,967893
+PENP-1-6, 2021-07-14 05:35:00,1SPT,180,New,Not Assigned,,,,,,,967894
+PENP-1-6, 2021-07-13 05:34:00,1SPT,180,New,Not Assigned,,,,,,,967895
+PENP-1-4, 2021-06-17 05:20:00,1SPT,180,New,Not Assigned,,,,,,,967896
+PENP-1-5, 2021-06-29 06:24:00,1SPT,180,New,Not Assigned,,,,,,,967901
+PENP-1-4, 2021-06-22 05:21:00,1SPT,180,New,Not Assigned,,,,,,,967902
+PENP-2-3, 2021-05-14 05:40:00,1SPT,180,New,Not Assigned,,,,,,,967904
+PENP-1-2, 2021-05-19 05:35:00,1SPT,180,New,Not Assigned,,,,,,,967906
+PENP-1-4, 2021-06-19 05:20:00,1SPT,180,New,Not Assigned,,,,,,,967908
+ASC-1, 2021-06-20 05:19:00,1SPT,180,New,Not Assigned,,,,,,,967909
+ASC-1, 2021-07-01 05:23:00,1SPT,180,Transcribed,Alex MacPhail,,,,,,,967912
+PENP-1-5, 2021-07-02 05:25:00,1SPT,180,New,Not Assigned,,,,,,,967913
+PENP-1-6, 2021-07-15 05:36:00,1SPT,180,New,Not Assigned,,,,,,,967914
+ASC-1, 2021-06-18 05:19:00,1SPT,180,New,Not Assigned,,,,,,,967915
+PENP-1-4, 2021-06-16 05:20:00,1SPT,180,New,Not Assigned,,,,,,,967916
+PENP-1-3, 2021-06-02 06:24:00,1SPT,180,New,Not Assigned,,,,,,,967917
+PENP-1-3, 2021-05-26 05:29:00,1SPT,180,New,Not Assigned,,,,,,,967920
+PENP-2-3, 2021-05-16 05:38:00,1SPT,180,New,Not Assigned,,,,,,,967922
+PENP-1-2, 2021-05-21 05:33:00,1SPT,180,New,Not Assigned,,,,,,,967924
+PENP-1-2, 2021-05-23 06:31:00,1SPT,180,New,Not Assigned,,,,,,,967925
+LXI-1, 2021-07-24 05:44:00,1SPT,180,New,Not Assigned,,,,,,,967926
+PENP-3-4, 2021-06-01 04:23:00,1SPM,180,Transcribed,Steve Enid,None,Light,None,Light,Left Channel Failed,left side not working,221775

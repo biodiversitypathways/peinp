@@ -12,7 +12,19 @@ toc-depth: 3
 toc-expand: true
 toc-location: left
 styles: styles.css
+reference-location: margin
+citation-location: margin
 ---
+
+```{r}
+### To run this locally
+
+# Create a new R project and version control from the repo
+# Pull from main
+# Load the pei.RData file
+# Render
+
+```
 
 ```{r}
 #| label: load-packages and authenticate
@@ -27,11 +39,15 @@ library(wildRtrax)
 library(unmarked)
 library(sf)
 library(terra)
+library(vctrs)
 library(ggridges)
 library(scales)
 library(kableExtra)
 library(plotly)
 library(DT)
+library(lme4)
+library(ggpubr)
+library(vegan)
 
 wt_auth()
 
@@ -48,20 +64,17 @@ load('pei.RData')
 
 # Introduction
 
-Human activities are known to be causing global declines in forest wildlife. Direct and indirect effects of habitat fragmentation and loss, climate change, and increased access to sensitive areas are pressures that affect forest biodiversity in managed areas.
+Human activities have been identified as key contributors to the global decline in forest wildlife. The repercussions of habitat fragmentation and loss, climate change, and increased access to sensitive areas exert direct and indirect pressures on forest biodiversity, particularly in managed regions.
 
-In 2019, Prince Edward Island National Park engaged in a program to utilize autonomous recording units (ARUs) for passive acoustic monitoring (PAM) of wildlife to help utilize these technologies to report on biodiversity changes by the way of ecological integrity metrics.
+In 2019, Prince Edward Island National Park initiated a program incorporating autonomous recording units (ARUs) for passive acoustic monitoring (PAM) of the Park's wildlife. ARUs are compact environmental sensors that are designed to passively record the environment, capturing vocalizing species like birds and amphibians. This technology enables resource managers to conduct prolonged surveys with minimal human interference. The species detected by these units contribute valuable information to ecological integrity metrics such as species richness, diversity, occupancy, and trends over time. This data aids decision-making and management within the Park. Given the rapid and ease of accumulating data from these units, maintaining a high standard of data integrity is paramount to ensure future data interoperability and sharing. WildTrax, an online platform tailored for users of environmental sensors, addresses this challenge by providing a solution to standardize, harmonize, and share data.
 
-Maintaining data integrity is of the utmost importance to ensure that data interoperability and sharing can be facilitated in the future. Therefore, inaugurating this program is the use of WildTrax, an online platform designed to allow users of environmental sensors to store, manage, process, share, and discover data from these sensors.
+The objectives of this report are to:
 
-The general objectives of this report are to:
-
--   Describe the data management and data processing procedures for the acoustic data collected from 2019 to 2023;
--   Identify all audible species and the abundance of each species within each selected recording;
--   Define simple methods and ecological integrity metrics robust enough to be applied to evaluate species presence, species richness at locations over time, and species occupancy over time;
--   Provide recommendations for continued monitoring approaches;
--   Contribute to evaluating the ecological integrity of forest ecosystems in Prince Edward Island National Park;
--   Helping to facilitate data publication to the public, resource managers, academic institutions, and other resource agencies.
+- Describe the data management and processing procedures for the acoustic data collected from 2019 to 2023
+- Identify all audible species and quantify the abundance of each species within each recording
+- Define straightforward methods and robust ecological integrity metrics for evaluating species presence, species richness, and species occupancy over time at various locations
+- Offer recommendations for ongoing monitoring approaches to contribute to the assessment of ecological integrity in forest ecosystems
+- Facilitate data publication to the public, resource managers, academic institutions, and other relevant agencies
 
 ------------------------------------------------------------------------
 
@@ -69,11 +82,16 @@ The general objectives of this report are to:
 
 ## Data collection
 
-Data were collected during the spring and summer seasons from 2019 to 2023. A total of 30 locations were surveyed over the five-year period: 21 locations as part of the forest songbird monitoring program (code: `PENP-*`), 6 for Bank Swallow Monitoring (code: `PENP-BS-*`), 2 locations deployed in First Nations communities (`ASC-1,LXI-1`), and one location for events (`PENP-E1`). Nine locations were surveyed each year, while the remaining locations were surveyed on rotation as best as possible. Details can be found in Table 1 (@tbl-loc-summary) and illustrated in Figure 1 (@fig-locs).
+Data were collected during the spring and summer seasons from `r min(pei_locs$year)` to `r max(pei_locs$year)`. A total of `r pei_locs |> st_drop_geometry() |> select(location) |> distinct() |> tally()` locations were surveyed over the five-year period: 
 
-ARUs were deployed at the beginning of the breeding season in April and May. These ARUs rotated through locations during the spring and summer until their final retrieval in July and August. At each location, the ARUs were set to record for 30 minutes continuously every hour for four hours, starting one hour before dawn and ending three hours after dawn. For Bank Swallow Monitoring locations, recordings were made every 5 minutes for a duration of 3 minutes each. On average, each ARU recorded for `r average_deployment$mean` +/- `r average_deployment$sd` days.
+* 21 locations as part of the forest songbird monitoring program (code: `PENP-*`) with ARUs recording during the morning hours,
+* 6 for Bank Swallow Monitoring (code: `PENP-BS-*`) with ARUs placed strategically beside ponds recording in the evening,
+* 2 locations deployed in First Nations communities (`ASC-1, LXI-1`) to complement the forest songbird and evening schedules,
+* And one location for events (`PENP-E1`), which was to examine the effects of a single public event
 
-```{r Geospatial assets}
+Nine locations (`r repeats`) were surveyed each year, while the remaining locations were surveyed on rotation as best as possible. Details can be found in Table 1 (@tbl-loc-summary) and illustrated in Figure 1 (@fig-locs). ARUs were deployed at the beginning of the breeding season in April and May. These ARUs rotated through locations during the spring and summer until their final retrieval in July and August. At each location, the ARUs were set to record for 30 minutes continuously every hour for four hours, starting one hour before dawn and ending three hours after dawn. For Bank Swallow Monitoring locations, recordings were made every 5 minutes for a duration of 3 minutes each from 1.5 hours before dusk to 1.5 hours after dusk. On average, each ARU recorded for `r average_deployment$mean` +/- `r average_deployment$sd` days.
+
+```{r}
 #| warning: false
 #| echo: false
 #| eval: true
@@ -81,40 +99,42 @@ ARUs were deployed at the beginning of the breeding season in April and May. The
 #| include: true
 #| results: hide
 
+pei_locs <- pei_main |>
+  mutate(year = lubridate::year(recording_date_time)) |>
+  select(location, latitude, longitude, year) |>
+  distinct() |>
+  sf::st_as_sf(coords = c("longitude","latitude"), crs = 4326)
+
+repeats <- pei_locs |>
+  st_drop_geometry() |>
+  group_by(location) |>
+  summarise(count = n_distinct(year)) |>
+  ungroup() |>
+  filter(count == 5) |>
+  select(location) |>
+  distinct() |>
+  pull()
+
+######## Define geospatial assets
 
 pei_shp <- read_sf('assets/PEI.shp')
+peinp_shp <- read_sf('assets/peinp.shp')
+peinp_shp <- st_transform(peinp_shp, st_crs(pei_locs)) |> st_make_valid()
 coast <- read_sf('assets/coastline_polygon.shp') 
-coast <- st_transform(coast, st_crs(pei_locs)) %>% st_make_valid()
-# Make up siteCovs for now
-distance_to_coast <- read_csv("penp_coastline_distance.csv")
+coast <- st_transform(coast, st_crs(pei_locs)) |> st_make_valid()
 #nearest_feature <- st_nearest_feature(oneloc, coast)
 
-```
+# Make up siteCovs for now
+distance_to_coast <- read_csv("penp_coastline_distance.csv")
+year_covs <- read_csv("year_covariates.csv")
 
-```{r Location summary and map}
-#| warning: false
-#| echo: false
-#| eval: true
-#| message: false
-#| include: true
-#| results: hide
-#| fig-cap: "Locations surveyed each year"
-#| label: fig-locs
-#| fig-width: 9
-
-pei_locs <- pei_main %>%
-  mutate(year = lubridate::year(recording_date_time)) %>%
-  select(location, latitude, longitude, year) %>%
-  distinct() %>%
-  sf::st_as_sf(., coords = c("longitude","latitude"), crs = 4326)
-
-locs_summary <- pei_locs %>%
-  st_drop_geometry() %>%
-  group_by(location, year) %>%
-  mutate(value = row_number()) %>%
-  ungroup() %>%
-  arrange(year) %>%
-  pivot_wider(names_from = year, values_from = value, values_fill = 0) %>%
+locs_summary <- pei_locs |>
+  st_drop_geometry() |>
+  group_by(location, year) |>
+  mutate(value = row_number()) |>
+  ungroup() |>
+  arrange(year) |>
+  pivot_wider(names_from = year, values_from = value, values_fill = 0) |>
   mutate(Site = case_when(grepl('PENP-1-*',location) ~ "Cavendish",
                           grepl('PENP-2-*',location) ~ "Brackley",
                           grepl('PENP-3-*',location) ~ "Dalvay",
@@ -125,8 +145,22 @@ locs_summary <- pei_locs %>%
                           TRUE ~ "Communities")) %>%
   rename('Location' = location)
 
+```
+
+```{r}
+#| warning: false
+#| echo: false
+#| eval: true
+#| message: false
+#| include: true
+#| results: hide
+#| fig-cap: "Locations surveyed each year"
+#| label: fig-locs
+#| fig-width: 11
+
 ggplot() +
-  geom_sf(data = pei_shp, fill = NA) +
+  geom_sf(data = pei_shp, fill = '#FFD580') +
+  geom_sf(data = peinp_shp, fill = '#D0FFBC') +
   #geom_sf(data = coast, fill = "darkblue") +
   geom_point(data = pei_locs %>% inner_join(., locs_summary %>% select(Location, Site), by = c("location" = "Location")), 
              aes(x = st_coordinates(geometry)[,1], y = st_coordinates(geometry)[,2], colour = Site)) +
@@ -134,8 +168,13 @@ ggplot() +
   xlab("Longitude") +
   ylab("Latitude") +
   theme_void() +
-  facet_wrap(~year, ncol = 3) +
-  theme(legend.position = "bottom")
+  facet_wrap(~year, ncol=1) +
+  theme(
+    legend.position = "right",
+    panel.background = element_rect(fill = "#A2C8EC")  # Change the background color here
+  ) +
+  xlim(-63.47902,-62.56987) +
+  ylim(46.38308,46.51148)
 
 ```
 
@@ -154,7 +193,7 @@ kable(locs_summary, caption = "Location summary for ARUs deployed")
 
 ## Data management
 
-A total of `r count_recs` recordings were collected between 2019 - 2023 (see @fig-recs-collect). From 2019 - 2021, data were transferred via hard drive to the University of Alberta in Edmonton, where they are redundantly stored on a server known as Cirrus. The recordings were standardized to ensure adherence to the naming convention of `LOCATION_DATETIME`, such as `PENP-1-1_20230625_053500.wav`. The remaining recordings (2022 - 2023) were directly uploaded to WildTrax by Parks Canada staff and can be downloaded from the platform's Recording tab, accessible under Manage \> Download list of recordings (see @fig-download-recs).
+A total of `r count_recs` recordings were collected (see @fig-recs-collect). From 2019 - 2021, data were transferred via hard drive to the University of Alberta in Edmonton, where they are redundantly stored on a server known as Cirrus. The recordings were standardized to ensure adherence to the naming convention of `LOCATION_DATETIME`, such as `PENP-1-1_20230625_053500.wav`. The remaining recordings (2022 - 2023) were directly uploaded to WildTrax by Parks Canada staff and can be downloaded from the platform's Recording tab, accessible under Manage \> Download list of recordings (see @fig-download-recs).
 
 ![Downloading a list of recordings from WildTrax](download-recs.png){#fig-download-recs}
 
@@ -171,9 +210,8 @@ wildtrax_penp_recs <- read_csv("penp_recordings.csv") %>%
   rename("recording_date_time" = recordingDate) %>%
   rename("length_seconds" = `length(s)`) %>%
   mutate(recording_date_time = as.POSIXct(recording_date_time, format="%Y-%m-%d %H:%M"))
-  
 
-cirrus_recs <- cirrus_penp_recs %>%
+all_recs <- cirrus_penp_recs %>%
   select(location, recording_date_time, length_seconds) %>%
   bind_rows(., wildtrax_penp_recs) %>%
   select(location, recording_date_time, length_seconds) %>%
@@ -184,24 +222,24 @@ cirrus_recs <- cirrus_penp_recs %>%
          year = year(recording_date_time),
          month= month(recording_date_time, label = T))
 
-recs_plot <- cirrus_recs |>
+count_recs <- nrow(all_recs)
+
+average_deployment <- all_recs |>
+  group_by(location, year) |>
+  summarise(count = n_distinct(julian)) |>
+  ungroup() |>
+  summarise(mean = round(mean(count),2),
+            sd = round(sd(count),2))
+
+recs_plot <- all_recs |>
   rename("Location" = location) |>
   rename("Day of Year" = julian) |>
   ggplot(aes(x = `Day of Year`, y = Location, fill = Location)) +
   geom_density_ridges() +
   facet_wrap(~ year) +
   theme_minimal() +
-  scale_fill_viridis_d() +
-  scale_x_discrete(guide = guide_axis(check.overlap = TRUE))
-
-count_recs <- nrow(cirrus_recs)
-
-average_deployment <- cirrus_recs |>
-  group_by(location, year) |>
-  summarise(count = n_distinct(julian)) |>
-  ungroup() |>
-  summarise(mean = round(mean(count),2),
-            sd = round(sd(count),2))
+  scale_fill_viridis_d()
+  #scale_x_discrete(guide = guide_axis(check.overlap = TRUE))
   
 ```
 
@@ -213,8 +251,8 @@ average_deployment <- cirrus_recs |>
 #| include: true
 #| results: hide
 #| fig-align: center
-#| fig-width: 9
-#| fig-height: 9
+#| fig-width: 10
+#| fig-height: 10
 #| fig-cap: Ridgeplot of recordings collected for each location over each survey year
 #| label: fig-recs-collect
 
@@ -222,30 +260,37 @@ recs_plot
 
 ```
 
-## Community Data Processing
+## Community data processing
 
-The principal goal for data processing was to describe the acoustic community of species heard on specific recordings. To ensure balanced replication, for each location and year surveyed, four randomly selected recordings were processed for 3-minutes between the hours of 4:00 AM - 7:59 AM and four separate dates. Four recordings will ensure that we have the minimum number of samples for a simple occupancy analysis. Tags are made in a count-removal framework, only tagging the time of first detection of each individual heard on the recordings. In case a species was overly abundant a TMTT ('too many to tag') flag was used (see @tbl-tmtt).
+The principal goal for data processing was to describe the acoustic community of species heard on specific recordings. To ensure balanced replication, for each location and year surveyed, four randomly selected recordings were processed for 3-minutes between the hours of 4:00 AM - 7:59 AM ideally on four separate dates. Four recordings will ensure that we have the minimum number of samples for a simple occupancy analysis. Tags are made in a count-removal framework, only tagging the time of first detection of each individual heard on the recordings. In case a species was overly abundant a TMTT ('too many to tag') flag was used (see @tbl-tmtt). Amphibian abundance was estimated at the time of first detection using the [North American Amphibian Monitoring Program](https://www.usgs.gov/centers/eesc/science/north-american-amphibian-monitoring-program) with abundance of species being estimated on the scale of "calling intensity index" of 1 - 3. Mammals such as Red Squirrel, were also noted on the recordings. After the data are processed in WildTrax, the [wildRtrax](https://abbiodiversity.github.io/wildRtrax/) package is use to download the data into a standard format prepared for analysis. To ensure balanced replication, each location was surveyed at minimum for 4 recordings x 3 minutes at dawn (see @tbl-loc-repl). We also verified everything that was tagged (see @tbl-verified).
 
-Amphibian abundance was estimated at the time of first detection using the [North American Amphibian Monitoring Program](https://www.usgs.gov/centers/eesc/science/north-american-amphibian-monitoring-program) with abundance of species being estimated on the scale of "calling intensity index" 1 - 3. Mammals such as Red Squirrel, were also noted on the recordings.
-
-After the data are processed in WildTrax, the [wildRtrax](https://abbiodiversity.github.io/wildRtrax/) package is use to download the data into a standard format prepared for analysis.
 
 ```{r Data download}
 #| warning: false
 #| message: false
 #| echo: false
 #| eval: false
-#| include: false
+#| include: true
 
-pei_data <- wt_get_download_summary(sensor = 'ARU') %>%
-  filter(grepl('^Prince Edward Island National Park Forest Songbird',project)) %>%
-  select(project_id) %>%
+pei_projects <- wildRtrax::wt_get_download_summary(sensor = 'ARU') |>
+  filter(grepl('^Prince Edward Island National Park Forest Songbird', project)) |>
+  select(project_id) |>
   pull()
 
-pei_main <- map_dfr(.x = pei_data, .f = ~wt_download_report(project_id = .x, sensor_id = "ARU", weather_cols = F, reports = "main"))
+pei_main <-
+  map_dfr(
+    .x = pei_projects,
+    .f = ~ wildRtrax::wt_download_report(
+      project_id = .x,
+      sensor_id = "ARU",
+      weather_cols = T,
+      reports = "main"
+    )
+  )
+
+pei_main |> names()
 ```
 
-To ensure balanced replication, each location was surveyed at minmum for 4 recordings x 3 minutes at dawn (see @tbl-loc-repl). We also verified everything that was tagged (see @tbl-verified).
 
 ```{r}
 #| warning: false
@@ -253,11 +298,11 @@ To ensure balanced replication, each location was surveyed at minmum for 4 recor
 #| eval: true
 #| include: true
 
-pei_tasks <- pei_main %>%
-  as_tibble() %>%
-  filter(aru_task_status %in% c("Transcribed","New")) %>%
-  select(project_id, location, recording_date_time, task_duration, task_method, observer_id) %>%
-  distinct() %>%
+pei_tasks <- pei_main |>
+  as_tibble() |>
+  filter(aru_task_status %in% c("Transcribed","New")) |>
+  select(project_id, location, recording_date_time, task_duration, task_method, observer_id) |>
+  distinct() |>
   mutate(hour = lubridate::hour(recording_date_time),
          year = lubridate::year(recording_date_time),
          typ = case_when(
@@ -265,10 +310,18 @@ pei_tasks <- pei_main %>%
     hour > 7 & hour < 20 ~ "Day",
     hour >= 19 & hour < 21 ~ "Dusk",
     TRUE ~ "Night"
-  )) %>%
-  group_by(location, year, task_duration, typ) %>%
-  tally() %>%
-  ungroup()
+  )) |>
+  group_by(location, year, task_duration, typ) |>
+  tally() |>
+  ungroup() |>
+  filter(location == "PENP-1-1")
+
+
+task_info <- fs::dir_ls('tasks', regexp = "*.csv") |>
+  map_dfr(~read_csv(., show_col_types = F)) |>
+  select(internal_task_id, rain:audioQuality) |>
+  distinct()
+
 ```
 
 ```{r}
@@ -278,9 +331,9 @@ pei_tasks <- pei_main %>%
 #| message: false
 #| include: true
 #| label: tbl-loc-repl
-#| tbl-cap: Tasks and unit replication for listening
+#| tbl-cap: Example of tasks and unit replication for listening at PENP-1-1
 
-pei_tasks |> DT::datatable(rownames=F, filter="top")
+kable(pei_tasks)
 ```
 
 ```{r}
@@ -292,11 +345,13 @@ pei_tasks |> DT::datatable(rownames=F, filter="top")
 #| label: tbl-verified
 #| tbl-cap: Proportion of tags verified
 
-all_tags <- pei_main %>% tally() %>% pull()
+all_tags <- pei_main |> 
+  tally() |>
+  pull()
 
-verified_tags <- pei_main %>%
-  group_by(tag_is_verified) %>%
-  tally() %>%
+verified_tags <- pei_main |>
+  group_by(tag_is_verified) |>
+  tally() |>
   mutate(Proportion = round(n / all_tags,4)*100) |>
   rename("Count" = n) |>
   rename("Tag is verified" = tag_is_verified)
@@ -329,20 +384,22 @@ wt_songscope_tags()
 #| echo: false
 #| message: false
 #| eval: true
-#| include: true
+#| include: false
 #| label: tbl-tmtt
 #| tbl-cap: TMTT tags
 
 tmtt_tags <- pei_main |>
-  group_by(location, recording_date_time, observer, species_code, individual_count) |>
-  tally() |>
+  select(location, recording_date_time, species_code, individual_count) |>
+  distinct() |>
   filter(individual_count == "TMTT")
 
-tmtt_tags |> DT::datatable(rownames=F, filter="top")
+kable(head(tmtt_tags))
 
 ```
 
 ### Species richness
+
+A total of `r nrow(distinct_spp)` species were found across the five years. @fig-spp-rich-locs describes the relationship of species richness across each location and survey year with @fig-spp-rich-annual showing the relationship between species richness and survey effort. 
 
 ```{r}
 #| warning: false
@@ -351,32 +408,45 @@ tmtt_tags |> DT::datatable(rownames=F, filter="top")
 #| eval: true
 #| include: true
 #| results: hide
+#| fig-align: center
+#| fig-width: 10
+#| fig-height: 10
+#| fig-cap: Species richness at forest monitoring locations across years
+#| label: fig-spp-rich-locs
 
-spp_rich_location <- pei_main %>%
-  as_tibble() %>%
-  wt_tidy_species(remove = c("mammal","amphibian","abiotic","insect","unknown"), zerofill = T) %>%
-  mutate(year = lubridate::year(recording_date_time)) %>%
-  filter(!(location == 'PENP-BS-6' & task_method != "1SPT")) %>%
-  select(location, year, species_code) %>% 
-  distinct() %>%
-  group_by(location, year) %>%
-  summarise(species_count = n_distinct(species_code)) %>%
+spp_rich_location <- pei_main |>
+  as_tibble() |>
+  filter(!grepl('BS|ASC|LXI',location)) |>
+  wt_tidy_species(remove = c("mammal","amphibian","abiotic","insect","unknown"), zerofill = T) |>
+  mutate(year = lubridate::year(recording_date_time)) |>
+  filter(!(location == 'PENP-BS-6' & task_method != "1SPT")) |>
+  select(location, year, species_code) |>
+  distinct() |>
+  group_by(location, year) |>
+  summarise(species_count = n_distinct(species_code)) |>
   ungroup()
 
-spp_rich_location %>%
-  ggplot(., aes(x=year, y=species_count, fill=year)) +
+distinct_spp <- pei_main |>
+  as_tibble() |>
+  filter(!grepl('BS|ASC|LXI',location)) |>
+  wt_tidy_species(remove = c("mammal","amphibian","abiotic","insect","unknown"), zerofill = T) |>
+  mutate(year = lubridate::year(recording_date_time)) |>
+  filter(!(location == 'PENP-BS-6' & task_method != "1SPT")) |>
+  select(species_code) |>
+  distinct() |>
+  arrange(species_code)
+
+spp_rich_location |>
+  ggplot(aes(x=year, y=species_count, colour=year)) +
   geom_line() +
   geom_point() +
   facet_wrap(~location) +
   theme_bw() +
-  scale_fill_viridis_c() +
+  scale_colour_viridis_c() +
   xlab('Year') + ylab('Species richness') +
   ggtitle('Species richness at each location surveyed for each year')
 
 ```
-
-For each year
-
 ```{r}
 #| warning: false
 #| echo: false
@@ -384,17 +454,23 @@ For each year
 #| include: true
 #| results: hide
 
-spp_rich_annual <- pei_main %>%
-  as_tibble() %>%
-  wt_tidy_species(remove = c("mammal","amphibian","abiotic","insect","unknown"), zerofill = T) %>%
-  mutate(year = lubridate::year(recording_date_time)) %>%
-  filter(!(location == 'PENP-BS-6' & task_method != "1SPT")) %>%
-  select(location, year, species_code) %>% 
-  distinct() %>%
-  group_by(year) %>%
+spp_rich_annual <- pei_main |>
+  as_tibble() |>
+  filter(!grepl('BS|ASC|LXI',location)) |>
+  wt_tidy_species(remove = c("mammal","amphibian","abiotic","insect","unknown"), zerofill = T) |>
+  mutate(year = lubridate::year(recording_date_time)) |>
+  filter(!(location == 'PENP-BS-6' & task_method != "1SPT")) |>
+  select(location, year, species_code) |>
+  distinct() |>
+  group_by(year) |>
   summarise(effort = n_distinct(species_code) / n_distinct(location),
-            species_count = n_distinct(species_code)) %>%
+            species_count = n_distinct(species_code)) |>
   ungroup()
+
+year_effort <- pei_main |>
+  mutate(year = lubridate::year(recording_date_time)) |>
+  group_by(year) |>
+  summarise(count_of_locs = n_distinct(location))
 ```
 
 ```{r}
@@ -402,114 +478,383 @@ spp_rich_annual <- pei_main %>%
 #| echo: false
 #| eval: true
 #| include: true
+#| fig-align: center
+#| fig-width: 10
+#| fig-height: 10
+#| fig-cap: Species richness at forest monitoring locations across years considering sampling effort
+#| label: fig-spp-rich-annual
 
-year_effort <- pei_main %>%
-  mutate(year = lubridate::year(recording_date_time)) %>%
-  group_by(year) %>%
-  summarise(count_of_locs = n_distinct(location))
-
-spp_rich_annual %>%
+spp_rich_annual_plot <- spp_rich_annual %>%
   inner_join(., year_effort) %>%
   ggplot(., aes(x = year)) +
   geom_line(aes(y = species_count), size = 1) +
   geom_bar(aes(y = count_of_locs * 5), alpha = 0.7, stat = "identity") +  # Adjust the multiplier for better visualization
   scale_y_continuous(name = "Species Count", sec.axis = sec_axis(~./5, name = "Count of Locations")) +
   labs(x = "Year") +
-  theme_minimal() +
-  theme(legend.position = "bottom")
+  theme_bw()
+
+spp_rich_annual_plot
 
 ```
 
 ```{r}
 #| warning: false
-#| message: false
 #| echo: false
 #| eval: true
-#| include: false
+#| message: false
+#| include: true
 #| results: hide
-
-pei_main %>%
-  wt_tidy_species(remove = c("mammal","amphibian","abiotic","insect","unknown"), zerofill = T) %>%
-  select(location, recording_date_time, species_code, individual_count) %>%
-  group_by(species_code) %>%
-  add_tally() %>%
-  ungroup() %>%
-  filter(!n < 100) %>%
-  select(-n) %>%
-  mutate(julian = lubridate::yday(recording_date_time),
-         month= month(recording_date_time)) %>%
-  ggplot(.,
-       aes(x = month, y = species_code, fill = species_code)) + 
-  geom_density_ridges() + 
-  scale_fill_viridis_d() +
-  labs(title = "Activity per location of most commonly detected species", x = "Location", y = "Species") +
-  theme_bw()
-
-```
-
-### Species occupancy
-
-We chose locations that had at least 4 dawn visits and that were visited in all five years. We then chose only forest obligate species. We modeled a multi-season occupancy model following Royle et al. 2021 incorporating both colonization () and extinction parameters () of species occupancy starting with the 'first year's occupancy' as a reference state. The only year covariate that was also used was the impact of Fiona on the final year (2023) of data. Site covariates included distance to ocean edge and proportion of forested area around the ARU. Observation covariates were day of year, hour, observer and the quadratic for year and hour. Although method was different between 2019 (1SPM) and other years (2020 - 2023), only time to first detection of individuals in the 1SPM recordings were used to match the 1SPT method. We then predict the models and chose the best model using AIC.
-
-```{r}
+#| fig-align: center
+#| fig-width: 10
+#| fig-height: 10
+#| fig-cap: Seasonal detection activity of most commonly detected forest species
+#| label: fig-spp-activity
 
 guilds <- read_csv("bird_guilds.csv")
 
+pei_main |>
+  wt_tidy_species(remove = c("mammal","amphibian","abiotic","insect","unknown"), zerofill = T) |>
+  filter(!grepl('BS|ASC|LXI',location)) |>
+  select(location, recording_date_time, species_common_name, species_code, individual_count) |>
+  mutate(julian = lubridate::yday(recording_date_time),
+         month= month(recording_date_time),
+         year = factor(year(recording_date_time))) |>
+  inner_join(guilds |> select(species_common_name, habitat_nesting)) |>
+  arrange(species_code) |>
+  filter(habitat_nesting %in% c("CW","MW","OW","TSS")) |>
+  group_by(species_code) |>
+  add_tally() |>
+  ungroup() |>
+  filter(!n < 100) |>
+  mutate(habitat_nesting = case_when(
+    habitat_nesting == "CW" ~ "Coniferous Woodland",
+    habitat_nesting == "MW" ~ "Mixedwood",
+    habitat_nesting == "OW" ~ "Open Woodland",
+    habitat_nesting == "TSS" ~ "Tree Shrub / Swamp",
+    TRUE ~ as.character(habitat_nesting)
+  )) |>
+  rename("Nesting habitat" = habitat_nesting) |>
+  ggplot(aes(x = julian, y = species_common_name, fill = `Nesting habitat`)) + 
+  geom_density_ridges(scale = 3, rel_min_height = 0.005, alpha = 0.4) + 
+  scale_fill_viridis_d() +
+  facet_wrap(~year, nrow = 1) +
+  xlim(120,210) +
+  theme_bw() +
+  xlab("Day of Year") + ylab("Species")
+
 ```
+
+A quick test to show proximity to ocean is the major effect of noise and species richness on audio data so that we can use that site covariate in the occupany models.
 
 ```{r}
 #| warning: false
 #| echo: false
-#| eval: true
+#| eval: false
 #| include: true
 
-pei_occu <- pei_main %>%
-  as_tibble() %>%
-  filter(aru_task_status == "Transcribed") %>%
-  wt_tidy_species(., remove = c("mammal","amphibian","abiotic","insect","unknown")) %>%
-  left_join(., guilds %>% select(species_common_name, habitat_nesting)) %>%
-  filter(habitat_nesting %in% c("CW","MW","OW","TSS")) %>%
-  wt_replace_tmtt() %>%
-  mutate(task_duration = gsub('s','',task_duration) %>% as.numeric()) %>%
-  filter(!task_duration > 180, !(grepl('PENP-BS-*',location) & task_method != '1SPT')) %>%
+library(lmtest)
+
+ocean_richness <- spp_rich_location |>
+  inner_join(distance_to_coast) |>
+  filter(!location %in% c('ASC-1'))
+
+ggplot(ocean_richness, aes(x = coast_dist, y = species_count)) +
+  geom_point() +
+  labs(title = "Scatter plot of species_count vs coast_dist",
+       x = "coast_dist",
+       y = "species_count")
+
+# Fit a linear regression model
+model <- glm(species_count ~ coast_dist, data = ocean_richness)
+test_independence <- dwtest(model)$p.value # Independence
+test_resid_normality <- shapiro.test(resid(model))$p.value # Normality of residuals
+test_homoscedasticity <- car::ncvTest(model)$p # Homoscedasticity
+
+
+
+# Check the summary of the model
+summary(model)
+
+# Interpret the results
+# Look at the p-value for the 'coast_dist' coefficient
+# If the p-value is less than your chosen significance level (e.g., 0.05), you can reject the null hypothesis that the coefficient is zero.
+
+# Additional diagnostics and visualization
+# Check residuals vs. fitted values, normal Q-Q plot, etc.
+plot(model)
+
+# You can also check for multicollinearity if there are other predictors
+
+# Consider transforming variables or using different models if assumptions are violated
+
+# Make predictions
+predictions <- predict(model, newdata = ocean_richness)
+
+# Visualize the predicted values against the actual values
+ggplot(ocean_richness, aes(x = coast_dist, y = species_count)) +
+  geom_point() +
+  geom_line(aes(y = predictions), color = "red") +
+  labs(title = "Predicted vs. Actual values",
+       x = "coast_dist",
+       y = "species_count")
+
+BC_model <- caret::BoxCoxTrans(ocean_richness$species_count)
+ocean_richness <- cbind(ocean_richness, dist_new=predict(BC_model, ocean_richness$species_count)) # append the transformed variable to cars
+
+lm(dist_new ~ coast_dist, data = ocean_richness)
+```
+
+### Species diversity
+
+```{r}
+
+raw_dog <- pei_main |> 
+  as_tibble() |>
+  wt_tidy_species(remove = c("mammal","amphibian","abiotic","insect","unknown"), zerofill = T) |>
+  filter(!grepl('BS|ASC|LXI',location)) |>
+  wt_replace_tmtt() |>
+  select(location, recording_date_time, species_code, species_common_name, individual_order, individual_count) |>
+  distinct() |>
+  group_by(location, recording_date_time, species_code, species_common_name) |>
+  summarise(count = max(individual_order)) |>
+  ungroup() |>
+  pivot_wider(names_from = species_code, values_from = count, values_fill = 0) |>
+  as.data.frame()
+
+#betadiver(raw_dog[,4:103])
+#diversity(raw_dog[,4:103], index="shannon")
+```
+
+
+
+### Species occupancy
+
+For testing species occupancy, we selected locations with a minimum of four dawn visits across five years, focusing on forest obligate species for ecological relevance (see @tbl-bird-guilds). Utilizing a single-season single-species occupancy model (see @fig-spp-occ) from Mackenzie et al. 2003. Site-specific covariates included the distance to the ocean edge and the proportion of forested area surrounding the ARU. Observation covariates incorporated day of the year, hour, observer details, and a quadratic term for both year and hour. Despite variations in methodology between 2019 (1SPM) and subsequent years (2020 - 2023), we maintained consistency by exclusively utilizing the time to the first detection of individuals from the 1SPM recordings. Model predictions were then generated, and the best model was selected based on the Aikaike Information Criterion (AIC).
+
+```{r}
+#| warning: false
+#| echo: false
+#| eval: false
+#| include: false
+
+ss_occ_plot_loop <- function(input, species_choice) {
+  
+  data <- input
+  
+  pei_occu_19 <- data |>
+    as_tibble() |>
+    filter(aru_task_status == "Transcribed") |>
+   filter(!grepl('BS|ASC|LXI',location)) |>
+  wt_tidy_species(remove = c("mammal","amphibian","abiotic","insect","unknown")) |>
+  left_join(guilds |> select(species_common_name, habitat_nesting)) |>
+  filter(habitat_nesting %in% c("CW","MW","OW","TSS")) |>
+  wt_replace_tmtt() |>
+  mutate(task_duration = gsub('s','',task_duration) %>% as.numeric()) |>
+  filter(!task_duration > 180, !(grepl('PENP-BS-*',location) & task_method != '1SPT')) |>
   mutate(hour = lubridate::hour(recording_date_time),
-         year = lubridate::year(recording_date_time)) %>%
+         year = lubridate::year(recording_date_time)) |>
+  group_by(location) |>
+  mutate(ct = n_distinct(year)) |>
+  ungroup() |>
+  filter(ct == 5) |>
   filter(hour %in% c(4:7),
-         year == 2023) %>%
-  #group_by(location) %>%
-  #mutate(ct = n_distinct(year)) %>%
-  #ungroup() %>%
-  #filter(ct == 5) %>%
-  #select(-ct) %>%
-  group_by(species_code) %>%
-  add_tally() %>%
-  ungroup()
+         year == 2019)
+  
+  pei_occu_20 <- data |>
+    as_tibble() |>
+    filter(aru_task_status == "Transcribed") |>
+   filter(!grepl('BS|ASC|LXI',location)) |>
+  wt_tidy_species(remove = c("mammal","amphibian","abiotic","insect","unknown")) |>
+  left_join(guilds |> select(species_common_name, habitat_nesting)) |>
+  filter(habitat_nesting %in% c("CW","MW","OW","TSS")) |>
+  wt_replace_tmtt() |>
+  mutate(task_duration = gsub('s','',task_duration) %>% as.numeric()) |>
+  filter(!task_duration > 180, !(grepl('PENP-BS-*',location) & task_method != '1SPT')) |>
+  mutate(hour = lubridate::hour(recording_date_time),
+         year = lubridate::year(recording_date_time)) |>
+  group_by(location) |>
+  mutate(ct = n_distinct(year)) |>
+  ungroup() |>
+  filter(ct == 5) |>
+  filter(hour %in% c(4:7),
+         year == 2020)
+  
+  pei_occu_21 <- data |>
+    as_tibble() |>
+    filter(aru_task_status == "Transcribed") |>
+   filter(!grepl('BS|ASC|LXI',location)) |>
+  wt_tidy_species(remove = c("mammal","amphibian","abiotic","insect","unknown")) |>
+  left_join(guilds |> select(species_common_name, habitat_nesting)) |>
+  filter(habitat_nesting %in% c("CW","MW","OW","TSS")) |>
+  wt_replace_tmtt() |>
+  mutate(task_duration = gsub('s','',task_duration) %>% as.numeric()) |>
+  filter(!task_duration > 180, !(grepl('PENP-BS-*',location) & task_method != '1SPT')) |>
+  mutate(hour = lubridate::hour(recording_date_time),
+         year = lubridate::year(recording_date_time)) |>
+  group_by(location) |>
+  mutate(ct = n_distinct(year)) |>
+  ungroup() |>
+  filter(ct == 5) |>
+  filter(hour %in% c(4:7),
+         year == 2021)
+  
+  pei_occu_22 <- data |>
+    as_tibble() |>
+    filter(aru_task_status == "Transcribed") |>
+   filter(!grepl('BS|ASC|LXI',location)) |>
+  wt_tidy_species(remove = c("mammal","amphibian","abiotic","insect","unknown")) |>
+  left_join(guilds |> select(species_common_name, habitat_nesting)) |>
+  filter(habitat_nesting %in% c("CW","MW","OW","TSS")) |>
+  wt_replace_tmtt() |>
+  mutate(task_duration = gsub('s','',task_duration) %>% as.numeric()) |>
+  filter(!task_duration > 180, !(grepl('PENP-BS-*',location) & task_method != '1SPT')) |>
+  mutate(hour = lubridate::hour(recording_date_time),
+         year = lubridate::year(recording_date_time)) |>
+  group_by(location) |>
+  mutate(ct = n_distinct(year)) |>
+  ungroup() |>
+  filter(ct == 5) |>
+  filter(hour %in% c(4:7),
+         year == 2022)
+  
+   pei_occu_23 <- data |>
+    as_tibble() |>
+    filter(aru_task_status == "Transcribed") |>
+   filter(!grepl('BS|ASC|LXI',location)) |>
+  wt_tidy_species(remove = c("mammal","amphibian","abiotic","insect","unknown")) |>
+  left_join(guilds |> select(species_common_name, habitat_nesting)) |>
+  filter(habitat_nesting %in% c("CW","MW","OW","TSS")) |>
+  wt_replace_tmtt() |>
+  mutate(task_duration = gsub('s','',task_duration) %>% as.numeric()) |>
+  filter(!task_duration > 180, !(grepl('PENP-BS-*',location) & task_method != '1SPT')) |>
+  mutate(hour = lubridate::hour(recording_date_time),
+         year = lubridate::year(recording_date_time)) |>
+  group_by(location) |>
+  mutate(ct = n_distinct(year)) |>
+  ungroup() |>
+  filter(ct == 5) |>
+  filter(hour %in% c(4:7),
+         year == 2023)
 
-site_covariates <- pei_occu %>%
-  inner_join(., distance_to_coast) %>%
-  unique() %>%
-  distinct(location, .keep_all = T)
+site_covariates_19 <- pei_occu_19 |>
+  inner_join(distance_to_coast) |>
+  select(location, year, coast_dist) |>
+  distinct()
 
-occu_one <- wt_format_occupancy(pei_occu, siteCovs = site_covariates, species = "BTNW")
-occu_model <- occu(~ doy + hr + observer ~ coast_dist, occu_one)
-occ_fit <- predict(occu_model, data = site_covariates, type="state",interval="confidence")
+site_covariates_20 <- pei_occu_20 |>
+  inner_join(distance_to_coast) |>
+  select(location, year, coast_dist) |>
+  distinct()
 
-occ_graph <- occ_fit %>%
-   as_tibble() %>%
-   bind_cols(., site_covariates)
+site_covariates_21 <- pei_occu_21 |>
+  inner_join(distance_to_coast) |>
+  select(location, year, coast_dist) |>
+  distinct()
 
-occ_graph_all <- bind_rows(occ19, occ20, occ21, occ22, occ23) %>%
-  mutate(year = factor(year(recording_date_time))) %>%
-  select(Predicted:upper,year)
+site_covariates_22 <- pei_occu_22 |>
+  inner_join(distance_to_coast) |>
+  select(location, year, coast_dist) |>
+  distinct()
 
-ggplot(occ_graph_all, aes(x = year, y = Predicted, fill=year)) +
+site_covariates_23 <- pei_occu_23 |>
+  inner_join(distance_to_coast) |>
+  select(location, year, coast_dist) |>
+  distinct()
+
+occu_one_19 <- wt_format_occupancy(pei_occu_19, siteCovs = site_covariates_19, species = species_choice)
+occu_one_20 <- wt_format_occupancy(pei_occu_20, siteCovs = site_covariates_20, species = species_choice)
+occu_one_21 <- wt_format_occupancy(pei_occu_21, siteCovs = site_covariates_21, species = species_choice)
+occu_one_22 <- wt_format_occupancy(pei_occu_22, siteCovs = site_covariates_22, species = species_choice)
+occu_one_23 <- wt_format_occupancy(pei_occu_23, siteCovs = site_covariates_23, species = species_choice)
+
+occu_model_19 <- occu(~ doy + hr + observer ~ coast_dist, occu_one_19)
+occu_model_20  <- occu(~ doy + hr + observer ~ coast_dist, occu_one_20)
+occu_model_21 <- occu(~ doy + hr + observer ~ coast_dist, occu_one_21)
+occu_model_22 <- occu(~ doy + hr + observer ~ coast_dist, occu_one_22)
+occu_model_23 <- occu(~ doy + hr + observer ~ coast_dist, occu_one_23)
+
+
+occ_fit_19 <- predict(occu_model_19, data = site_covariates_19, type="state",interval="confidence")
+occ_fit_20 <- predict(occu_model_20, data = site_covariates_20, type="state",interval="confidence")
+occ_fit_21 <- predict(occu_model_21, data = site_covariates_21, type="state",interval="confidence")
+occ_fit_22 <- predict(occu_model_22, data = site_covariates_22, type="state",interval="confidence")
+occ_fit_23 <- predict(occu_model_23, data = site_covariates_23, type="state",interval="confidence")
+
+
+occ_graph_19 <- occ_fit_19 %>% as_tibble() %>% bind_cols(., site_covariates_19)
+occ_graph_20 <- occ_fit_20 %>% as_tibble() %>% bind_cols(., site_covariates_20)
+occ_graph_21 <- occ_fit_21 %>% as_tibble() %>% bind_cols(., site_covariates_21)
+occ_graph_22 <- occ_fit_22 %>% as_tibble() %>% bind_cols(., site_covariates_22)
+occ_graph_23 <- occ_fit_23 %>% as_tibble() %>% bind_cols(., site_covariates_23)
+
+occ_graph_all <- bind_rows(occ_graph_19, occ_graph_20, occ_graph_21, occ_graph_22, occ_graph_23)
+  
+occ_plot <- ggplot(occ_graph_all %>%
+         mutate(year = factor(year)) %>%
+  select(Predicted:upper,year), aes(x = year, y = Predicted, fill=year)) +
   geom_boxplot(alpha = 0.3) +
-  labs(title = "Predicted Occupancy change of BTNW",
+  labs(title = paste0("Predicted Occupancy change of ",species_choice),
        x = "Year",
        y = "Predicted Occupancy") +
   theme_bw() +
   scale_fill_viridis_d()
+  
+  return(occ_plot)
+  
+}
+
+occ_spp
+
+
 ```
+
+```{r}
+#| warning: false
+#| echo: false
+#| eval: false
+#| include: false
+
+revi_occ <- ss_occ_plot_loop(pei_main, "REVI")
+amre_occ <- ss_occ_plot_loop(pei_main, "AMRE")
+btnw_occ <- ss_occ_plot_loop(pei_main, "BTNW")
+nopa_occ <- ss_occ_plot_loop(pei_main, "NOPA")
+mawa_occ <- ss_occ_plot_loop(pei_main, "MAWA")
+swth_occ <- ss_occ_plot_loop(pei_main, "SWTH")
+alfl_occ <- ss_occ_plot_loop(pei_main, "ALFL")
+yrwa_occ <- ss_occ_plot_loop(pei_main, "YRWA")
+baww_occ <- ss_occ_plot_loop(pei_main, "BAWW")
+bhvi_occ <- ss_occ_plot_loop(pei_main, "BHVI")
+blja_occ <- ss_occ_plot_loop(pei_main, "BLJA")
+chsp_occ <- ss_occ_plot_loop(pei_main, "CHSP")
+btbw_occ <- ss_occ_plot_loop(pei_main, "BTBW")
+blbw_occ <- ss_occ_plot_loop(pei_main, "BLBW")
+gcki_occ <- ss_occ_plot_loop(pei_main, "GCKI")
+mowa_occ <- ss_occ_plot_loop(pei_main, "MOWA")
+heth_occ <- ss_occ_plot_loop(pei_main, "HETH")
+cswa_occ <- ss_occ_plot_loop(pei_main, "CSWA")
+eawp_occ <- ss_occ_plot_loop(pei_main, "EAWP")
+ybsa_occ <- ss_occ_plot_loop(pei_main, "YBSA")
+
+```
+
+```{r}
+#| warning: false
+#| echo: false
+#| eval: true
+#| include: false
+#| fig-width: 9
+#| fig-height: 9
+#| fig-cap: Predicted single season occupancy from forest species with high detections. 
+#| label: fig-spp-occ
+
+
+occ_spp |> select(species_code) |> slice(1:20) |> pull()
+
+ggarrange(revi_occ, amre_occ, btnw_occ, nopa_occ, mawa_occ, swth_occ, alfl_occ, yrwa_occ, baww_occ, bhvi_occ,
+          blja_occ, chsp_occ, btbw_occ, blbw_occ, gcki_occ, mowa_occ, heth_occ, cswa_occ, eawp_occ, ybsa_occ)
+
+```
+
 
 ```{r}
 #| warning: false
@@ -519,7 +864,7 @@ ggplot(occ_graph_all, aes(x = year, y = Predicted, fill=year)) +
 #| results: hide
 #| message: false
 
-oast_model <- glm(COYE ~ recording_date_time + coast_dist, offset=offstz$COYE.off, data=pei_wide_plus)
+coast_model <- glm(COYE ~ recording_date_time + coast_dist, offset=offstz$COYE.off, data=pei_wide_plus)
 
 pei_wide <- pei_main %>%
   wt_tidy_species(., remove = c("mammal","amphibian","abiotic","insect","unknown")) %>%

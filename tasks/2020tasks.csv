@@ -1,0 +1,153 @@
+﻿location,recordingDate,method,taskLength,status,transcriber,rain,wind,industryNoise,otherNoise,audioQuality,taskComments,internal_task_id
+PENP-1-4, 2020-07-09 07:31:00,1SPM,180,Transcribed,Christopher Moser-Purdy,None,None,None,None,None,,146919
+PENP-2-3, 2020-06-23 05:21:00,1SPM,180,Transcribed,Alana Demko,None,Light,None,Light,None,,146666
+PENP-1-1, 2020-07-15 06:36:00,1SPM,180,Transcribed,Steve Enid,Light,Light,None,Moderate,Both Sides Extra Static,,146700
+PENP-4-4, 2020-06-17 06:18:00,1SPM,180,Transcribed,Alana Demko,None,Light,None,Light,None,,146642
+PENP-3-1, 2020-07-15 06:35:00,1SPM,180,Bad Weather,Brandon Law,None,Heavy,None,None,None,,146658
+PENP-1-1, 2020-07-24 05:46:00,1SPM,180,Transcribed,Alana Demko,Moderate,None,None,None,None,,146691
+PENP-3-5, 2020-07-21 06:41:00,1SPM,180,Transcribed,Brandon Law,None,Light,None,None,None,,146679
+PENP-2-3, 2020-06-30 08:24:00,1SPM,180,Transcribed,Christopher Moser-Purdy,None,None,None,Heavy,None,,146967
+PENP-3-2, 2020-07-05 05:27:00,1SPM,180,Transcribed,Brandon Law,None,Light,None,None,None,,146958
+PENP-3-6, 2020-07-24 07:45:00,1SPM,180,Transcribed,Brandon Law,None,None,None,None,None,,146979
+PENP-4-2, 2020-07-08 08:27:00,1SPM,180,Transcribed,Alana Demko,None,Moderate,None,Moderate,None,,146962
+PENP-4-4, 2020-06-19 05:18:00,1SPM,180,Transcribed,Steve Enid,None,Light,None,Light,None,,146988
+PENP-2-3, 2020-06-29 08:23:00,1SPM,180,Transcribed,Alana Demko,None,Moderate,None,Moderate,None,,146994
+PENP-3-6, 2020-07-18 06:38:00,1SPM,180,Transcribed,Alana Demko,Light,None,None,Light,None,,147005
+PENP-4-1, 2020-07-17 07:36:00,1SPM,180,Transcribed,Brandon Law,None,None,None,None,None,,147016
+PENP-4-1, 2020-07-20 04:39:00,1SPM,180,Transcribed,Christopher Moser-Purdy,None,Moderate,None,None,None,,147021
+PENP-3-1, 2020-07-22 07:42:00,1SPM,180,Transcribed,Brandon Law,None,Moderate,Light,None,None,,147036
+PENP-1-4, 2020-07-04 04:27:00,1SPM,180,Transcribed,Brandon Law,None,None,None,Light,None,,147039
+PENP-1-4, 2020-07-04 06:27:00,1SPM,180,Transcribed,Christopher Moser-Purdy,None,None,None,Light,None,,146750
+PENP-1-1, 2020-07-16 06:37:00,1SPM,180,Transcribed,Steve Enid,None,Moderate,None,Moderate,Both Sides Extra Static,,146934
+PENP-4-1, 2020-07-20 05:39:00,1SPM,180,Transcribed,Christopher Moser-Purdy,None,Moderate,None,None,None,,146924
+PENP-4-3, 2020-06-23 04:19:00,1SPM,180,Transcribed,Alana Demko,Light,Light,None,None,None,,146915
+PENP-1-4, 2020-07-13 08:34:00,1SPM,180,Transcribed,Alana Demko,Light,Light,None,Moderate,None,,146950
+PENP-3-6, 2020-07-16 04:36:00,1SPM,180,Transcribed,Brandon Law,None,Light,None,Light,None,,146656
+PENP-1-2, 2020-06-30 06:24:00,1SPM,180,Transcribed,Steve Enid,None,Moderate,None,Moderate,None,wind and surf noise,146926
+PENP-1-2, 2020-07-02 07:26:00,1SPM,180,Transcribed,Alana Demko,None,Moderate,None,Moderate,None,,146702
+PENP-1-1, 2020-07-24 04:46:00,1SPM,180,Bad Weather,Steve Enid,,,,,,,146898
+PENP-4-1, 2020-07-16 06:35:00,1SPM,180,Transcribed,Alex MacPhail,None,None,None,Moderate,None,,146645
+PENP-4-1, 2020-07-24 08:43:00,1SPM,180,Transcribed,Christopher Moser-Purdy,None,Light,None,None,None,,146678
+PENP-1-2, 2020-06-27 05:23:00,1SPM,180,Transcribed,Alana Demko,None,None,None,Light,None,,146712
+PENP-1-4, 2020-07-07 04:29:00,1SPM,180,Transcribed,Alex MacPhail,None,None,None,None,None,,146695
+PENP-4-2, 2020-07-07 04:26:00,1SPM,180,Transcribed,Christopher Moser-Purdy,None,None,None,None,None,,146701
+PENP-4-3, 2020-06-25 05:19:00,1SPM,180,Transcribed,Steve Enid,None,Light,None,Light,None,,146777
+PENP-4-2, 2020-07-04 06:24:00,1SPM,180,Transcribed,Christopher Moser-Purdy,None,Moderate,None,None,Both Sides Extra Static,,146755
+PENP-4-4, 2020-06-15 06:18:00,1SPM,180,Transcribed,Brandon Law,None,Light,None,None,None,,146832
+PENP-4-4, 2020-06-10 07:18:00,1SPM,180,Transcribed,Brandon Law,None,Light,None,None,None,"",146860
+PENP-4-2, 2020-07-06 07:26:00,1SPM,180,Transcribed,Alana Demko,Moderate,None,None,Moderate,None,,146874
+PENP-2-3, 2020-07-01 06:25:00,1SPM,180,Transcribed,Alex MacPhail,None,None,None,Heavy,None,,146854
+PENP-3-1, 2020-07-21 07:41:00,1SPM,180,Transcribed,Christopher Moser-Purdy,None,Moderate,None,None,None,,146785
+PENP-4-1, 2020-07-17 06:36:00,1SPM,180,Transcribed,Steve Enid,None,None,None,None,None,,146923
+PENP-3-1, 2020-07-24 06:45:00,1SPM,180,Transcribed,Alex MacPhail,None,Light,None,None,None,,146953
+PENP-1-1, 2020-07-20 08:41:00,1SPM,180,Transcribed,Alex MacPhail,None,Moderate,None,None,None,,146669
+PENP-4-3, 2020-06-23 07:19:00,1SPM,180,Transcribed,Steve Enid,None,Light,None,Light,None,,146746
+PENP-3-2, 2020-07-09 08:30:00,1SPM,180,Transcribed,Brandon Law,None,None,None,None,None,,146992
+PENP-1-1, 2020-07-24 08:46:00,1SPM,180,Transcribed,Brandon Law,Light,Light,None,None,None,,146895
+PENP-1-1, 2020-07-20 06:41:00,1SPM,180,Bad Weather,Brandon Law,None,Heavy,None,None,None,,146982
+PENP-4-3, 2020-06-25 04:19:00,1SPM,180,Transcribed,Steve Enid,None,Moderate,None,Moderate,None,,146870
+PENP-4-3, 2020-06-30 07:22:00,1SPM,180,Transcribed,Alana Demko,Light,None,None,Light,None,,146831
+PENP-3-1, 2020-07-18 05:38:00,1SPM,180,Transcribed,Steve Enid,None,Light,None,Light,None,,146827
+PENP-1-1, 2020-07-23 04:45:00,1SPM,180,Transcribed,Brandon Law,None,Light,None,None,None,,146709
+PENP-4-1, 2020-07-20 07:39:00,1SPM,180,Transcribed,Alana Demko,None,Moderate,None,Light,None,,146818
+PENP-1-1, 2020-07-21 05:42:00,1SPM,180,Transcribed,Steve Enid,None,Moderate,None,Moderate,None,,147008
+PENP-4-4, 2020-06-16 08:18:00,1SPM,180,Transcribed,Alex MacPhail,None,None,None,None,None,,146718
+PENP-3-5, 2020-07-23 04:55:15,1SPM,180,Transcribed,Alana Demko,Light,None,None,None,None,,146643
+PENP-1-1, 2020-07-22 05:43:00,1SPM,180,Transcribed,Christopher Moser-Purdy,None,None,None,Light,None,,146880
+PENP-4-4, 2020-06-13 05:18:00,1SPM,180,Transcribed,Christopher Moser-Purdy,None,None,None,Light,None,,146778
+PENP-1-4, 2020-07-05 08:28:00,1SPM,180,Transcribed,Steve Enid,None,Light,None,Light,None,,146909
+PENP-3-2, 2020-07-10 06:31:00,1SPM,180,Transcribed,Brandon Law,None,None,None,None,None,,146959
+PENP-4-4, 2020-06-18 04:18:00,1SPM,180,Transcribed,Christopher Moser-Purdy,None,Moderate,None,Light,None,,146805
+PENP-3-5, 2020-07-24 05:45:00,1SPM,180,Transcribed,Brandon Law,None,None,None,None,None,,146859
+PENP-2-3, 2020-07-01 07:25:00,1SPM,180,Transcribed,Brandon Law,Moderate,None,None,Moderate,None,,146732
+PENP-1-4, 2020-07-13 05:34:00,1SPM,180,Transcribed,Christopher Moser-Purdy,None,Light,None,None,None,,146989
+PENP-3-1, 2020-07-23 04:44:00,1SPM,180,Transcribed,Christopher Moser-Purdy,None,Light,None,None,None,,146901
+PENP-4-1, 2020-07-19 07:38:00,1SPM,180,Transcribed,Brandon Law,None,None,None,None,None,,146974
+PENP-3-2, 2020-07-09 06:30:00,1SPM,180,Transcribed,Alana Demko,Light,None,None,Light,None,,146665
+PENP-1-1, 2020-07-19 04:40:00,1SPM,180,Transcribed,Alana Demko,Light,None,None,Light,None,,146928
+PENP-3-2, 2020-07-06 04:27:00,1SPM,180,Transcribed,Alana Demko,Light,None,None,Light,None,,146897
+PENP-3-5, 2020-07-20 06:40:00,1SPM,180,Transcribed,Alana Demko,None,Moderate,None,None,None,,146983
+PENP-3-6, 2020-07-23 08:44:00,1SPM,180,Transcribed,Alana Demko,Light,Moderate,None,Moderate,None,,146907
+PENP-3-2, 2020-07-11 05:31:00,1SPM,180,Transcribed,Steve Enid,Light,Light,Light,Light,None,,147019
+PENP-1-2, 2020-06-27 08:23:00,1SPM,180,Transcribed,Brandon Law,None,Moderate,None,None,None,,146813
+PENP-1-2, 2020-06-25 06:22:00,1SPM,180,Transcribed,Brandon Law,None,Moderate,None,None,None,,147013
+PENP-3-2, 2020-07-08 08:29:00,1SPM,180,Transcribed,Christopher Moser-Purdy,None,Light,None,None,None,,146869
+PENP-3-5, 2020-07-23 08:44:00,1SPM,180,Transcribed,Alana Demko,Light,Light,None,None,None,,146716
+PENP-3-5, 2020-07-16 05:36:00,1SPM,180,Transcribed,Alana Demko,None,Moderate,None,None,None,,146765
+PENP-4-4, 2020-06-12 08:18:00,1SPM,180,Transcribed,Steve Enid,None,Light,None,Light,None,,146969
+PENP-3-6, 2020-07-24 04:45:00,1SPM,180,Transcribed,Steve Enid,Moderate,Light,None,Moderate,None,,146889
+PENP-3-2, 2020-07-09 07:30:00,1SPM,180,Transcribed,Steve Enid,None,None,None,None,None,good recording,146879
+PENP-1-1, 2020-07-19 07:40:00,1SPM,180,Transcribed,Steve Enid,None,Light,Light,Light,None,,146722
+PENP-3-6, 2020-07-21 06:41:00,1SPM,180,Transcribed,Alana Demko,Light,Light,None,Light,None,,146863
+PENP-3-5, 2020-07-21 07:41:00,1SPM,180,Transcribed,Alana Demko,Light,None,None,Light,None,,146886
+PENP-2-3, 2020-07-02 08:25:00,1SPM,180,Transcribed,Christopher Moser-Purdy,None,Moderate,None,None,None,,146724
+PENP-4-1, 2020-07-19 08:38:00,1SPM,180,Transcribed,Steve Enid,None,Light,None,Light,None,good recording - loud Cicada's sometimes interfere with birds,146881
+PENP-3-5, 2020-07-24 07:45:00,1SPM,180,Transcribed,Steve Enid,None,None,None,None,None,good recording,146941
+PENP-4-2, 2020-07-07 05:26:00,1SPM,180,Transcribed,Brandon Law,None,None,None,None,None,,146906
+PENP-4-4, 2020-06-13 07:18:00,1SPM,180,Transcribed,Brandon Law,None,None,None,None,None,,147025
+PENP-3-5, 2020-07-19 06:39:00,1SPM,180,Transcribed,Steve Enid,None,None,None,None,None,very good recording !,146900
+PENP-1-4, 2020-07-12 05:33:00,1SPM,180,Transcribed,Alana Demko,None,None,None,Moderate,None,,146990
+PENP-3-6, 2020-07-17 06:37:00,1SPM,180,Transcribed,Steve Enid,None,Light,Light,Light,None,traffic noise,146653
+PENP-3-6, 2020-07-20 05:40:00,1SPM,180,Transcribed,Alana Demko,None,Moderate,None,Moderate,None,,146766
+PENP-3-2, 2020-07-12 04:32:00,1SPM,180,Transcribed,Christopher Moser-Purdy,None,Moderate,None,None,None,,146829
+PENP-3-5, 2020-07-18 04:38:00,1SPM,180,Transcribed,Brandon Law,Light,None,None,None,None,,146893
+PENP-3-1, 2020-07-15 05:35:00,1SPM,180,Transcribed,Alana Demko,None,Moderate,None,None,None,,146951
+PENP-4-4, 2020-06-17 07:18:00,1SPM,180,Transcribed,Brandon Law,None,Moderate,None,None,None,,146882
+PENP-3-5, 2020-07-22 04:42:00,1SPM,180,Transcribed,Christopher Moser-Purdy,None,None,None,Light,None,,146655
+PENP-3-5, 2020-07-17 07:37:00,1SPM,180,Transcribed,Alex MacPhail,None,None,None,None,None,,146792
+PENP-4-4, 2020-06-10 04:18:00,1SPM,180,Transcribed,Steve Enid,None,Light,None,Moderate,None,constant background noise - maybe the surf ??,147032
+PENP-1-4, 2020-07-08 06:30:00,1SPM,180,Transcribed,Alana Demko,Light,Light,None,Moderate,None,,146738
+PENP-2-3, 2020-06-30 04:24:00,1SPM,180,Transcribed,Steve Enid,None,Moderate,None,Moderate,None,wind/water noise,146956
+PENP-4-3, 2020-06-24 08:19:00,1SPM,180,Transcribed,Steve Enid,None,Light,None,Light,None,good recording !,146966
+PENP-1-2, 2020-06-24 08:22:00,1SPM,180,Transcribed,Brandon Law,None,Moderate,None,None,None,,146984
+PENP-1-2, 2020-06-27 07:23:00,1SPM,180,Transcribed,Alana Demko,None,Moderate,None,Moderate,None,,147014
+PENP-3-2, 2020-07-12 06:32:00,1SPM,180,Transcribed,Christopher Moser-Purdy,None,Light,None,None,None,,146913
+PENP-3-5, 2020-07-17 06:37:00,1SPM,180,Transcribed,Brandon Law,None,None,None,None,None,,146871
+PENP-3-5, 2020-07-15 08:35:00,1SPM,180,Bad Weather,Alana Demko,None,Heavy,None,None,None,heavy wind; not transcribed,146939
+PENP-4-2, 2020-07-05 06:25:00,1SPM,180,Transcribed,Alana Demko,None,Moderate,None,Moderate,None,,147034
+PENP-3-6, 2020-07-23 04:44:00,1SPM,180,Transcribed,Steve Enid,Light,Light,None,Light,None,,146911
+PENP-4-2, 2020-07-07 06:26:00,1SPM,180,Transcribed,Brandon Law,None,None,None,None,None,,147003
+PENP-1-2, 2020-06-26 06:22:00,1SPM,180,Transcribed,Steve Enid,None,Light,None,Light,None,,146802
+PENP-4-3, 2020-07-01 06:22:00,1SPM,180,Transcribed,Brandon Law,Moderate,None,None,None,None,,146787
+PENP-2-3, 2020-06-25 05:22:00,1SPM,180,Transcribed,Alana Demko,None,Light,None,Moderate,None,,146971
+PENP-3-1, 2020-07-23 08:44:00,1SPM,180,Transcribed,Christopher Moser-Purdy,None,Light,None,None,None,,146891
+PENP-4-3, 2020-06-25 06:19:00,1SPM,180,Transcribed,Alex MacPhail,None,Light,None,None,None,,146933
+PENP-4-2, 2020-07-10 04:29:00,1SPM,180,Transcribed,Brandon Law,None,None,None,None,None,,146938
+PENP-4-1, 2020-07-19 05:38:00,1SPM,180,Transcribed,Steve Enid,None,None,None,None,None,,146673
+PENP-3-6, 2020-07-19 07:39:00,1SPM,180,Transcribed,Alana Demko,Light,None,None,Light,None,,146853
+PENP-1-4, 2020-07-10 07:32:00,1SPM,180,Transcribed,Steve Enid,None,None,None,None,None,,146887
+PENP-4-2, 2020-07-04 07:24:00,1SPM,180,Transcribed,Steve Enid,None,Moderate,None,Moderate,None,windy,146857
+PENP-3-6, 2020-07-19 05:39:00,1SPM,180,Transcribed,Brandon Law,None,None,None,None,None,,146916
+PENP-1-1, 2020-07-15 08:36:00,1SPM,180,Bad Weather,Brandon Law,None,Heavy,None,None,None,,147006
+PENP-3-6, 2020-07-16 08:36:00,1SPM,180,Transcribed,Brandon Law,None,Light,Light,None,None,,146640
+PENP-1-1, 2020-07-22 07:43:00,1SPM,180,Transcribed,Christopher Moser-Purdy,None,Light,None,None,None,,146957
+PENP-4-4, 2020-06-15 08:18:00,1SPM,180,Transcribed,Alana Demko,None,None,None,Moderate,None,,146917
+PENP-4-1, 2020-07-18 05:37:00,1SPM,180,Transcribed,Brandon Law,Light,None,None,None,None,,146927
+PENP-1-4, 2020-07-11 04:58:22,1SPM,180,Transcribed,Christopher Moser-Purdy,None,None,None,None,None,,147033
+PENP-4-1, 2020-07-17 04:36:00,1SPM,180,Transcribed,Alana Demko,Light,None,None,Moderate,None,,146809
+PENP-3-1, 2020-07-22 08:42:00,1SPM,180,Transcribed,Christopher Moser-Purdy,None,Light,None,Light,None,,146858
+PENP-3-2, 2020-07-12 05:32:00,1SPM,180,Transcribed,Alana Demko,None,Light,None,Light,None,,146735
+PENP-4-3, 2020-06-25 08:19:00,1SPM,180,Transcribed,Steve Enid,None,Light,None,Light,None,,146867
+PENP-1-4, 2020-07-11 08:33:00,1SPM,180,Transcribed,Brandon Law,None,Light,None,None,None,,146685
+PENP-4-2, 2020-07-09 08:28:00,1SPM,180,Transcribed,Brandon Law,None,None,None,None,None,,146762
+PENP-4-4, 2020-06-12 04:18:00,1SPM,180,Transcribed,Alana Demko,Light,Moderate,None,Light,None,,146961
+PENP-3-1, 2020-07-20 06:40:00,1SPM,180,Transcribed,Steve Enid,Light,Moderate,None,Moderate,None,windy,146929
+PENP-1-2, 2020-06-30 08:24:00,1SPM,180,Transcribed,Alana Demko,None,Light,None,Moderate,None,,146789
+PENP-4-3, 2020-06-26 07:20:00,1SPM,180,Transcribed,Alana Demko,Light,Light,None,Light,None,,146688
+PENP-4-2, 2020-07-05 07:25:00,1SPM,180,Transcribed,Steve Enid,Light,Moderate,None,Moderate,None,,146945
+PENP-1-2, 2020-06-29 05:24:00,1SPM,180,Transcribed,Alana Demko,None,Light,None,Moderate,None,,146947
+PENP-2-3, 2020-06-23 06:21:00,1SPM,180,Transcribed,Brandon Law,None,None,None,None,None,,146949
+PENP-1-4, 2020-07-11 06:33:00,1SPM,180,Transcribed,Christopher Moser-Purdy,None,None,None,Light,None,,146978
+PENP-1-4, 2020-07-06 05:28:00,1SPM,180,Transcribed,Brandon Law,Moderate,None,None,None,None,,146970
+PENP-3-6, 2020-07-15 08:35:00,1SPM,180,Transcribed,Steve Enid,Light,Moderate,None,Moderate,None,,146977
+PENP-1-4, 2020-07-05 07:28:00,1SPM,180,Transcribed,Steve Enid,None,Light,Light,Light,None,traffic noise,146998
+PENP-1-2, 2020-07-02 05:26:00,1SPM,180,Transcribed,Christopher Moser-Purdy,None,Light,None,None,None,,147000
+PENP-2-3, 2020-06-25 04:22:00,1SPM,180,Transcribed,Steve Enid,None,Light,None,Light,None,,147001
+PENP-4-1, 2020-07-16 08:35:00,1SPM,180,Transcribed,Brandon Law,None,Moderate,None,None,None,,146995
+PENP-4-4, 2020-06-15 05:18:00,1SPM,180,Transcribed,Christopher Moser-Purdy,None,None,None,Light,None,,147010
+PENP-3-2, 2020-07-08 07:29:00,1SPM,180,Transcribed,Alana Demko,None,Light,None,Moderate,None,,147026
+PENP-4-2, 2020-07-06 04:26:00,1SPM,180,Transcribed,Brandon Law,None,Light,None,None,None,,147023
+PENP-2-3, 2020-06-27 05:22:00,1SPM,180,Transcribed,Brandon Law,None,None,None,None,None,,147027
+PENP-2-3, 2020-06-24 07:21:00,1SPM,180,Transcribed,Alana Demko,None,None,None,Light,None,,147037
+PENP-2-3, 2020-06-28 07:23:00,1SPM,180,Transcribed,Christopher Moser-Purdy,None,Light,None,None,None,,146935
+PENP-3-1, 2020-07-17 05:37:00,1SPM,180,Transcribed,Christopher Moser-Purdy,None,Light,None,None,None,,146946

@@ -1,0 +1,92 @@
+﻿location,recordingDate,method,taskLength,status,transcriber,rain,wind,industryNoise,otherNoise,audioQuality,taskComments,internal_task_id
+PENP-4-4, 2019-07-14 05:32:00,1SPM,180,Transcribed,Brandon Law,None,None,None,None,None,"
+",64161
+PENP-4-3, 2019-06-15 04:17:00,1SPM,180,Transcribed,Alex MacPhail,None,None,None,None,None,,162244
+PENP-1-1, 2019-06-01 04:25:00,1SPM,180,Transcribed,Christopher Moser-Purdy,None,None,None,None,Other issues,Sounds like it was put through a high pass filter. Really difficult to discern sounds,64098
+PENP-1-1, 2019-06-02 06:24:00,1SPM,180,Transcribed,Jillian Slater,None,Light,Light,None,None,,64095
+PENP-1-1, 2019-06-08 04:22:00,1SPM,180,Transcribed,Brandon Law,Light,None,None,Light,None,,64094
+PENP-1-3, 2019-07-25 05:46:00,1SPM,180,Transcribed,Christopher Wagner,None,None,None,Moderate,None,,64104
+PENP-1-3, 2019-07-05 08:27:00,1SPM,180,Transcribed,Jillian Slater,None,None,Moderate,None,None,,64100
+PENP-2-3, 2019-07-02 06:25:00,1SPM,180,Transcribed,Brandon Law,None,None,None,Heavy,None,,64115
+PENP-3-1, 2019-05-28 05:26:00,1SPM,180,Transcribed,Connor Charchuk,None,Light,None,None,None,,64123
+PENP-3-2, 2019-06-01 08:24:00,1SPM,180,Transcribed,Christopher Moser-Purdy,None,None,None,None,Both Sides Extra Static,Person talking in first minute and last minute and playing around with ARU,64126
+PENP-3-2, 2019-06-08 06:20:00,1SPM,180,Transcribed,Connor Charchuk,None,None,None,Light,None,,64128
+PENP-3-2, 2019-06-06 05:21:00,1SPM,180,Transcribed,Christopher Moser-Purdy,None,Moderate,None,None,None,,64130
+PENP-3-4, 2019-07-12 06:32:00,1SPM,180,Transcribed,Scott Wilson,None,None,None,Light,None,,64132
+PENP-4-2, 2019-06-04 04:20:00,1SPM,180,Transcribed,Connor Charchuk,None,None,None,None,None,,64148
+PENP-3-4, 2019-07-15 04:34:00,1SPM,180,Transcribed,Christopher Wagner,None,None,None,Moderate,None,,64134
+PENP-3-4, 2019-07-13 06:33:00,1SPM,180,Transcribed,Jillian Slater,None,Light,None,None,None,,64139
+PENP-4-3, 2019-06-15 05:17:00,1SPM,180,Transcribed,Scott Wilson,None,None,None,None,None,Very light/diffuse wind.,64158
+PENP-1-1, 2019-06-09 05:21:00,1SPM,180,Transcribed,Scott Wilson,None,None,None,None,None,Chronic traffic noise from highway.,64097
+PENP-3-4, 2019-07-05 06:26:00,1SPM,180,Transcribed,Alana Demko,None,None,None,Light,None,,64137
+PENP-1-3, 2019-07-22 08:43:00,1SPM,180,Transcribed,Alana Demko,None,None,None,Moderate,None,,64107
+PENP-3-2, 2019-06-11 06:20:00,1SPM,180,Transcribed,Brandon Law,None,None,None,None,None,,64125
+PENP-3-1, 2019-05-29 04:26:00,1SPM,180,Transcribed,Scott Wilson,None,None,None,None,None,,64116
+PENP-4-2, 2019-06-05 08:20:00,1SPM,180,Transcribed,Scott Wilson,None,None,None,None,None,"Could be LINO 1, but mostly traffic noise.",64150
+PENP-4-4, 2019-07-12 05:30:00,1SPM,180,Transcribed,Scott Wilson,None,None,None,None,None,,64159
+PENP-4-3, 2019-06-16 07:17:00,1SPM,180,Transcribed,Jillian Slater,None,Light,None,None,Both Sides Extra Static,,64156
+PENP-3-4, 2019-07-20 05:39:00,1SPM,180,Transcribed,Connor Charchuk,None,None,None,None,None,,64138
+PENP-1-1, 2019-06-05 08:23:00,1SPM,180,Transcribed,Alex MacPhail,None,Light,Light,None,None,AMRE / YEWA dense,64091
+PENP-4-4, 2019-07-02 06:22:00,1SPM,180,Transcribed,Connor Charchuk,None,None,None,None,None,,64160
+PENP-4-2, 2019-06-12 06:18:00,1SPM,180,Bad Weather,Brandon Law,None,Heavy,None,None,None,,64153
+PENP-4-2, 2019-06-10 08:18:00,1SPM,180,Transcribed,Scott Wilson,None,None,None,None,None,Could also have LIBA due to ocean? Not sure of abiotic noise.,64149
+PENP-4-4, 2019-07-03 07:23:00,1SPM,180,Transcribed,Christopher Wagner,None,Moderate,None,None,None,,64166
+PENP-1-3, 2019-08-11 07:06:00,1SPM,180,Transcribed,Connor Charchuk,None,Light,None,None,None,,64106
+PENP-4-1, 2019-05-21 04:31:00,1SPM,180,Bad Weather,Brandon Law,Heavy,None,None,None,None,,64140
+PENP-3-4, 2019-07-11 04:31:00,1SPM,180,Transcribed,Jillian Slater,None,Moderate,None,None,None,,64135
+PENP-3-4, 2019-07-15 08:34:00,1SPM,180,Transcribed,Scott Wilson,None,Light,None,None,None,Not sure what to call background noise. Wind?,64133
+PENP-1-1, 2019-06-05 08:23:00,1SPM,180,Transcribed,Scott Wilson,None,None,None,None,None,,64086
+PENP-4-1, 2019-05-15 04:38:00,1SPM,180,Transcribed,Jillian Slater,None,Light,Moderate,None,None,,64143
+PENP-4-4, 2019-07-16 05:34:00,1SPM,180,Transcribed,Christopher Wagner,Moderate,None,None,None,None,,64163
+PENP-4-1, 2019-05-28 03:25:00,1SPM,180,Transcribed,Christopher Moser-Purdy,None,None,None,Light,None,,64144
+PENP-4-3, 2019-06-14 07:18:00,1SPM,180,Bad Weather,Christopher Moser-Purdy,None,Heavy,None,None,None,,64157
+PENP-3-2, 2019-06-10 07:20:00,1SPM,180,Transcribed,Connor Charchuk,None,None,None,None,None,,64129
+PENP-4-1, 2019-05-17 05:35:00,1SPM,180,Transcribed,Connor Charchuk,None,None,Light,None,None,,64141
+PENP-1-3, 2019-08-03 04:56:00,1SPM,180,Transcribed,Jillian Slater,None,Light,Moderate,None,None,,64105
+PENP-3-2, 2019-06-04 05:22:00,1SPM,180,Transcribed,Christopher Wagner,None,None,None,Light,None,,64127
+PENP-3-1, 2019-05-28 04:26:00,1SPM,180,Transcribed,Brandon Law,None,None,None,None,None,,64118
+PENP-1-3, 2019-07-16 08:36:00,1SPM,180,Transcribed,Christopher Wagner,None,None,None,Moderate,None,,64101
+PENP-4-1, 2019-05-16 04:37:00,1SPM,180,Transcribed,Brandon Law,Light,None,None,None,None,,64147
+PENP-4-2, 2019-06-01 06:22:00,1SPM,180,Transcribed,Christopher Moser-Purdy,None,None,None,Light,None,,64152
+PENP-2-3, 2019-07-03 05:25:00,1SPM,180,Transcribed,Brandon Law,None,Light,None,Heavy,None,,64114
+PENP-4-2, 2019-06-06 04:20:00,1SPM,180,Transcribed,Brandon Law,None,None,Light,None,None,,64155
+PENP-1-1, 2019-06-04 07:23:00,1SPM,180,Transcribed,Jillian Slater,None,None,None,None,None,,64096
+PENP-3-1, 2019-04-16 08:23:00,1SPM,180,Transcribed,Jillian Slater,None,None,None,Heavy,Other issues,Not sure this happened outside...,64120
+PENP-1-1, 2019-06-05 08:23:00,1SPM,180,Transcribed,Jillian Slater,None,None,Light,None,None,,64089
+PENP-2-3, 2019-06-13 08:20:00,1SPM,180,Transcribed,Jillian Slater,None,Moderate,None,Moderate,None,,64109
+PENP-4-4, 2019-07-14 08:32:00,1SPM,180,Transcribed,Jillian Slater,None,Light,None,None,None,,64165
+PENP-3-1, 2019-05-26 06:28:00,1SPM,180,Transcribed,Connor Charchuk,None,None,None,None,None,,64122
+PENP-3-1, 2019-05-28 08:26:00,1SPM,180,Transcribed,Christopher Wagner,None,None,None,Moderate,None,,64119
+PENP-3-2, 2019-06-06 08:21:00,1SPM,180,Transcribed,Scott Wilson,Moderate,None,None,None,None,Rain relatively strong but activity still high.,64124
+PENP-1-3, 2019-08-02 05:55:00,1SPM,180,Transcribed,Christopher Moser-Purdy,None,None,None,Moderate,None,,64103
+PENP-4-1, 2019-05-28 05:25:00,1SPM,180,Transcribed,Christopher Moser-Purdy,None,None,Moderate,None,None,,64145
+PENP-4-2, 2019-05-31 07:23:00,1SPM,180,Transcribed,Jillian Slater,None,Moderate,Moderate,None,None,,64154
+PENP-4-2, 2019-06-01 05:22:00,1SPM,180,Transcribed,Jillian Slater,None,None,Light,None,None,,64151
+PENP-1-1, 2019-06-01 05:25:00,1SPM,180,Transcribed,Scott Wilson,None,None,None,None,None,Chronic traffic noise.,64099
+PENP-1-1, 2019-06-12 04:21:00,1SPM,180,Bad Weather,Scott Wilson,,,,,,,64093
+PENP-4-4, 2019-07-13 08:31:00,1SPM,180,Transcribed,Scott Wilson,None,Light,None,None,None,,64162
+PENP-1-1, 2019-06-05 08:23:00,1SPM,180,Transcribed,Brandon Law,None,None,None,None,None,,64088
+PENP-3-1, 2019-05-27 08:27:00,1SPM,180,Transcribed,Jillian Slater,None,Light,None,None,None,,64117
+PENP-1-1, 2019-06-05 08:23:00,1SPM,180,Transcribed,Christopher Moser-Purdy,None,Light,None,None,None,,64090
+PENP-3-4, 2019-07-17 08:36:00,1SPM,180,Transcribed,Scott Wilson,None,Moderate,None,None,None,Wind is consistently moderate. Changed to bad weather. ,64136
+PENP-2-3, 2019-06-27 05:22:00,1SPM,180,Transcribed,Connor Charchuk,None,None,None,Light,None,,64112
+PENP-1-3, 2019-07-04 05:26:00,1SPM,180,Transcribed,Jillian Slater,None,None,Moderate,None,None,,64102
+PENP-3-2, 2019-06-08 08:20:00,1SPM,180,Transcribed,Scott Wilson,None,None,None,Moderate,None,Not sure how to note background noise.,64131
+PENP-3-1, 2019-05-25 06:29:00,1SPM,180,Transcribed,Tyne Baker,None,None,None,Moderate,None,,64121
+PENP-4-1, 2019-05-21 06:31:00,1SPM,180,Transcribed,S Shappas,Light,None,None,None,None,,64146
+PENP-2-3, 2019-06-26 06:22:00,1SPM,180,Transcribed,Jillian Slater,None,Light,None,None,None,,64113
+PENP-2-3, 2019-06-26 05:22:00,1SPM,180,Transcribed,Jillian Slater,None,None,None,None,None,,64110
+PENP-4-1, 2019-05-15 06:38:00,1SPM,180,Transcribed,Brandon Law,None,None,None,Moderate,None,,64142
+PENP-2-3, 2019-07-02 04:25:00,1SPM,180,Transcribed,Brandon Law,None,None,None,Heavy,None,NO DETECTIONS,64111
+PENP-1-1, 2019-06-05 08:23:00,1SPM,180,Transcribed,Connor Charchuk,None,None,None,None,None,,64092
+PENP-1-1, 2019-06-05 08:23:00,1SPM,180,Transcribed,Christopher Wagner,None,None,None,Light,None,,64087
+PENP-4-4, 2019-07-02 05:22:00,1SPM,180,Transcribed,Connor Charchuk,Moderate,None,None,None,None,,64164
+PENP-1-2, 2019-06-13 06:20:00,1SPM,180,Transcribed,Christopher Moser-Purdy,None,None,None,Moderate,None,,87834
+PENP-1-2, 2019-06-27 08:23:00,1SPM,180,Transcribed,Jillian Slater,None,Light,None,None,None,,87829
+PENP-1-2, 2019-06-27 05:23:00,1SPM,180,Transcribed,Jillian Slater,None,Light,None,None,None,,87833
+PENP-1-2, 2019-06-17 05:20:00,1SPM,180,Transcribed,Brandon Law,None,None,None,None,None,,87832
+PENP-2-3, 2019-07-04 06:26:00,1SPM,180,Transcribed,Christopher Moser-Purdy,None,None,None,Heavy,None,"",64108
+PENP-1-2, 2019-06-24 04:21:00,1SPM,180,Transcribed,Alana Demko,Light,Moderate,None,Moderate,None,"",87835
+PENP-1-2, 2019-06-17 08:20:00,1SPM,180,Transcribed,Alana Demko,None,None,None,None,None,,87831
+PENP-1-2, 2019-06-17 07:20:00,1SPM,180,Transcribed,Christopher Moser-Purdy,None,None,None,None,None,,87830
+PENP-1-2, 2019-06-24 08:21:00,1SPM,180,Transcribed,Brandon Law,None,Moderate,None,Moderate,None,,87828

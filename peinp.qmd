@@ -1,12 +1,17 @@
 ---
 title: "Report on the use of passive acoustic monitoring for evaluating ecological integrity in Prince Edward Island National Park"
-format: html
+format:
+  html:
+    grid:
+      margin-width: 300px
+  pdf: default
 navbar: right
 theme: cosmo
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 author: "Alex MacPhail"
 editor: visual
 bibliography: references.bib
+nocite: '@*'
 toc: true
 toc-depth: 3
 toc-expand: true
@@ -16,15 +21,17 @@ reference-location: margin
 citation-location: margin
 ---
 
-```{r}
-### To run this locally
+![](peinpheader.png){style="float:left`;" fig-alt="Photo of the ocean" fig-align="center"}
 
-# Create a new R project and version control from the repo
-# Pull from main
-# Load the pei.RData file
-# Render
+::: {.fullwidth}
+To run this report locally:
 
-```
+- Open RStudio or your preferred IDE
+- Create a new project and set up for version control using the GitHub repository
+- Pull from remote main
+- Load the `pei.RData` file in the first chunk
+- Render the document and review the results
+:::
 
 ```{r}
 #| label: load-packages and authenticate
@@ -56,40 +63,41 @@ load('pei.RData')
 #cirrus_penp_recs  <- readRDS('penpcirrus.RDS')
 ```
 
-![](peinpheader.png){style="float:left`;" fig-alt="Photo of the ocean" fig-align="center"}
-
 # Abstract
 
-------------------------------------------------------------------------
+This study spans five years and surveys 30 locations in Prince Edward Island to assess avian species distribution. A total of 100 avian species were identified. Despite stable species richness and diversity, variations in species occupancy were noted, attributed to the limited sample size. The study recommends consistent monitoring at core sites during the breeding season, emphasizing the importance of well-maintained acoustic equipment. The potential for extending acoustic monitoring to other taxa, such as amphibians, is also discussed for a more comprehensive ecological evaluation.
+
+---
 
 # Introduction
 
 Human activities have been identified as key contributors to the global decline in forest wildlife. The repercussions of habitat fragmentation and loss, climate change, and increased access to sensitive areas exert direct and indirect pressures on forest biodiversity, particularly in managed regions.
 
-In 2019, Prince Edward Island National Park initiated a program incorporating autonomous recording units (ARUs) for passive acoustic monitoring (PAM) of the Park's wildlife. ARUs are compact environmental sensors that are designed to passively record the environment, capturing vocalizing species like birds and amphibians. This technology enables resource managers to conduct prolonged surveys with minimal human interference. The species detected by these units contribute valuable information to ecological integrity metrics such as species richness, diversity, occupancy, and trends over time. This data aids decision-making and management within the Park. Given the rapid and ease of accumulating data from these units, maintaining a high standard of data integrity is paramount to ensure future data interoperability and sharing. WildTrax, an online platform tailored for users of environmental sensors, addresses this challenge by providing a solution to standardize, harmonize, and share data.
+In 2019, Prince Edward Island National Park initiated a program incorporating autonomous recording units (ARUs) for passive acoustic monitoring (PAM) of the Park's wildlife. ARUs are compact environmental sensors that are designed to passively record the environment (@aru-overview), capturing vocalizing species like birds and amphibians. This technology enables resource managers to conduct prolonged surveys with minimal human interference. The species detected by these units contribute valuable information to ecological integrity metrics such as species richness, diversity, occupancy, and trends over time. This data aids decision-making and management within the Park. Given the rapid and ease of accumulating data from these units, maintaining a high standard of data integrity is paramount to ensure future data interoperability and sharing (@aru-overview). [WildTrax](https://www.wildtrax.ca) is an online platform developed by the [Alberta Biodiversity Monitoring Institute (**ABMI**)](https://abmi.ca) for users of environmental sensors to help addresses these big data challenges by providing solutions to standardize, harmonize, and share data.
 
 The objectives of this report are to:
 
-- Describe the data management and processing procedures for the acoustic data collected from 2019 to 2023
-- Identify all audible species and quantify the abundance of each species within each recording
-- Define straightforward methods and robust ecological integrity metrics for evaluating species presence, species richness, and species occupancy over time at various locations
-- Offer recommendations for ongoing monitoring approaches to contribute to the assessment of ecological integrity in forest ecosystems
-- Facilitate data publication to the public, resource managers, academic institutions, and other relevant agencies
+-   Describe the data management and processing procedures for the acoustic data collected from 2019 to 2023
+-   Identify all audible species and quantify the abundance of each species within each recording
+-   Utilize traditional human tagging, visual scanning and automated recognition techniques to detect species on audio recordings
+-   Define straightforward methods and robust ecological integrity metrics for evaluating species presence, species richness, and species occupancy over time at various locations
+-   Offer recommendations for ongoing monitoring approaches to contribute to the assessment of ecological integrity in forest ecosystems
+-   Facilitate data publication to the public, resource managers, academic institutions, and other relevant agencies
 
-------------------------------------------------------------------------
+---
 
 # Methods
 
 ## Data collection
 
-Data were collected during the spring and summer seasons from `r min(pei_locs$year)` to `r max(pei_locs$year)`. A total of `r pei_locs |> st_drop_geometry() |> select(location) |> distinct() |> tally()` locations were surveyed over the five-year period: 
+Data were collected during the spring and summer seasons from `r min(pei_locs$year)` to `r max(pei_locs$year)`. A total of `r pei_locs |> st_drop_geometry() |> select(location) |> distinct() |> tally()` locations were surveyed over the five-year period:
 
-* 21 locations as part of the forest songbird monitoring program (code: `PENP-*`) with ARUs recording during the morning hours,
-* 6 for Bank Swallow Monitoring (code: `PENP-BS-*`) with ARUs placed strategically beside ponds recording in the evening,
-* 2 locations deployed in First Nations communities (`ASC-1, LXI-1`) to complement the forest songbird and evening schedules,
-* And one location for events (`PENP-E1`), which was to examine the effects of a single public event
+-   21 locations as part of the forest songbird monitoring program (code: `PENP-*`) with ARUs recording during the morning hours,
+-   6 for Bank Swallow Monitoring (code: `PENP-BS-*`) with ARUs placed strategically beside ponds recording in the evening,
+-   2 locations deployed in First Nations communities (`ASC-1, LXI-1`) to complement the forest songbird and evening schedules,
+-   And one location (`PENP-E1`), which was to examine the effects of a single public event
 
-Nine locations (`r repeats`) were surveyed each year, while the remaining locations were surveyed on rotation as best as possible. Details can be found in Table 1 (@tbl-loc-summary) and illustrated in Figure 1 (@fig-locs). ARUs were deployed at the beginning of the breeding season in April and May. These ARUs rotated through locations during the spring and summer until their final retrieval in July and August. At each location, the ARUs were set to record for 30 minutes continuously every hour for four hours, starting one hour before dawn and ending three hours after dawn. For Bank Swallow Monitoring locations, recordings were made every 5 minutes for a duration of 3 minutes each from 1.5 hours before dusk to 1.5 hours after dusk. On average, each ARU recorded for `r average_deployment$mean` +/- `r average_deployment$sd` days.
+Locations were surveyed on rotation with `r length(repeats)` locations (`r repeats`) were surveyed each year. A detailed list of all survey years can be found in Table 1 (@tbl-loc-summary) and illustrated in Figure 1 (@fig-locs). ARUs were deployed at the beginning of the breeding season in April and May and rotated locations until their final retrieval in July and August. At the forest songbird locations (`PENP-*`), the ARUs were set to record for 30 minutes continuously every hour for four hours, starting one hour before dawn and ending three hours after dawn. For Bank Swallow Monitoring locations (`PENP-BS`), recordings were made every 5 minutes for a duration of 3 minutes each from 1.5 hours before dusk to 1.5 hours after dusk. On average, each ARU recorded for `r average_deployment$mean` +/- `r average_deployment$sd` days.
 
 ```{r}
 #| warning: false
@@ -123,6 +131,13 @@ peinp_shp <- st_transform(peinp_shp, st_crs(pei_locs)) |> st_make_valid()
 coast <- read_sf('assets/coastline_polygon.shp') 
 coast <- st_transform(coast, st_crs(pei_locs)) |> st_make_valid()
 #nearest_feature <- st_nearest_feature(oneloc, coast)
+#clu <- read_sf('assets/CorporateLanduseInventory2010.shp')
+#clu <- st_transform(clu, st_crs(pei_locs)) |> st_make_valid()
+
+locs_buff <- st_buffer(pei_locs, 150) |> select(location) |> distinct()
+clu_crop <- st_crop(clu, xmin=-63.8658,ymin=46.19434,xmax=-62.65111,ymax=46.6279)
+ints <- st_intersection(clu_crop, locs_buff)
+
 
 # Make up siteCovs for now
 distance_to_coast <- read_csv("penp_coastline_distance.csv")
@@ -156,7 +171,7 @@ locs_summary <- pei_locs |>
 #| results: hide
 #| fig-cap: "Locations surveyed each year"
 #| label: fig-locs
-#| fig-width: 11
+#| cap-location: margin
 
 ggplot() +
   geom_sf(data = pei_shp, fill = '#FFD580') +
@@ -193,7 +208,7 @@ kable(locs_summary, caption = "Location summary for ARUs deployed")
 
 ## Data management
 
-A total of `r count_recs` recordings were collected (see @fig-recs-collect). From 2019 - 2021, data were transferred via hard drive to the University of Alberta in Edmonton, where they are redundantly stored on a server known as Cirrus. The recordings were standardized to ensure adherence to the naming convention of `LOCATION_DATETIME`, such as `PENP-1-1_20230625_053500.wav`. The remaining recordings (2022 - 2023) were directly uploaded to WildTrax by Parks Canada staff and can be downloaded from the platform's Recording tab, accessible under Manage \> Download list of recordings (see @fig-download-recs).
+A total of `r count_recs` recordings were collected (see @fig-recs-collect). From 2019 - 2021, data were transferred via hard drive to the University of Alberta in Edmonton, where they are redundantly stored on a server known as Cirrus. The recordings were standardized to ensure adherence to the naming convention of `LOCATION_DATETIME`, such as `PENP-1-1_20230625_053500.wav`. The remaining recordings (2022 - 2023) were directly uploaded to WildTrax by Parks Canada staff and can be downloaded from the platform's Recording tab, accessible under Manage > Download list of recordings (see @fig-download-recs).
 
 ![Downloading a list of recordings from WildTrax](download-recs.png){#fig-download-recs}
 
@@ -255,6 +270,7 @@ recs_plot <- all_recs |>
 #| fig-height: 10
 #| fig-cap: Ridgeplot of recordings collected for each location over each survey year
 #| label: fig-recs-collect
+#| cap-location: margin
 
 recs_plot
 
@@ -262,8 +278,9 @@ recs_plot
 
 ## Community data processing
 
-The principal goal for data processing was to describe the acoustic community of species heard on specific recordings. To ensure balanced replication, for each location and year surveyed, four randomly selected recordings were processed for 3-minutes between the hours of 4:00 AM - 7:59 AM ideally on four separate dates. Four recordings will ensure that we have the minimum number of samples for a simple occupancy analysis. Tags are made in a count-removal framework, only tagging the time of first detection of each individual heard on the recordings. In case a species was overly abundant a TMTT ('too many to tag') flag was used (see @tbl-tmtt). Amphibian abundance was estimated at the time of first detection using the [North American Amphibian Monitoring Program](https://www.usgs.gov/centers/eesc/science/north-american-amphibian-monitoring-program) with abundance of species being estimated on the scale of "calling intensity index" of 1 - 3. Mammals such as Red Squirrel, were also noted on the recordings. After the data are processed in WildTrax, the [wildRtrax](https://abbiodiversity.github.io/wildRtrax/) package is use to download the data into a standard format prepared for analysis. To ensure balanced replication, each location was surveyed at minimum for 4 recordings x 3 minutes at dawn (see @tbl-loc-repl). We also verified everything that was tagged (see @tbl-verified).
+The principal goal for data processing was to describe the acoustic community of species heard at locations while choosing a large enough subset of recordings for analyses. To ensure balanced replication, for each location and year surveyed, four randomly selected recordings were processed for 3-minutes between the hours of 4:00 AM - 7:59 AM ideally on four separate dates (see @tbl-loc-repl). Four recordings will ensure that we have the minimum number of samples for a simple occupancy analysis (@occu-less-than-one and @imperfect-occu). Tags are made using count-removal (@time-removal) where tags are only made at the time of first detection of each individual heard on the recordings. In case a species was overly abundant a TMTT ('too many to tag') flag was used (see @tbl-tmtt). We also verified that all tags that were created were checked by a second observer to ensure accuracy of detections (see @tbl-verified). Amphibian abundance was estimated at the time of first detection using the [North American Amphibian Monitoring Program](https://www.usgs.gov/centers/eesc/science/north-american-amphibian-monitoring-program) with abundance of species being estimated on the scale of "calling intensity index" of 1 - 3. Mammals such as Red Squirrel, were also noted on the recordings. 
 
+After the data are processed in WildTrax, the [wildRtrax](https://abbiodiversity.github.io/wildRtrax/) package is use to download the data into a standard format prepared for analysis. 
 
 ```{r Data download}
 #| warning: false
@@ -290,7 +307,6 @@ pei_main <-
 
 pei_main |> names()
 ```
-
 
 ```{r}
 #| warning: false
@@ -359,13 +375,33 @@ verified_tags <- pei_main |>
 kable(verified_tags)
 ```
 
+```{r}
+#| warning: false
+#| echo: false
+#| message: false
+#| eval: true
+#| include: true
+#| label: tbl-tmtt
+#| tbl-cap: TMTT tags
+
+tmtt_tags <- pei_main |>
+  select(location, recording_date_time, species_code, individual_count) |>
+  distinct() |>
+  filter(individual_count == "TMTT")
+
+kable(head(tmtt_tags))
+
+```
+
 ## Visual scanning
 
-Visual scanning is the concept of visually examining recordings en masse in order to find the signal in question in audio recordings. It has been a well-proven method for detecting many different taxa (Cameron et al. 2020, Garland et al. 2020) with comparable biological metrics to other traditional methods. Visual scanning allows a user to use frequency-limited or time-limited spectrograms and scan lots of them visually much fatser than listneing to the audio. These changes are easily made by adjusting project setitngs in WildTrax. Visual scanning for Bank Swallow was conducted at each `PENP-BS-*` location. A total of `r pei_tasks |> filter(grepl('BS',location)) |> tally()` recordings. Tags were made at the time of first detection in each minute interval.
+Visual scanning is the concept of visually examining spectrograms in order to find a signal within an audio recording. Visual scanning can be a useful processing method allowing trained users to process recordings much faster than traditional listening. It has been used for detecting different taxa (@vis-scan-amphs, @aru-vs-cams-wolves) with comparable biological metrics, as well as helping to maximize species detection in large acoustic monitoring data sets (@all-the-scans). WildTrax's project settings and dynamic spectrogram settings in the processing interface allow users to upload many recordings, while also allowing frequency-limited or time-limited spectrograms. These changes are easily made by adjusting project settings in WildTrax.
+
+In order to determine presence of Bank Swallow (BANS) at `PENP-BS-*` site, visual scanning was employed to identify the time of first detection of the species on recordings at these locations. A total of `r pei_main |> filter(grepl('BS',location)) |> select(location, recording_date_time, task_method) |> distinct() |> tally()` recordings were visually scanned for BANS. Tags were made at the time of first detection in each minute interval.
 
 ## Automated recognition
 
-Automated recongition is a well-known process to help detect rare and elusive species, as well as species that may have low detectability in large datasets. We constructed a recognizer for EAWP and used three previously constructed Wildlife Acoustics Songscope recognizer for OSFL, RUBL and CAWA. Hits were uploaded to WildTrax via the `wt_songscope_tags` function in `wildRtrax`.
+Automated recognition is a well-known process to help detect rare and elusive species (@), species that may have low detectability in large data sets (@). We constructed a recognizer for EAWP and used three previously constructed Wildlife Acoustics SongScope recognizer for OSFL, RUBL and CAWA. Hits were uploaded to WildTrax via the `wt_songscope_tags` function in `wildRtrax`.
 
 ```{r}
 #| eval: false
@@ -379,27 +415,9 @@ wt_songscope_tags()
 
 ## Avian species
 
-```{r}
-#| warning: false
-#| echo: false
-#| message: false
-#| eval: true
-#| include: false
-#| label: tbl-tmtt
-#| tbl-cap: TMTT tags
-
-tmtt_tags <- pei_main |>
-  select(location, recording_date_time, species_code, individual_count) |>
-  distinct() |>
-  filter(individual_count == "TMTT")
-
-kable(head(tmtt_tags))
-
-```
-
 ### Species richness
 
-A total of `r nrow(distinct_spp)` species were found across the five years. @fig-spp-rich-locs describes the relationship of species richness across each location and survey year with @fig-spp-rich-annual showing the relationship between species richness and survey effort. 
+A total of `r nrow(distinct_spp)` species were found across the five years. @fig-spp-rich-locs describes the relationship of species richness across each location and survey year with @fig-spp-rich-annual showing the relationship between species richness and survey effort.
 
 ```{r}
 #| warning: false
@@ -413,6 +431,7 @@ A total of `r nrow(distinct_spp)` species were found across the five years. @fig
 #| fig-height: 10
 #| fig-cap: Species richness at forest monitoring locations across years
 #| label: fig-spp-rich-locs
+#| cap-location: margin
 
 spp_rich_location <- pei_main |>
   as_tibble() |>
@@ -447,6 +466,7 @@ spp_rich_location |>
   ggtitle('Species richness at each location surveyed for each year')
 
 ```
+
 ```{r}
 #| warning: false
 #| echo: false
@@ -483,6 +503,7 @@ year_effort <- pei_main |>
 #| fig-height: 10
 #| fig-cap: Species richness at forest monitoring locations across years considering sampling effort
 #| label: fig-spp-rich-annual
+#| cap-location: margin
 
 spp_rich_annual_plot <- spp_rich_annual %>%
   inner_join(., year_effort) %>%
@@ -504,13 +525,29 @@ spp_rich_annual_plot
 #| message: false
 #| include: true
 #| results: hide
+#| label: tbl-bird-guilds
+#| tbl-cap: Bird guilds. For nesting habitat; Ag = Agricultural, Be = Beach, Bo = Bog, CW = Coniferous Woodlands, ES = Early Successional, MW = Mixed Woodlands, OW = Open Woodlands, TSS = Treed/Shrubby Swamp, Ur = Urban.
+
+guilds <- read_csv("bird_guilds.csv")
+
+kable(guilds)
+
+```
+
+
+```{r}
+#| warning: false
+#| echo: false
+#| eval: true
+#| message: false
+#| include: true
+#| results: hide
 #| fig-align: center
 #| fig-width: 10
 #| fig-height: 10
 #| fig-cap: Seasonal detection activity of most commonly detected forest species
 #| label: fig-spp-activity
-
-guilds <- read_csv("bird_guilds.csv")
+#| cap-location: margin
 
 pei_main |>
   wt_tidy_species(remove = c("mammal","amphibian","abiotic","insect","unknown"), zerofill = T) |>
@@ -607,6 +644,11 @@ lm(dist_new ~ coast_dist, data = ocean_richness)
 ### Species diversity
 
 ```{r}
+#| warning: false
+#| eval: false
+#| message: false
+#| include: false
+#| echo: false
 
 raw_dog <- pei_main |> 
   as_tibble() |>
@@ -625,11 +667,9 @@ raw_dog <- pei_main |>
 #diversity(raw_dog[,4:103], index="shannon")
 ```
 
-
-
 ### Species occupancy
 
-For testing species occupancy, we selected locations with a minimum of four dawn visits across five years, focusing on forest obligate species for ecological relevance (see @tbl-bird-guilds). Utilizing a single-season single-species occupancy model (see @fig-spp-occ) from Mackenzie et al. 2003. Site-specific covariates included the distance to the ocean edge and the proportion of forested area surrounding the ARU. Observation covariates incorporated day of the year, hour, observer details, and a quadratic term for both year and hour. Despite variations in methodology between 2019 (1SPM) and subsequent years (2020 - 2023), we maintained consistency by exclusively utilizing the time to the first detection of individuals from the 1SPM recordings. Model predictions were then generated, and the best model was selected based on the Aikaike Information Criterion (AIC).
+For testing species occupancy, we selected locations with a minimum of four dawn visits across all five years, focusing on forest obligate species for ecological relevance (see @tbl-bird-guilds). Utilizing a single-season single-species occupancy model (see @fig-spp-occ) from Mackenzie et al. 2003. Site-specific covariates included the distance to the ocean edge and the proportion of forested area surrounding the ARU. Observation covariates incorporated day of the year, hour, observer details, and a quadratic term for both year and hour. Despite variations in methodology between 2019 (1SPM) and subsequent years (2020 - 2023), we maintained consistency by exclusively utilizing the time to the first detection of individuals from the 1SPM recordings. Model predictions were then generated, and the best model was selected based on the Aikaike Information Criterion (AIC).
 
 ```{r}
 #| warning: false
@@ -796,7 +836,9 @@ occ_plot <- ggplot(occ_graph_all %>%
   labs(title = paste0("Predicted Occupancy change of ",species_choice),
        x = "Year",
        y = "Predicted Occupancy") +
+  ylim(0.00,1.00) +
   theme_bw() +
+  theme(legend.position="none")
   scale_fill_viridis_d()
   
   return(occ_plot)
@@ -841,12 +883,11 @@ ybsa_occ <- ss_occ_plot_loop(pei_main, "YBSA")
 #| warning: false
 #| echo: false
 #| eval: true
-#| include: false
-#| fig-width: 9
-#| fig-height: 9
+#| include: true
+#| fig-width: 12
 #| fig-cap: Predicted single season occupancy from forest species with high detections. 
 #| label: fig-spp-occ
-
+#| fig-column: page-right
 
 occ_spp |> select(species_code) |> slice(1:20) |> pull()
 
@@ -854,7 +895,6 @@ ggarrange(revi_occ, amre_occ, btnw_occ, nopa_occ, mawa_occ, swth_occ, alfl_occ, 
           blja_occ, chsp_occ, btbw_occ, blbw_occ, gcki_occ, mowa_occ, heth_occ, cswa_occ, eawp_occ, ybsa_occ)
 
 ```
-
 
 ```{r}
 #| warning: false
@@ -899,9 +939,18 @@ ggplot(pei_wide_plus, aes(x = recording_date_time, y = COYE)) +
 
 ```
 
-### Species-at-risk
-
 ## Visual scanning
+
+BANS were detected at 
+
+```{r}
+
+pei_main |>
+  filter(species_code == "BANS") |>
+  select(location, recording_date_time, species_code, individual_order, individual_count) |>
+  distinct()
+
+```
 
 ------------------------------------------------------------------------
 
@@ -938,8 +987,19 @@ pei_main %>%
 
 # Discussion
 
-------------------------------------------------------------------------
+Effective conservation efforts demand a robust and nuanced understanding of ecological dynamics. In the pursuit of preserving biodiversity and ecological integrity, Prince Edward Island National Park's ARU program provides a pivotal tool and valuable insights into the impacts of human activities on forest wildlife. Recommendations aimed at optimizing the efficiency and reliability of the ARU program include the following
 
-### References
+## Continued monitoring of historical locations
 
-------------------------------------------------------------------------
+One paramount recommendation involves the prioritized monitoring of historical locations, particularly emphasizing `r repeats` as indispensable baselines for evaluating ecological changes over time. To enhance data capture, a strategic adjustment to the ARU schedule is proposed. Shifting monitoring times to dawn and dusk and extending deployment periods to 4-7 days at minimum per location between May 15 and July 15 will maximize the chances of capturing the diverse vocalizations of species during their peak activity periods. This adjustment acknowledges the dynamic nature of wildlife behavior and ensures a more comprehensive representation of the ecosystem's acoustic landscape.
+
+
+## Equipment servicing
+
+Ensuring the ARUs' optimal functionality is of utmost importance for data reliability. Regular servicing is recommended, with a specific focus on the critical aspects of microphone sensitivity and degradation (see @arus-mics). Timely and thorough servicing not only safeguards data quality but also extends the lifespan and effectiveness of the ARU infrastructure. These factors directly influence the ARUs' capacity to detect species, making them pivotal considerations in maintaining the accuracy of collected data.
+
+
+## Extra monitoring
+
+Expanding monitoring beyond the confines of the park to include control locations is a strategic move to enhance the program's comprehensiveness. By broadening the scope of surveillance, assessments of occupancy and population dynamics can be conducted in a more holistic manner. This expansion provides a broader ecological context, facilitating a nuanced understanding of the interactions between wildlife and their surroundings. The data gathered from these external locations contribute significantly to refining ecological models and establishing a comprehensive understanding of the ecological dynamics both within and outside the park boundaries, as well as facilitate a citizen science component to the work being done.
+

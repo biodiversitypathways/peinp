@@ -917,7 +917,7 @@ site_covariates_23 <- pei_occu_23 |>
   filter(landcover_proportion == max(landcover_proportion)) |>
   ungroup()
 
-occu_one_19 <- wt_format_occupancy(pei_occu_19, siteCovs = site_covariates_19, species = "AMRE")
+occu_one_19 <- wt_format_occupancy(pei_occu_19, siteCovs = site_covariates_19, species = "NOPA")
 occu_one_20 <- wt_format_occupancy(pei_occu_20, siteCovs = site_covariates_20, species = species_choice)
 occu_one_21 <- wt_format_occupancy(pei_occu_21, siteCovs = site_covariates_21, species = species_choice)
 occu_one_22 <- wt_format_occupancy(pei_occu_22, siteCovs = site_covariates_22, species = species_choice)
@@ -952,8 +952,10 @@ occu_model_21 <- occu(~ doy + hr + observer ~ coast_dist + landcover_proportion,
 occu_model_22 <- occu(~ doy + hr + observer ~ coast_dist + landcover_proportion, occu_one_22)
 occu_model_23 <- occu(~ doy + hr + observer ~ coast_dist + landcover_proportion, occu_one_23)
 
-dredge(occu_model_19)
-mb.gof.test(occu_model_19, nsim=100, plot.hist=F)
+mb.gof.test(occu_model_19, nsim=1000, plot.hist=F)
+occ_dredge <- dredge(occu_model_19)
+occ_dredge_delta <- get.models(occ_dredge, subset = delta <= 2.5)
+occ_avg <- model.avg(occ_dredge_delta, fit = TRUE)
 
 socc_fit_19 <- predict(occu_model_19, data = site_covariates_19, type="state",interval="confidence")
 occ_fit_20 <- predict(occu_model_20, data = site_covariates_20, type="state",interval="confidence")

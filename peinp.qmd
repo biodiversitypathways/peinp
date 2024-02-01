@@ -137,7 +137,28 @@ coast <- st_transform(coast, st_crs(pei_locs)) |> st_make_valid()
 locs_buff <- st_buffer(pei_locs, 150) |> select(location) |> distinct()
 clu_crop <- st_crop(clu, xmin=-63.8658,ymin=46.19434,xmax=-62.65111,ymax=46.6279)
 ints <- st_intersection(clu_crop, locs_buff)
+ints2 <- ints %>% 
+  mutate(area = st_area(.))
 
+cover_cols = c("COVER1","COVER2","COVER3","COVER4","COVER5")
+wetland_cols = c("CLASS1","CLASS2","CLASS3","CLASS4","CLASS5","CLASS6","CLASS7")
+
+df_long <- ints2 %>%
+  filter(!grepl('ASC|LXI|BS',location)) %>%
+  select(location, COVER1, area) %>%
+  distinct() %>%
+  st_drop_geometry() %>%
+  group_by(location, COVER1) %>%
+  summarise(area = sum(area)) %>%
+  ungroup() %>%
+  pivot_wider(names_from = COVER1, values_from = area) %>%
+  mutate_all(~replace(., is.na(.), 0)) %>%
+  mutate(across(-location, ~as.numeric(.x))) %>%
+  rowwise() %>%
+  mutate(total = sum(c_across(-location))) %>%
+  ungroup() %>%
+  mutate(across(-c(location,total), ~ .x / total)) %>%
+  select(-total)
 
 # Make up siteCovs for now
 distance_to_coast <- read_csv("penp_coastline_distance.csv")
@@ -999,7 +1020,7 @@ One paramount recommendation involves the prioritized monitoring of historical l
 Ensuring the ARUs' optimal functionality is of utmost importance for data reliability. Regular servicing is recommended, with a specific focus on the critical aspects of microphone sensitivity and degradation (see @arus-mics). Timely and thorough servicing not only safeguards data quality but also extends the lifespan and effectiveness of the ARU infrastructure. These factors directly influence the ARUs' capacity to detect species, making them pivotal considerations in maintaining the accuracy of collected data.
 
 
-## Extra monitoring
+## Ex-situ monitoring
 
-Expanding monitoring beyond the confines of the park to include control locations is a strategic move to enhance the program's comprehensiveness. By broadening the scope of surveillance, assessments of occupancy and population dynamics can be conducted in a more holistic manner. This expansion provides a broader ecological context, facilitating a nuanced understanding of the interactions between wildlife and their surroundings. The data gathered from these external locations contribute significantly to refining ecological models and establishing a comprehensive understanding of the ecological dynamics both within and outside the park boundaries, as well as facilitate a citizen science component to the work being done.
+Given the size and proximity to unmanaged areas around the Park, expanding monitoring beyond the confines of the park to include control locations is a strategic move to enhance the program's comprehensiveness. By broadening the scope of surveillance, assessments of occupancy and population dynamics can be conducted in a more holistic manner. This expansion provides a broader ecological context, facilitating a nuanced understanding of the interactions between wildlife and their surroundings. The data gathered from these external locations could significantly contribute to refining ecological models and establishing a comprehensive understanding of the ecological and population dynamics of species located in the park. This would also facilitate a citizen science component to the work being done.
 

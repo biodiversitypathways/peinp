@@ -761,15 +761,15 @@ ss_occ_plot_loop <- function(input, species_choice) {
   pei_occu_19 <- data |>
     as_tibble() |>
     filter(aru_task_status == "Transcribed") |>
-   filter(!grepl('BS|ASC|LXI|E1',location)) |>
-  wt_tidy_species(remove = c("mammal","amphibian","abiotic","insect","unknown")) |>
-  left_join(guilds |> select(species_common_name, habitat_nesting)) |>
-  filter(habitat_nesting %in% c("CW","MW","OW","TSS")) |>
-  wt_replace_tmtt() |>
-  mutate(task_duration = gsub('s','',task_duration) %>% as.numeric()) |>
-  filter(!task_duration > 180, !(grepl('PENP-BS-*',location) & task_method != '1SPT')) |>
-  mutate(hour = lubridate::hour(recording_date_time),
-         year = lubridate::year(recording_date_time)) |>
+    filter(!grepl('BS|ASC|LXI|E1',location)) |>
+    wt_tidy_species(remove = c("mammal","amphibian","abiotic","insect","unknown")) |>
+    left_join(guilds |> select(species_common_name, habitat_nesting)) |>
+    filter(habitat_nesting %in% c("CW","MW","OW","TSS")) |>
+    wt_replace_tmtt() |>
+    mutate(task_duration = gsub('s','',task_duration) %>% as.numeric()) |>
+    filter(!task_duration > 180, !(grepl('PENP-BS-*',location) & task_method != '1SPT')) |>
+    mutate(hour = lubridate::hour(recording_date_time),
+            year = lubridate::year(recording_date_time)) |>
   # group_by(location) |>
   # mutate(ct = n_distinct(year)) |>
   # ungroup() |>
@@ -854,18 +854,18 @@ ss_occ_plot_loop <- function(input, species_choice) {
   # filter(!ctn < 4) |>
   # select(-ctn)
   
-   pei_occu_23 <- data |>
+  pei_occu_23 <- data |>
     as_tibble() |>
     filter(aru_task_status == "Transcribed") |>
-   filter(!grepl('BS|ASC|LXI|E1',location)) |>
-  wt_tidy_species(remove = c("mammal","amphibian","abiotic","insect","unknown")) |>
-  left_join(guilds |> select(species_common_name, habitat_nesting)) |>
-  filter(habitat_nesting %in% c("CW","MW","OW","TSS")) |>
-  wt_replace_tmtt() |>
-  mutate(task_duration = gsub('s','',task_duration) %>% as.numeric()) |>
-  filter(!task_duration > 180, !(grepl('PENP-BS-*',location) & task_method != '1SPT')) |>
-  mutate(hour = lubridate::hour(recording_date_time),
-         year = lubridate::year(recording_date_time)) |>
+    filter(!grepl('BS|ASC|LXI|E1',location)) |>
+    wt_tidy_species(remove = c("mammal","amphibian","abiotic","insect","unknown")) |>
+    left_join(guilds |> select(species_common_name, habitat_nesting)) |>
+    filter(habitat_nesting %in% c("CW","MW","OW","TSS")) |>
+    wt_replace_tmtt() |>
+    mutate(task_duration = gsub('s','',task_duration) %>% as.numeric()) |>
+    filter(!task_duration > 180, !(grepl('PENP-BS-*',location) & task_method != '1SPT')) |>
+    mutate(hour = lubridate::hour(recording_date_time),
+           year = lubridate::year(recording_date_time)) |>
   # group_by(location) |>
   # mutate(ct = n_distinct(year)) |>
   # ungroup() |>
@@ -899,7 +899,7 @@ site_covariates_20 <- pei_occu_20 |>
   distinct() |>
   pivot_wider(names_from = landcover, values_from = landcover_proportion, values_fill = 0) |>
   group_by(location, year, coast_dist) |>
-summarise(across(starts_with(c("Anthro","Deciduous","Open","Conifer")), max)) |>
+  summarise(across(starts_with(c("Anthro","Deciduous","Open","Conifer")), max)) |>
   ungroup()
   # pivot_longer(-c(location:coast_dist), names_to = "landcover", values_to = "landcover_proportion") |>
   # group_by(location, year, coast_dist) |>
@@ -912,7 +912,7 @@ site_covariates_21 <- pei_occu_21 |>
   distinct() |>
   pivot_wider(names_from = landcover, values_from = landcover_proportion, values_fill = 0) |>
   group_by(location, year, coast_dist) |>
-summarise(across(starts_with(c("Anthro","Deciduous","Open","Conifer")), max)) |>
+  summarise(across(starts_with(c("Anthro","Deciduous","Open","Conifer")), max)) |>
   ungroup()
   # pivot_longer(-c(location:coast_dist), names_to = "landcover", values_to = "landcover_proportion") |>
   # group_by(location, year, coast_dist) |>
@@ -938,7 +938,7 @@ site_covariates_23 <- pei_occu_23 |>
   distinct() |>
   pivot_wider(names_from = landcover, values_from = landcover_proportion, values_fill = 0) |>
   group_by(location, year, coast_dist) |>
-summarise(across(starts_with(c("Anthro","Deciduous","Open","Conifer")), max)) |>
+  summarise(across(starts_with(c("Anthro","Deciduous","Open","Conifer")), max)) |>
   ungroup()
   # pivot_longer(-c(location:coast_dist), names_to = "landcover", values_to = "landcover_proportion") |>
   # group_by(location, year, coast_dist) |>
@@ -955,64 +955,33 @@ occu_one_23 <- wt_format_occupancy(pei_occu_23, siteCovs = site_covariates_23, s
 
 print('Breaking here2?')
 
-occu_one_19@siteCovs$coast_dist <- scale(occu_one_19@siteCovs$coast_dist)
-occu_one_19@siteCovs$Anthro <- scale(occu_one_19@siteCovs$Anthro)
-occu_one_19@siteCovs$Open <- scale(occu_one_19@siteCovs$Open)
-occu_one_19@siteCovs$Conifer <- scale(occu_one_19@siteCovs$Conifer)
-occu_one_19@siteCovs$Deciduous <- scale(occu_one_19@siteCovs$Deciduous)
+sitecovs_to_scale <- c("coast_dist","Anthro","Open","Conifer","Deciduous")
 
-print('Breaking here2????')
+for (variable in sitecovs_to_scale) {
+  occu_one_19@siteCovs[[variable]] <- scale(occu_one_19@siteCovs[[variable]])
+  occu_one_20@siteCovs[[variable]] <- scale(occu_one_20@siteCovs[[variable]])
+  occu_one_21@siteCovs[[variable]] <- scale(occu_one_21@siteCovs[[variable]])
+  occu_one_22@siteCovs[[variable]] <- scale(occu_one_22@siteCovs[[variable]])
+  occu_one_23@siteCovs[[variable]] <- scale(occu_one_23@siteCovs[[variable]])
+}
 
-occu_one_20@siteCovs$coast_dist <- scale(occu_one_20@siteCovs$coast_dist)
-occu_one_20@siteCovs$Anthro <- scale(occu_one_20@siteCovs$Anthro)
-occu_one_20@siteCovs$Open <- scale(occu_one_20@siteCovs$Open)
-occu_one_20@siteCovs$Conifer <- scale(occu_one_20@siteCovs$Conifer)
-occu_one_20@siteCovs$Deciduous <- scale(occu_one_20@siteCovs$Deciduous)
+obscovs_to_scale <- c("doy","hr","doy2","hr2")
 
-print('Breaking here2????????')
-
-occu_one_21@siteCovs$coast_dist <- scale(occu_one_21@siteCovs$coast_dist)
-occu_one_21@siteCovs$Anthro <- scale(occu_one_21@siteCovs$Anthro)
-occu_one_21@siteCovs$Open <- scale(occu_one_21@siteCovs$Open)
-occu_one_21@siteCovs$Conifer <- scale(occu_one_21@siteCovs$Conifer)
-occu_one_21@siteCovs$Deciduous <- scale(occu_one_21@siteCovs$Deciduous)
-
-print('Breaking here2?????????????')
-
-occu_one_22@siteCovs$coast_dist <- scale(occu_one_22@siteCovs$coast_dist)
-occu_one_22@siteCovs$Anthro <- scale(occu_one_22@siteCovs$Anthro)
-occu_one_22@siteCovs$Open <- scale(occu_one_22@siteCovs$Open)
-occu_one_22@siteCovs$Conifer <- scale(occu_one_22@siteCovs$Conifer)
-occu_one_22@siteCovs$Deciduous <- scale(occu_one_22@siteCovs$Deciduous)
-
-print('Breaking here2????????????????')
-
-occu_one_23@siteCovs$coast_dist <- scale(occu_one_23@siteCovs$coast_dist)
-occu_one_23@siteCovs$Anthro <- scale(occu_one_23@siteCovs$Anthro)
-occu_one_23@siteCovs$Open <- scale(occu_one_23@siteCovs$Open)
-occu_one_23@siteCovs$Conifer <- scale(occu_one_23@siteCovs$Conifer)
-occu_one_23@siteCovs$Deciduous <- scale(occu_one_23@siteCovs$Deciduous)
-
-print('Breaking here3?')
-
-occu_one_19@obsCovs$doy <- scale(occu_one_19@obsCovs$doy)
-occu_one_19@obsCovs$hr <- scale(occu_one_19@obsCovs$hr)
-occu_one_20@obsCovs$doy <- scale(occu_one_20@obsCovs$doy)
-occu_one_20@obsCovs$hr <- scale(occu_one_20@obsCovs$hr)
-occu_one_21@obsCovs$doy <- scale(occu_one_21@obsCovs$doy)
-occu_one_21@obsCovs$hr <- scale(occu_one_21@obsCovs$hr)
-occu_one_22@obsCovs$doy <- scale(occu_one_22@obsCovs$doy)
-occu_one_22@obsCovs$hr <- scale(occu_one_22@obsCovs$hr)
-occu_one_23@obsCovs$doy <- scale(occu_one_23@obsCovs$doy)
-occu_one_23@obsCovs$hr <- scale(occu_one_23@obsCovs$hr)
+for (variable in obscovs_to_scale) {
+  occu_one_19@obsCovs[[variable]] <- scale(occu_one_19@obsCovs[[variable]])
+  occu_one_20@obsCovs[[variable]] <- scale(occu_one_20@obsCovs[[variable]])
+  occu_one_21@obsCovs[[variable]] <- scale(occu_one_21@obsCovs[[variable]])
+  occu_one_22@obsCovs[[variable]] <- scale(occu_one_22@obsCovs[[variable]])
+  occu_one_23@obsCovs[[variable]] <- scale(occu_one_23@obsCovs[[variable]])
+}
 
 print('Breaking here4?')
 
-occu_model_19 <- occu(~ doy + hr ~ coast_dist + Anthro + Open + Deciduous + Conifer, occu_one_19)
-occu_model_20 <- occu(~ doy + hr ~ coast_dist + Anthro + Open + Deciduous + Conifer, occu_one_20)
-occu_model_21 <- occu(~ doy + hr ~ coast_dist + Anthro + Open + Deciduous + Conifer, occu_one_21)
-occu_model_22 <- occu(~ doy + hr ~ coast_dist + Anthro + Open + Deciduous + Conifer, occu_one_22)
-occu_model_23 <- occu(~ doy + hr ~ coast_dist + Anthro + Open + Deciduous + Conifer, occu_one_23)
+occu_model_19 <- occu(~ doy2 + hr2 ~ Anthro + Open + Deciduous + Conifer, occu_one_19)
+occu_model_20 <- occu(~ doy2 + hr2 ~ Anthro + Open + Deciduous + Conifer, occu_one_20)
+occu_model_21 <- occu(~ doy2 + hr2 ~ Anthro + Open + Deciduous + Conifer, occu_one_21)
+occu_model_22 <- occu(~ doy2 + hr2 ~ Anthro + Open + Deciduous + Conifer, occu_one_22)
+occu_model_23 <- occu(~ doy2 + hr2 ~ Anthro + Open + Deciduous + Conifer, occu_one_23)
 
 print('Breaking here5?')
 
@@ -1030,51 +999,68 @@ print(gof21$c.hat.est)
 print(gof22$c.hat.est)
 print(gof23$c.hat.est)
 
-#occ_dredge <- dredge(occu_model_19)
+print('Breaking heasadsasdr65?')
 
-# model_comparison <- as.data.frame(occ_dredge) %>% 
-#   select(starts_with("psi(p"), df, AICc, delta, weight)
-# # shorten names for printing
-# names(model_comparison) <- names(model_comparison) %>% 
-#   str_extract("(?<=psi\\(pland_[0-9]{2}_)[a-z_]+") %>% 
-#   coalesce(names(model_comparison))
-# 
-# mutate_all(model_comparison, ~ round(., 3)) %>% 
-#   head(18) %>% 
-#   knitr::kable()
-# 
-# 
-# occ_dredge_delta <- get.models(occ_dredge, subset = delta <= 2.5)
-# occ_avg <- model.avg(occ_dredge_delta, fit = TRUE)
-# occ_model_sel <- model.sel(occ_dredge)
+occ_dredge_19 <- dredge(occu_model_19)
+occ_dredge_delta_19 <- get.models(occ_dredge_19, subset = delta <= 2.5)
+tryCatch({occ_avg_19 <- model.avg(occ_dredge_delta_19, fit = TRUE)}, error = {occ_avg_19 <- NULL})
+if (is.null(occ_avg_19)) {occ_fit_19 <- predict(occu_model_19, site_covariates_19, type="state",interval="confidence")} 
+else {occ_fit_19 <- predict(occ_avg_19, site_covariates_19, type="state",interval="confidence")}
+if ("fit" %in% colnames(occ_fit_19 %>% as_tibble())) {occ_graph_19 <- occ_fit_19 %>% as_tibble() %>% bind_cols(., site_covariates_19)} 
+else {occ_graph_19 <- occ_fit_19 %>% as_tibble() %>% rename("fit" = Predicted)}
 
+print('Breaking her65???S??')
 
-occ_fit_19 <- predict(occu_model_19, data = site_covariates_19, type="state",interval="confidence")
-occ_fit_20 <- predict(occu_model_20, data = site_covariates_20, type="state",interval="confidence")
-occ_fit_21 <- predict(occu_model_21, data = site_covariates_21, type="state",interval="confidence")
-occ_fit_22 <- predict(occu_model_22, data = site_covariates_22, type="state",interval="confidence")
-occ_fit_23 <- predict(occu_model_23, data = site_covariates_23, type="state",interval="confidence")
+occ_dredge_20 <- dredge(occu_model_20)
+occ_dredge_delta_20 <- get.models(occ_dredge_20, subset = delta <= 2.5)
+tryCatch({occ_avg_20 <- model.avg(occ_dredge_delta_20, fit = TRUE)}, error = {occ_avg_20 <- NULL})
+if (is.null(occ_avg_20)) {occ_fit_20 <- predict(occu_model_20, site_covariates_20, type="state",interval="confidence")} 
+else {occ_fit_20 <- predict(occ_avg_20, site_covariates_20, type="state",interval="confidence")}
+if ("fit" %in% colnames(occ_fit_19 %>% as_tibble())) {occ_graph_20 <- occ_fit_20 %>% as_tibble() %>% bind_cols(., site_covariates_20)} 
+else {occ_graph_20 <- occ_fit_20 %>% as_tibble() %>% rename("fit" = Predicted)}
 
-print('Breaking her57?')
+print('Breaking her65kjdslkhsdj?')
 
-occ_graph_19 <- occ_fit_19 %>% as_tibble() %>% bind_cols(., site_covariates_19)
-occ_graph_20 <- occ_fit_20 %>% as_tibble() %>% bind_cols(., site_covariates_20)
-occ_graph_21 <- occ_fit_21 %>% as_tibble() %>% bind_cols(., site_covariates_21)
-occ_graph_22 <- occ_fit_22 %>% as_tibble() %>% bind_cols(., site_covariates_22)
-occ_graph_23 <- occ_fit_23 %>% as_tibble() %>% bind_cols(., site_covariates_23)
+# occ_dredge_21 <- dredge(occu_model_21)
+# occ_dredge_delta_21 <- get.models(occ_dredge_21, subset = delta <= 2.5)
+# tryCatch({occ_avg_21 <- model.avg(occ_dredge_delta_21, fit = TRUE)}, error = {occ_avg_21 <- NULL})
+# if (is.null(occ_avg_21)) {occ_fit_21 <- predict(occu_model_21, site_covariates_21, type="state",interval="confidence")} 
+# else {occ_fit_21 <- predict(occ_avg_21, site_covariates_21, type="state",interval="confidence")}
+# if ("fit" %in% colnames(occ_fit_19 %>% as_tibble())) {occ_graph_21 <- occ_fit_21 %>% as_tibble() %>% bind_cols(., site_covariates_21)} 
+# else {occ_graph_21 <- occ_fit_21 %>% as_tibble() %>% rename("fit" = Predicted)}
+
+print('Breaking her65kjdssdsaflkhsdj?')
+
+occ_dredge_22 <- dredge(occu_model_22)
+occ_dredge_delta_22 <- get.models(occ_dredge_22, subset = delta <= 2.5)
+tryCatch({occ_avg_22 <- model.avg(occ_dredge_delta_22, fit = TRUE)}, error = {occ_avg_22 <- NULL})
+if (is.null(occ_avg_22)) {occ_fit_22 <- predict(occu_model_22, site_covariates_22, type="state",interval="confidence")} 
+else {occ_fit_22 <- predict(occ_avg_22, site_covariates_22, type="state",interval="confidence")}
+if ("fit" %in% colnames(occ_fit_19 %>% as_tibble())) {occ_graph_22 <- occ_fit_22 %>% as_tibble() %>% bind_cols(., site_covariates_22)} 
+else {occ_graph_22 <- occ_fit_22 %>% as_tibble() %>% rename("fit" = Predicted)}
+
+print('Breaking aaaaa?')
+
+occ_dredge_23 <- dredge(occu_model_23)
+occ_dredge_delta_23 <- get.models(occ_dredge_23, subset = delta <= 2.5)
+tryCatch({occ_avg_23 <- model.avg(occ_dredge_delta_23, fit = TRUE)}, error = {occ_avg_23 <- NULL})
+if (is.null(occ_avg_23)) {occ_fit_23 <- predict(occu_model_23, site_covariates_23, type="state",interval="confidence")} 
+else {occ_fit_23 <- predict(occ_avg_23, site_covariates_23, type="state",interval="confidence")}
+if ("fit" %in% colnames(occ_fit_19 %>% as_tibble())) {occ_graph_23 <- occ_fit_23 %>% as_tibble() %>% bind_cols(., site_covariates_23)} 
+else {occ_graph_23 <- occ_fit_23 %>% as_tibble() %>% rename("fit" = Predicted)}
 
 print('Breaking her58?')
 
-occ_graph_all <- bind_rows(occ_graph_19, occ_graph_20, occ_graph_21, occ_graph_22, occ_graph_23)
+occ_graph_all <- bind_rows(occ_graph_19, occ_graph_20, occ_graph_22, occ_graph_23)
   
 occ_plot <- ggplot(occ_graph_all %>%
          mutate(year = factor(year)) %>%
-  select(Predicted:upper,year), aes(x = year, y = Predicted, fill=year)) +
-  geom_boxplot(alpha = 0.3) +
+  select(fit:year), aes(x = year, y = fit, fill=year)) +
+  geom_boxplot() +
+  ylim(0.00,1.00) +
   labs(title = paste0("Occcupancy of ", species_choice),
        x = "Year",
        y = "Predicted Occupancy") +
-  ylim(0.00,1.00) +
   theme_bw() +
   theme(legend.position="none") +
   scale_fill_viridis_d()
@@ -1129,7 +1115,9 @@ ybsa_occ <- ss_occ_plot_loop(pei_main, "YBSA")
 
 #occ_spp |> select(species_code) |> slice(1:20) |> pull()
 
-ggarrange(revi_occ, amre_occ, btnw_occ, nopa_occ, mawa_occ)
+ggarrange(revi_occ, amre_occ, btnw_occ, nopa_occ)
+
+, mawa_occ)
 
 ```
 
@@ -1238,5 +1226,5 @@ Ensuring the ARUs' optimal functionality is of utmost importance for data reliab
 
 ## Ex-situ monitoring
 
-Given the size and proximity to unmanaged areas around the Park, expanding monitoring beyond the confines of the park to include control locations is a strategic move to enhance the program's comprehensiveness. By broadening the scope of surveillance, assessments of occupancy and population dynamics can be conducted in a more holistic manner. This expansion provides a broader ecological context, facilitating a nuanced understanding of the interactions between wildlife and their surroundings. The data gathered from these external locations could significantly contribute to refining ecological models and establishing a comprehensive understanding of the ecological and population dynamics of species located in the park. This would also facilitate a citizen science component to the work being done.
+Given the size and proximity to un-managed areas around the Park, expanding monitoring beyond the confines of the park to include control locations is a strategic move to enhance the program's comprehensiveness. By broadening the scope of surveillance, assessments of occupancy and population dynamics can be conducted in a more holistic manner. This expansion provides a broader ecological context, facilitating a nuanced understanding of the interactions between wildlife and their surroundings. The data gathered from these external locations could significantly contribute to refining ecological models and establishing a comprehensive understanding of the ecological and population dynamics of species located in the park. This would also facilitate a citizen science component to the work being done.
 

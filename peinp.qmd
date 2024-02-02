@@ -177,7 +177,15 @@ distance_to_coast <- read_csv("penp_coastline_distance.csv")
 year_covs <- read_csv("year_covariates.csv")
 
 covs <- distance_to_coast |>
-  inner_join(df_lk)
+  inner_join(df_lk) |>
+  mutate(landcover = case_when(landcover %in% c("WS","BS","BF") ~ "Conifer",
+                               landcover %in% c("RM","WB","AL","PO") ~ "Deciduous",
+                               landcover %in% c("SOY","NA","PAV","TRE") ~ "Anthro",
+                               landcover %in% c("SDW","BAR","GRS") ~ "Open",
+                               TRUE ~ NA_character_)) |>
+  group_by(location, coast_dist, landcover) |>
+  summarise(landcover_proportion = sum((landcover_proportion))) |>
+  ungroup()
 
 locs_summary <- pei_locs |>
   st_drop_geometry() |>
@@ -762,12 +770,17 @@ ss_occ_plot_loop <- function(input, species_choice) {
   filter(!task_duration > 180, !(grepl('PENP-BS-*',location) & task_method != '1SPT')) |>
   mutate(hour = lubridate::hour(recording_date_time),
          year = lubridate::year(recording_date_time)) |>
-  group_by(location) |>
-  mutate(ct = n_distinct(year)) |>
-  ungroup() |>
-  filter(ct == 5) |>
+  # group_by(location) |>
+  # mutate(ct = n_distinct(year)) |>
+  # ungroup() |>
+  # filter(ct == 5) |>
   filter(hour %in% c(4:7),
          year == 2019)
+  # group_by(location) |>
+  # mutate(ctn = n_distinct(recording_date_time)) |>
+  # ungroup() |>
+  # filter(!ctn < 4) |>
+  # select(-ctn)
   
   pei_occu_20 <- data |>
     as_tibble() |>
@@ -781,12 +794,17 @@ ss_occ_plot_loop <- function(input, species_choice) {
   filter(!task_duration > 180, !(grepl('PENP-BS-*',location) & task_method != '1SPT')) |>
   mutate(hour = lubridate::hour(recording_date_time),
          year = lubridate::year(recording_date_time)) |>
-  group_by(location) |>
-  mutate(ct = n_distinct(year)) |>
-  ungroup() |>
-  filter(ct == 5) |>
+  # group_by(location) |>
+  # mutate(ct = n_distinct(year)) |>
+  # ungroup() |>
+  # filter(ct == 5) |>
   filter(hour %in% c(4:7),
          year == 2020)
+  # group_by(location) |>
+  # mutate(ctn = n_distinct(recording_date_time)) |>
+  # ungroup() |>
+  # filter(!ctn < 4) |>
+  # select(-ctn)
   
   pei_occu_21 <- data |>
     as_tibble() |>
@@ -800,12 +818,17 @@ ss_occ_plot_loop <- function(input, species_choice) {
   filter(!task_duration > 180, !(grepl('PENP-BS-*',location) & task_method != '1SPT')) |>
   mutate(hour = lubridate::hour(recording_date_time),
          year = lubridate::year(recording_date_time)) |>
-  group_by(location) |>
-  mutate(ct = n_distinct(year)) |>
-  ungroup() |>
-  filter(ct == 5) |>
+  # group_by(location) |>
+  # mutate(ct = n_distinct(year)) |>
+  # ungroup() |>
+  # filter(ct == 5) |>
   filter(hour %in% c(4:7),
          year == 2021)
+  # group_by(location) |>
+  # mutate(ctn = n_distinct(recording_date_time)) |>
+  # ungroup() |>
+  # filter(!ctn < 4) |>
+  # select(-ctn)
   
   pei_occu_22 <- data |>
     as_tibble() |>
@@ -819,12 +842,17 @@ ss_occ_plot_loop <- function(input, species_choice) {
   filter(!task_duration > 180, !(grepl('PENP-BS-*',location) & task_method != '1SPT')) |>
   mutate(hour = lubridate::hour(recording_date_time),
          year = lubridate::year(recording_date_time)) |>
-  group_by(location) |>
-  mutate(ct = n_distinct(year)) |>
-  ungroup() |>
-  filter(ct == 5) |>
+  # group_by(location) |>
+  # mutate(ct = n_distinct(year)) |>
+  # ungroup() |>
+  # filter(ct == 5) |>
   filter(hour %in% c(4:7),
          year == 2022)
+  # group_by(location) |>
+  # mutate(ctn = n_distinct(recording_date_time)) |>
+  # ungroup() |>
+  # filter(!ctn < 4) |>
+  # select(-ctn)
   
    pei_occu_23 <- data |>
     as_tibble() |>
@@ -838,101 +866,134 @@ ss_occ_plot_loop <- function(input, species_choice) {
   filter(!task_duration > 180, !(grepl('PENP-BS-*',location) & task_method != '1SPT')) |>
   mutate(hour = lubridate::hour(recording_date_time),
          year = lubridate::year(recording_date_time)) |>
-  group_by(location) |>
-  mutate(ct = n_distinct(year)) |>
-  ungroup() |>
-  filter(ct == 5) |>
+  # group_by(location) |>
+  # mutate(ct = n_distinct(year)) |>
+  # ungroup() |>
+  # filter(ct == 5) |>
   filter(hour %in% c(4:7),
          year == 2023)
+  # group_by(location) |>
+  # mutate(ctn = n_distinct(recording_date_time)) |>
+  # ungroup() |>
+  # filter(!ctn < 4) |>
+  # select(-ctn)
 
 site_covariates_19 <- pei_occu_19 |>
   inner_join(covs) |>
-  select(location, year, coast_dist, landcover, landcover_proportion, description) |>
+  select(location, year, coast_dist, landcover, landcover_proportion) |>
   distinct() |>
-  relocate(description, .after = coast_dist) |>
   pivot_wider(names_from = landcover, values_from = landcover_proportion, values_fill = 0) |>
   group_by(location, year, coast_dist) |>
-  summarise(across(starts_with(c("GRS", "RM", "SOY", "TRE", "WS", "NA", "PAV", "WB", "SDW", "BS")), max)) |>
-  ungroup() |>
-  pivot_longer(-c(location:coast_dist), names_to = "landcover", values_to = "landcover_proportion") |>
-  group_by(location, year, coast_dist) |>
-  filter(landcover_proportion == max(landcover_proportion)) |>
+  summarise(across(starts_with(c("Anthro","Deciduous","Open","Conifer")), max)) |>
   ungroup()
+  # pivot_longer(-c(location:coast_dist), names_to = "landcover", values_to = "landcover_proportion") |>
+  # group_by(location, year, coast_dist) |>
+  # filter(landcover_proportion == max(landcover_proportion)) |>
+  # ungroup()
 
 # Print the result
 
 site_covariates_20 <- pei_occu_20 |>
   inner_join(covs) |>
-  select(location, year, coast_dist, landcover, landcover_proportion, description) |>
+  select(location, year, coast_dist, landcover, landcover_proportion) |>
   distinct() |>
-  relocate(description, .after = coast_dist) |>
   pivot_wider(names_from = landcover, values_from = landcover_proportion, values_fill = 0) |>
   group_by(location, year, coast_dist) |>
-  summarise(across(starts_with(c("GRS", "RM", "SOY", "TRE", "WS", "NA", "PAV", "WB", "SDW", "BS")), max)) |>
-  ungroup() |>
-  pivot_longer(-c(location:coast_dist), names_to = "landcover", values_to = "landcover_proportion") |>
-  group_by(location, year, coast_dist) |>
-  filter(landcover_proportion == max(landcover_proportion)) |>
+summarise(across(starts_with(c("Anthro","Deciduous","Open","Conifer")), max)) |>
   ungroup()
+  # pivot_longer(-c(location:coast_dist), names_to = "landcover", values_to = "landcover_proportion") |>
+  # group_by(location, year, coast_dist) |>
+  # filter(landcover_proportion == max(landcover_proportion)) |>
+  # ungroup()
 
 site_covariates_21 <- pei_occu_21 |>
   inner_join(covs) |>
-  select(location, year, coast_dist, landcover, landcover_proportion, description) |>
+  select(location, year, coast_dist, landcover, landcover_proportion) |>
   distinct() |>
-  relocate(description, .after = coast_dist) |>
   pivot_wider(names_from = landcover, values_from = landcover_proportion, values_fill = 0) |>
   group_by(location, year, coast_dist) |>
-  summarise(across(starts_with(c("GRS", "RM", "SOY", "TRE", "WS", "NA", "PAV", "WB", "SDW", "BS")), max)) |>
-  ungroup() |>
-  pivot_longer(-c(location:coast_dist), names_to = "landcover", values_to = "landcover_proportion") |>
-  group_by(location, year, coast_dist) |>
-  filter(landcover_proportion == max(landcover_proportion)) |>
+summarise(across(starts_with(c("Anthro","Deciduous","Open","Conifer")), max)) |>
   ungroup()
+  # pivot_longer(-c(location:coast_dist), names_to = "landcover", values_to = "landcover_proportion") |>
+  # group_by(location, year, coast_dist) |>
+  # filter(landcover_proportion == max(landcover_proportion)) |>
+  # ungroup()
 
 site_covariates_22 <- pei_occu_22 |>
   inner_join(covs) |>
-  select(location, year, coast_dist, landcover, landcover_proportion, description) |>
+  select(location, year, coast_dist, landcover, landcover_proportion) |>
   distinct() |>
-  relocate(description, .after = coast_dist) |>
   pivot_wider(names_from = landcover, values_from = landcover_proportion, values_fill = 0) |>
   group_by(location, year, coast_dist) |>
-  summarise(across(starts_with(c("GRS", "RM", "SOY", "TRE", "WS", "NA", "PAV", "WB", "SDW", "BS")), max)) |>
-  ungroup() |>
-  pivot_longer(-c(location:coast_dist), names_to = "landcover", values_to = "landcover_proportion") |>
-  group_by(location, year, coast_dist) |>
-  filter(landcover_proportion == max(landcover_proportion)) |>
+summarise(across(starts_with(c("Anthro","Deciduous","Open","Conifer")), max)) |>
   ungroup()
+  # pivot_longer(-c(location:coast_dist), names_to = "landcover", values_to = "landcover_proportion") |>
+  # group_by(location, year, coast_dist) |>
+  # filter(landcover_proportion == max(landcover_proportion)) |>
+  # ungroup()
 
 site_covariates_23 <- pei_occu_23 |>
   inner_join(covs) |>
-  select(location, year, coast_dist, landcover, landcover_proportion, description) |>
+  select(location, year, coast_dist, landcover, landcover_proportion) |>
   distinct() |>
-  relocate(description, .after = coast_dist) |>
   pivot_wider(names_from = landcover, values_from = landcover_proportion, values_fill = 0) |>
   group_by(location, year, coast_dist) |>
-  summarise(across(starts_with(c("GRS", "RM", "SOY", "TRE", "WS", "NA", "PAV", "WB", "SDW", "BS")), max)) |>
-  ungroup() |>
-  pivot_longer(-c(location:coast_dist), names_to = "landcover", values_to = "landcover_proportion") |>
-  group_by(location, year, coast_dist) |>
-  filter(landcover_proportion == max(landcover_proportion)) |>
+summarise(across(starts_with(c("Anthro","Deciduous","Open","Conifer")), max)) |>
   ungroup()
+  # pivot_longer(-c(location:coast_dist), names_to = "landcover", values_to = "landcover_proportion") |>
+  # group_by(location, year, coast_dist) |>
+  # filter(landcover_proportion == max(landcover_proportion)) |>
+  # ungroup()
 
-occu_one_19 <- wt_format_occupancy(pei_occu_19, siteCovs = site_covariates_19, species = "NOPA")
+print('Breaking here?')
+
+occu_one_19 <- wt_format_occupancy(pei_occu_19, siteCovs = site_covariates_19, species = species_choice)
 occu_one_20 <- wt_format_occupancy(pei_occu_20, siteCovs = site_covariates_20, species = species_choice)
 occu_one_21 <- wt_format_occupancy(pei_occu_21, siteCovs = site_covariates_21, species = species_choice)
 occu_one_22 <- wt_format_occupancy(pei_occu_22, siteCovs = site_covariates_22, species = species_choice)
 occu_one_23 <- wt_format_occupancy(pei_occu_23, siteCovs = site_covariates_23, species = species_choice)
 
+print('Breaking here2?')
+
 occu_one_19@siteCovs$coast_dist <- scale(occu_one_19@siteCovs$coast_dist)
-occu_one_19@siteCovs$landcover_proportion <- scale(occu_one_19@siteCovs$landcover_proportion)
+occu_one_19@siteCovs$Anthro <- scale(occu_one_19@siteCovs$Anthro)
+occu_one_19@siteCovs$Open <- scale(occu_one_19@siteCovs$Open)
+occu_one_19@siteCovs$Conifer <- scale(occu_one_19@siteCovs$Conifer)
+occu_one_19@siteCovs$Deciduous <- scale(occu_one_19@siteCovs$Deciduous)
+
+print('Breaking here2????')
+
 occu_one_20@siteCovs$coast_dist <- scale(occu_one_20@siteCovs$coast_dist)
-occu_one_20@siteCovs$landcover_proportion <- scale(occu_one_20@siteCovs$landcover_proportion)
+occu_one_20@siteCovs$Anthro <- scale(occu_one_20@siteCovs$Anthro)
+occu_one_20@siteCovs$Open <- scale(occu_one_20@siteCovs$Open)
+occu_one_20@siteCovs$Conifer <- scale(occu_one_20@siteCovs$Conifer)
+occu_one_20@siteCovs$Deciduous <- scale(occu_one_20@siteCovs$Deciduous)
+
+print('Breaking here2????????')
+
 occu_one_21@siteCovs$coast_dist <- scale(occu_one_21@siteCovs$coast_dist)
-occu_one_21@siteCovs$landcover_proportion <- scale(occu_one_21@siteCovs$landcover_proportion)
+occu_one_21@siteCovs$Anthro <- scale(occu_one_21@siteCovs$Anthro)
+occu_one_21@siteCovs$Open <- scale(occu_one_21@siteCovs$Open)
+occu_one_21@siteCovs$Conifer <- scale(occu_one_21@siteCovs$Conifer)
+occu_one_21@siteCovs$Deciduous <- scale(occu_one_21@siteCovs$Deciduous)
+
+print('Breaking here2?????????????')
+
 occu_one_22@siteCovs$coast_dist <- scale(occu_one_22@siteCovs$coast_dist)
-occu_one_22@siteCovs$landcover_proportion <- scale(occu_one_22@siteCovs$landcover_proportion)
+occu_one_22@siteCovs$Anthro <- scale(occu_one_22@siteCovs$Anthro)
+occu_one_22@siteCovs$Open <- scale(occu_one_22@siteCovs$Open)
+occu_one_22@siteCovs$Conifer <- scale(occu_one_22@siteCovs$Conifer)
+occu_one_22@siteCovs$Deciduous <- scale(occu_one_22@siteCovs$Deciduous)
+
+print('Breaking here2????????????????')
+
 occu_one_23@siteCovs$coast_dist <- scale(occu_one_23@siteCovs$coast_dist)
-occu_one_23@siteCovs$landcover_proportion <- scale(occu_one_23@siteCovs$landcover_proportion)
+occu_one_23@siteCovs$Anthro <- scale(occu_one_23@siteCovs$Anthro)
+occu_one_23@siteCovs$Open <- scale(occu_one_23@siteCovs$Open)
+occu_one_23@siteCovs$Conifer <- scale(occu_one_23@siteCovs$Conifer)
+occu_one_23@siteCovs$Deciduous <- scale(occu_one_23@siteCovs$Deciduous)
+
+print('Breaking here3?')
 
 occu_one_19@obsCovs$doy <- scale(occu_one_19@obsCovs$doy)
 occu_one_19@obsCovs$hr <- scale(occu_one_19@obsCovs$hr)
@@ -945,23 +1006,56 @@ occu_one_22@obsCovs$hr <- scale(occu_one_22@obsCovs$hr)
 occu_one_23@obsCovs$doy <- scale(occu_one_23@obsCovs$doy)
 occu_one_23@obsCovs$hr <- scale(occu_one_23@obsCovs$hr)
 
+print('Breaking here4?')
 
-occu_model_19 <- occu(~ doy + hr + observer ~ coast_dist + landcover_proportion, occu_one_19, starts = c(0,0,0,0,0,0,0,0,0,0,0,0,0,0))
-occu_model_20  <- occu(~ doy + hr + observer ~ coast_dist + landcover_proportion, occu_one_20)
-occu_model_21 <- occu(~ doy + hr + observer ~ coast_dist + landcover_proportion, occu_one_21)
-occu_model_22 <- occu(~ doy + hr + observer ~ coast_dist + landcover_proportion, occu_one_22)
-occu_model_23 <- occu(~ doy + hr + observer ~ coast_dist + landcover_proportion, occu_one_23)
+occu_model_19 <- occu(~ doy + hr ~ coast_dist + Anthro + Open + Deciduous + Conifer, occu_one_19)
+occu_model_20 <- occu(~ doy + hr ~ coast_dist + Anthro + Open + Deciduous + Conifer, occu_one_20)
+occu_model_21 <- occu(~ doy + hr ~ coast_dist + Anthro + Open + Deciduous + Conifer, occu_one_21)
+occu_model_22 <- occu(~ doy + hr ~ coast_dist + Anthro + Open + Deciduous + Conifer, occu_one_22)
+occu_model_23 <- occu(~ doy + hr ~ coast_dist + Anthro + Open + Deciduous + Conifer, occu_one_23)
 
-mb.gof.test(occu_model_19, nsim=1000, plot.hist=F)
-occ_dredge <- dredge(occu_model_19)
-occ_dredge_delta <- get.models(occ_dredge, subset = delta <= 2.5)
-occ_avg <- model.avg(occ_dredge_delta, fit = TRUE)
+print('Breaking here5?')
 
-socc_fit_19 <- predict(occu_model_19, data = site_covariates_19, type="state",interval="confidence")
+gof19 <- mb.gof.test(occu_model_19, nsim=1000, plot.hist=F)
+gof20 <- mb.gof.test(occu_model_20, nsim=1000, plot.hist=F)
+gof21 <- mb.gof.test(occu_model_21, nsim=1000, plot.hist=F)
+gof22 <- mb.gof.test(occu_model_22, nsim=1000, plot.hist=F)
+gof23 <- mb.gof.test(occu_model_23, nsim=1000, plot.hist=F)
+
+print('Breaking her65?')
+
+print(gof19$c.hat.est)
+print(gof20$c.hat.est)
+print(gof21$c.hat.est)
+print(gof22$c.hat.est)
+print(gof23$c.hat.est)
+
+#occ_dredge <- dredge(occu_model_19)
+
+# model_comparison <- as.data.frame(occ_dredge) %>% 
+#   select(starts_with("psi(p"), df, AICc, delta, weight)
+# # shorten names for printing
+# names(model_comparison) <- names(model_comparison) %>% 
+#   str_extract("(?<=psi\\(pland_[0-9]{2}_)[a-z_]+") %>% 
+#   coalesce(names(model_comparison))
+# 
+# mutate_all(model_comparison, ~ round(., 3)) %>% 
+#   head(18) %>% 
+#   knitr::kable()
+# 
+# 
+# occ_dredge_delta <- get.models(occ_dredge, subset = delta <= 2.5)
+# occ_avg <- model.avg(occ_dredge_delta, fit = TRUE)
+# occ_model_sel <- model.sel(occ_dredge)
+
+
+occ_fit_19 <- predict(occu_model_19, data = site_covariates_19, type="state",interval="confidence")
 occ_fit_20 <- predict(occu_model_20, data = site_covariates_20, type="state",interval="confidence")
 occ_fit_21 <- predict(occu_model_21, data = site_covariates_21, type="state",interval="confidence")
 occ_fit_22 <- predict(occu_model_22, data = site_covariates_22, type="state",interval="confidence")
 occ_fit_23 <- predict(occu_model_23, data = site_covariates_23, type="state",interval="confidence")
+
+print('Breaking her57?')
 
 occ_graph_19 <- occ_fit_19 %>% as_tibble() %>% bind_cols(., site_covariates_19)
 occ_graph_20 <- occ_fit_20 %>% as_tibble() %>% bind_cols(., site_covariates_20)
@@ -969,18 +1063,20 @@ occ_graph_21 <- occ_fit_21 %>% as_tibble() %>% bind_cols(., site_covariates_21)
 occ_graph_22 <- occ_fit_22 %>% as_tibble() %>% bind_cols(., site_covariates_22)
 occ_graph_23 <- occ_fit_23 %>% as_tibble() %>% bind_cols(., site_covariates_23)
 
+print('Breaking her58?')
+
 occ_graph_all <- bind_rows(occ_graph_19, occ_graph_20, occ_graph_21, occ_graph_22, occ_graph_23)
   
 occ_plot <- ggplot(occ_graph_all %>%
          mutate(year = factor(year)) %>%
   select(Predicted:upper,year), aes(x = year, y = Predicted, fill=year)) +
   geom_boxplot(alpha = 0.3) +
-  labs(title = paste0("Occcupancy of ",species_choice),
+  labs(title = paste0("Occcupancy of ", species_choice),
        x = "Year",
        y = "Predicted Occupancy") +
   ylim(0.00,1.00) +
   theme_bw() +
-  theme(legend.position="none")
+  theme(legend.position="none") +
   scale_fill_viridis_d()
   
   return(occ_plot)
@@ -1033,10 +1129,7 @@ ybsa_occ <- ss_occ_plot_loop(pei_main, "YBSA")
 
 #occ_spp |> select(species_code) |> slice(1:20) |> pull()
 
-ggarrange(revi_occ, amre_occ, btnw_occ, nopa_occ, mawa_occ, swth_occ,
-          alfl_occ, yrwa_occ, baww_occ, bhvi_occ, blja_occ, chsp_occ,
-          btbw_occ, blbw_occ, gcki_occ, mowa_occ, heth_occ, cswa_occ,
-          eawp_occ, ybsa_occ)
+ggarrange(revi_occ, amre_occ, btnw_occ, nopa_occ, mawa_occ)
 
 ```
 

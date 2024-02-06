@@ -1,0 +1,1853 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Alex MacPhail">
+<meta name="dcterms.date" content="2024-02-06">
+
+<title>Report on the use of passive acoustic monitoring in Prince Edward Island National Park</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="peinp_files/libs/clipboard/clipboard.min.js"></script>
+<script src="peinp_files/libs/quarto-html/quarto.js"></script>
+<script src="peinp_files/libs/quarto-html/popper.min.js"></script>
+<script src="peinp_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="peinp_files/libs/quarto-html/anchor.min.js"></script>
+<link href="peinp_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="peinp_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="peinp_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="peinp_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="peinp_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+</head>
+
+<body>
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article toc-left">
+<div id="quarto-sidebar-toc-left" class="sidebar toc-left">
+  <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="99">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#abstract" id="toc-abstract" class="nav-link active" data-scroll-target="#abstract">Abstract</a></li>
+  <li><a href="#land-acknowledgement" id="toc-land-acknowledgement" class="nav-link" data-scroll-target="#land-acknowledgement">Land Acknowledgement</a></li>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#methods" id="toc-methods" class="nav-link" data-scroll-target="#methods">Methods</a>
+  <ul class="collapse">
+  <li><a href="#data-collection" id="toc-data-collection" class="nav-link" data-scroll-target="#data-collection">Data collection</a></li>
+  <li><a href="#data-management" id="toc-data-management" class="nav-link" data-scroll-target="#data-management">Data management</a></li>
+  <li><a href="#community-data-processing" id="toc-community-data-processing" class="nav-link" data-scroll-target="#community-data-processing">Community data processing</a></li>
+  <li><a href="#visual-scanning" id="toc-visual-scanning" class="nav-link" data-scroll-target="#visual-scanning">Visual scanning</a></li>
+  <li><a href="#automated-recognition" id="toc-automated-recognition" class="nav-link" data-scroll-target="#automated-recognition">Automated recognition</a></li>
+  <li><a href="#analyses" id="toc-analyses" class="nav-link" data-scroll-target="#analyses">Analyses</a></li>
+  </ul></li>
+  <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results">Results</a>
+  <ul class="collapse">
+  <li><a href="#species-richness" id="toc-species-richness" class="nav-link" data-scroll-target="#species-richness">Species richness</a></li>
+  <li><a href="#species-diversity" id="toc-species-diversity" class="nav-link" data-scroll-target="#species-diversity">Species diversity</a></li>
+  <li><a href="#species-occupancy" id="toc-species-occupancy" class="nav-link" data-scroll-target="#species-occupancy">Species occupancy</a></li>
+  <li><a href="#visual-scanning-1" id="toc-visual-scanning-1" class="nav-link" data-scroll-target="#visual-scanning-1">Visual scanning</a></li>
+  <li><a href="#automated-recognition-1" id="toc-automated-recognition-1" class="nav-link" data-scroll-target="#automated-recognition-1">Automated recognition</a></li>
+  <li><a href="#amphibians" id="toc-amphibians" class="nav-link" data-scroll-target="#amphibians">Amphibians</a></li>
+  </ul></li>
+  <li><a href="#discussion" id="toc-discussion" class="nav-link" data-scroll-target="#discussion">Discussion</a></li>
+  </ul>
+</nav>
+</div>
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+</div>
+<main class="content page-columns page-full" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Report on the use of passive acoustic monitoring in Prince Edward Island National Park</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Alex MacPhail </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">February 6, 2024</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+</header>
+
+<div class="quarto-figure quarto-figure-center" style="float:left`;">
+<figure class="figure">
+<p><img src="peinpheader.png" class="img-fluid figure-img" alt="Photo of the ocean"></p>
+</figure>
+</div>
+<div class="fullwidth">
+<p>To run this report locally:</p>
+<ul>
+<li>Open RStudio or your preferred IDE</li>
+<li>Create a new project and set up for version control using the GitHub repository</li>
+<li>Pull from remote main</li>
+<li>Load the <code>pei.RData</code> file in the first chunk</li>
+<li>Render the document and review the results</li>
+</ul>
+</div>
+<section id="abstract" class="level1">
+<h1>Abstract</h1>
+<p>Passive acoustic monitoring has proven to be a valuable tool for monitoring vocalizing species. Environmental sensors are becoming increasingly easy to program and can autonomously generating extensive data sets of the soundscape, an invaluable resource for ecological integrity monitoring. Prince Edward Island National deployed autonomous recording units (ARUs) across 30 locations during a comprehensive five-year survey. The analysis revealed that species richness and diversity remained relatively stable, while single-species species occupancy exhibited diverse patterns. Common and generalist species showed consistent occupancy, but there was a notable reduction in conifer-nesting species in 2023, likely attributed to forest structural loss. Ongoing monitoring and dynamic models can yield more detailed and predictive results to ensure the continued maintenance of ecological integrity in the Park.</p>
+<hr>
+</section>
+<section id="land-acknowledgement" class="level1">
+<h1>Land Acknowledgement</h1>
+<p>In the spirit of Reconciliation, we acknowledge that the land upon which this data was gathered is unceeded Mi’kmaq territory. Epekwitk (Prince Edward Island), Mi’kma’ki, is covered by the historic Treaties of Peace and Friendship. We pay our respects to the Indigenous Mi’kmaq People who have occupied this Island for over 12,000 years; past, present and future.</p>
+</section>
+<section id="introduction" class="level1 page-columns page-full">
+<h1>Introduction</h1>
+<p>Human activities have been identified as key pressures and contributors to the global decline in forest wildlife (<span class="citation" data-cites="allan2017recent">Allan et al. (<a href="#ref-allan2017recent" role="doc-biblioref">2017</a>)</span>). The repercussions of habitat fragmentation (<span class="citation" data-cites="fahrig2003effects">Fahrig (<a href="#ref-fahrig2003effects" role="doc-biblioref">2003</a>)</span>) and loss (<span class="citation" data-cites="hanski2011habitat">Hanski (<a href="#ref-hanski2011habitat" role="doc-biblioref">2011</a>)</span>), climate change (<span class="citation" data-cites="mantyka2012interactions">Mantyka-pringle, Martin, and Rhodes (<a href="#ref-mantyka2012interactions" role="doc-biblioref">2012</a>)</span>, <span class="citation" data-cites="sattar2021review">Sattar et al. (<a href="#ref-sattar2021review" role="doc-biblioref">2021</a>)</span>, <span class="citation" data-cites="abrahms2023climate">Abrahms et al. (<a href="#ref-abrahms2023climate" role="doc-biblioref">2023</a>)</span>), and increased access to sensitive areas exert direct and indirect pressures on forest biodiversity, particularly in managed regions in Canada (<span class="citation" data-cites="lemieux2011state">Lemieux et al. (<a href="#ref-lemieux2011state" role="doc-biblioref">2011</a>)</span>).</p>
+<div class="no-row-height column-margin column-container"><div id="ref-allan2017recent" class="csl-entry" role="listitem">
+Allan, James R, Oscar Venter, Sean Maxwell, Bastian Bertzky, Kendall Jones, Yichuan Shi, and James EM Watson. 2017. <span>“Recent Increases in Human Pressure and Forest Loss Threaten Many Natural World Heritage Sites.”</span> <em>Biological Conservation</em> 206: 47–55.
+</div><div id="ref-fahrig2003effects" class="csl-entry" role="listitem">
+Fahrig, Lenore. 2003. <span>“Effects of Habitat Fragmentation on Biodiversity.”</span> <em>Annual Review of Ecology, Evolution, and Systematics</em> 34 (1): 487–515.
+</div><div id="ref-hanski2011habitat" class="csl-entry" role="listitem">
+Hanski, Ilkka. 2011. <span>“Habitat Loss, the Dynamics of Biodiversity, and a Perspective on Conservation.”</span> <em>Ambio</em> 40 (3): 248–55.
+</div><div id="ref-mantyka2012interactions" class="csl-entry" role="listitem">
+Mantyka-pringle, Chrystal S, Tara G Martin, and Jonathan R Rhodes. 2012. <span>“Interactions Between Climate and Habitat Loss Effects on Biodiversity: A Systematic Review and Meta-Analysis.”</span> <em>Global Change Biology</em> 18 (4): 1239–52.
+</div><div id="ref-sattar2021review" class="csl-entry" role="listitem">
+Sattar, Q, ME Maqbool, R Ehsan, S Akhtar, Q Sattar, ME Maqbool, R Ehsan, and S Akhtar. 2021. <span>“Review on Climate Change and Its Effect on Wildlife and Ecosystem.”</span> <em>Open J Environ Biol</em> 6 (1): 008–14.
+</div><div id="ref-abrahms2023climate" class="csl-entry" role="listitem">
+Abrahms, Briana, Neil H Carter, TJ Clark-Wolf, Kaitlyn M Gaynor, Erik Johansson, Alex McInturff, Anna C Nisi, Kasim Rafiq, and Leigh West. 2023. <span>“Climate Change as a Global Amplifier of Human–Wildlife Conflict.”</span> <em>Nature Climate Change</em> 13 (3): 224–34.
+</div><div id="ref-lemieux2011state" class="csl-entry" role="listitem">
+Lemieux, Christopher J, Thomas J Beechey, Daniel J Scott, and Paul A Gray. 2011. <span>“The State of Climate Change Adaptation in Canada’s Protected Areas Sector.”</span> <em>The Canadian Geographer/Le G<span>é</span>ographe Canadien</em> 55 (3): 301–17.
+</div><div id="ref-aru-overview" class="csl-entry" role="listitem">
+Shonfield, Julia, and Erin M Bayne. 2017. <span>“Autonomous Recording Units in Avian Ecological Research: Current Use and Future Applications.”</span> <em>Avian Conservation &amp; Ecology</em> 12 (1).
+</div><div id="ref-lots-of-pam" class="csl-entry" role="listitem">
+Sugai, Larissa Sayuri Moreira, Thiago Sanna Freire Silva, Jr Ribeiro José Wagner, and Diego Llusia. 2018. <span>“<span class="nocase">Terrestrial Passive Acoustic Monitoring: Review and Perspectives</span>.”</span> <em>BioScience</em> 69 (1): 15–25. <a href="https://doi.org/10.1093/biosci/biy147">https://doi.org/10.1093/biosci/biy147</a>.
+</div></div><p>In 2019, Prince Edward Island National Park initiated a program incorporating autonomous recording units (ARUs) for passive acoustic monitoring (PAM) of the Park’s wildlife. ARUs are compact environmental sensors that are designed to passively record the environment (<span class="citation" data-cites="aru-overview">Shonfield and Bayne (<a href="#ref-aru-overview" role="doc-biblioref">2017</a>)</span>), capturing vocalizing species like birds and amphibians, which is growing in use across the globe (<span class="citation" data-cites="lots-of-pam">Sugai et al. (<a href="#ref-lots-of-pam" role="doc-biblioref">2018</a>)</span>). This technology enables resource managers to conduct prolonged surveys with minimal human interference. The subsequent data collected by these units contribute valuable information to ecological integrity metrics such as species richness, diversity, occupancy, and trends over time. This data aids decision-making and management within the Park. Given the rapid and ease of accumulating data from these units, maintaining a high standard of data integrity is paramount to ensure future data interoperability and sharing. <a href="https://www.wildtrax.ca">WildTrax</a> is an online platform developed by the <a href="https://abmi.ca">Alberta Biodiversity Monitoring Institute (<strong>ABMI</strong>)</a> for users of environmental sensors to help addresses these big data challenges by providing solutions to standardize, harmonize, and share data.</p>
+<p>The objectives of this report are to:</p>
+<ul>
+<li>Describe the data management and processing procedures for the acoustic data collected from 2019 to 2023;</li>
+<li>Utilize traditional human tagging, visual scanning and automated recognition techniques to detect and count species and individuals heard on recordings;</li>
+<li>Define straightforward methods for evaluating species presence, species richness, and species occupancy over time at various locations;</li>
+<li>Offer recommendations for ongoing monitoring approaches to contribute to the assessment of ecological integrity in forest ecosystems;</li>
+<li>Facilitate data publication to the public, resource managers, academic institutions, and any other relevant agencies</li>
+</ul>
+<hr>
+</section>
+<section id="methods" class="level1 page-columns page-full">
+<h1>Methods</h1>
+<section id="data-collection" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="data-collection">Data collection</h2>
+<p>Data were collected during the spring and summer seasons from 2019 to 2023. A total of 30 locations were surveyed over the five-year period:</p>
+<ul>
+<li>21 locations as part of the forest songbird monitoring program (code: <code>PENP-*</code>) with ARUs recording during the morning hours,</li>
+<li>6 for Bank Swallow Monitoring (code: <code>PENP-BS-*</code>) with ARUs placed strategically beside ponds recording in the evening,</li>
+<li>2 locations deployed in First Nations communities (<code>ASC-1, LXI-1</code>) to complement the forest songbird and evening schedules,</li>
+<li>And one location (<code>PENP-E1</code>), which was to examine the effects of a single public event</li>
+</ul>
+<p>Locations were surveyed on rotation with 9 locations (PENP-1-1, PENP-1-2, PENP-2-3, PENP-3-1, PENP-3-2, PENP-4-1, PENP-4-2, PENP-4-3, PENP-4-4) surveyed each year. A detailed list of all survey years can be found in Table 1 (<a href="#tbl-loc-summary">Table&nbsp;1</a>) and illustrated in Figure 1 (<a href="#fig-locs">Figure&nbsp;1</a>). ARUs were deployed at the beginning of the breeding season in April-May, and rotated locations until their final retrieval in July-August. At the forest songbird locations (<code>PENP-*</code>), the ARUs were set to record for 30 minutes continuously every hour for four hours, starting one hour before dawn and ending three hours after dawn. For Bank Swallow Monitoring locations (<code>PENP-BS</code>), recordings were made every 5 minutes for a duration of 3 minutes each from 1.5 hours before dusk to 1.5 hours after dusk. On average, each ARU recorded for 11.27 +/- 8.03 days.</p>
+<div class="cell page-columns page-full">
+<div class="cell-output-display page-columns page-full">
+<div id="fig-locs" class="quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="figure page-columns page-full">
+<p><img src="peinp_files/figure-html/fig-locs-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption margin-caption">Figure&nbsp;1: ARU monitoring locations surveyed each year as part of the songbird monitoring program.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div id="tbl-loc-summary" class="anchored">
+<table data-quarto-postprocess="true" class="table table-sm table-striped small">
+<caption>Table&nbsp;1: Locations surveyed across years. Ones indicated a deployment in that year for that location</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Location</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2019</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2020</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2021</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2022</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2023</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Site</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">PENP-1-1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">Cavendish</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">PENP-1-2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">Cavendish</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">PENP-1-3</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">Cavendish</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">PENP-2-3</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">Brackley</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">PENP-3-1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">Dalvay</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">PENP-3-2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">Dalvay</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">PENP-3-4</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">Dalvay</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">PENP-4-1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">Greenwich</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">PENP-4-2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">Greenwich</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">PENP-4-3</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">Greenwich</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">PENP-4-4</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">Greenwich</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">PENP-1-4</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">Cavendish</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">PENP-3-5</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">Dalvay</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">PENP-3-6</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">Dalvay</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">ASC-1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">Communities</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">LXI-1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">Communities</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">PENP-1-5</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">Cavendish</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">PENP-1-6</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">Cavendish</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">PENP-3-7</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">Dalvay</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">PENP-3-8</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">Dalvay</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">PENP-4-6</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">Greenwich</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">PENP-5-1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">Skmaqn</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">PENP-BS-1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">Bank Swallow Monitoring</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">PENP-BS-2</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">Bank Swallow Monitoring</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">PENP-BS-3</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">Bank Swallow Monitoring</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">PENP-BS-4</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">Bank Swallow Monitoring</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">PENP-BS-5</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">Bank Swallow Monitoring</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">PENP-4-5</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">Greenwich</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">PENP-E1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">Skmaqn</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">PENP-BS-6</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">Bank Swallow Monitoring</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div id="tbl-obvs-and-covs" class="anchored">
+<table data-quarto-postprocess="true" class="table table-sm table-striped small">
+<caption>Table&nbsp;2: Site covariates for each forest songbird monitoring (PENP-*) location. Landcover is measured as proportion cover at 150 meter radius surrounding the ARU categorized into anthropogenic (pavement, soy), open (grass, sand dune, bare soil), deciduous (red maple, white birch, alder, poplar) and conifer (white spruce, black spruce, balsam fir).</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">location</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Distance from coast (m)</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Anthro</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Deciduous</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Open</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Conifer</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">PENP-1-1</td>
+<td style="text-align: right;">751</td>
+<td style="text-align: right;">0.05</td>
+<td style="text-align: right;">0.60</td>
+<td style="text-align: right;">0.35</td>
+<td style="text-align: right;">0.00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">PENP-1-2</td>
+<td style="text-align: right;">491</td>
+<td style="text-align: right;">0.06</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.94</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">PENP-1-3</td>
+<td style="text-align: right;">1540</td>
+<td style="text-align: right;">0.03</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.13</td>
+<td style="text-align: right;">0.85</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">PENP-1-4</td>
+<td style="text-align: right;">820</td>
+<td style="text-align: right;">0.09</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.91</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">PENP-1-5</td>
+<td style="text-align: right;">2050</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.91</td>
+<td style="text-align: right;">0.01</td>
+<td style="text-align: right;">0.08</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">PENP-1-6</td>
+<td style="text-align: right;">1640</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.97</td>
+<td style="text-align: right;">0.03</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">PENP-2-3</td>
+<td style="text-align: right;">78</td>
+<td style="text-align: right;">0.11</td>
+<td style="text-align: right;">0.02</td>
+<td style="text-align: right;">0.12</td>
+<td style="text-align: right;">0.75</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">PENP-3-1</td>
+<td style="text-align: right;">678</td>
+<td style="text-align: right;">0.32</td>
+<td style="text-align: right;">0.01</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.67</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">PENP-3-2</td>
+<td style="text-align: right;">672</td>
+<td style="text-align: right;">0.09</td>
+<td style="text-align: right;">0.38</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.53</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">PENP-3-4</td>
+<td style="text-align: right;">355</td>
+<td style="text-align: right;">0.31</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.69</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">PENP-3-5</td>
+<td style="text-align: right;">63</td>
+<td style="text-align: right;">0.10</td>
+<td style="text-align: right;">0.04</td>
+<td style="text-align: right;">0.57</td>
+<td style="text-align: right;">0.29</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">PENP-3-6</td>
+<td style="text-align: right;">1198</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.46</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.54</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">PENP-3-7</td>
+<td style="text-align: right;">408</td>
+<td style="text-align: right;">0.02</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.10</td>
+<td style="text-align: right;">0.89</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">PENP-3-8</td>
+<td style="text-align: right;">65</td>
+<td style="text-align: right;">0.39</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.17</td>
+<td style="text-align: right;">0.43</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">PENP-4-1</td>
+<td style="text-align: right;">447</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.34</td>
+<td style="text-align: right;">0.25</td>
+<td style="text-align: right;">0.41</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">PENP-4-2</td>
+<td style="text-align: right;">912</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.05</td>
+<td style="text-align: right;">0.21</td>
+<td style="text-align: right;">0.75</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">PENP-4-3</td>
+<td style="text-align: right;">1271</td>
+<td style="text-align: right;">0.06</td>
+<td style="text-align: right;">0.14</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.80</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">PENP-4-4</td>
+<td style="text-align: right;">902</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.01</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.99</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">PENP-4-5</td>
+<td style="text-align: right;">576</td>
+<td style="text-align: right;">0.57</td>
+<td style="text-align: right;">0.43</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">PENP-4-6</td>
+<td style="text-align: right;">789</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.84</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.16</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">PENP-5-1</td>
+<td style="text-align: right;">137</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.36</td>
+<td style="text-align: right;">0.64</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+</div>
+</div>
+</section>
+<section id="data-management" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="data-management">Data management</h2>
+<p>A total of 10078 recordings were collected (see <a href="#fig-recs-collect">Figure&nbsp;3</a>). From 2019 - 2021, data were transferred via hard drive to the University of Alberta in Edmonton, where they are redundantly stored on a server known as Cirrus. The recordings were standardized to ensure adherence to the naming convention of <code>LOCATION_DATETIME</code>, such as <code>PENP-1-1_20230625_053500.wav</code>. The remaining recordings (2022 - 2023) were directly uploaded to WildTrax by Parks Canada staff and can be downloaded from the platform’s Recording tab, accessible under Manage &gt; Download list of recordings (see <a href="#fig-download-recs">Figure&nbsp;2</a>).</p>
+<div id="fig-download-recs" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="download-recs.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">Figure&nbsp;2: Downloading a list of recordings from WildTrax</figcaption>
+</figure>
+</div>
+<div class="cell page-columns page-full" data-layout-align="center">
+<div class="cell-output-display page-columns page-full">
+<div id="fig-recs-collect" class="quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="figure page-columns page-full">
+<p><img src="peinp_files/figure-html/fig-recs-collect-1.png" class="img-fluid figure-img" width="960"></p>
+<figcaption class="figure-caption margin-caption">Figure&nbsp;3: Ridgeplot of recordings collected for each location over each survey year</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="community-data-processing" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="community-data-processing">Community data processing</h2>
+<p>The principal goal for data processing was to describe the acoustic community of species heard at locations while choosing a large enough subset of recordings for analyses. To ensure balanced replication, for each location and year surveyed, four randomly selected recordings were processed for 3-minutes between the hours of 4:00 AM - 7:59 AM ideally on four separate dates (see <a href="#tbl-loc-repl">Table&nbsp;3</a>). Four recordings will ensure that we have the minimum number of samples for a simple occupancy analysis (<span class="citation" data-cites="mackenzie2002estimating">Darryl I. MacKenzie et al. (<a href="#ref-mackenzie2002estimating" role="doc-biblioref">2002</a>)</span> and <span class="citation" data-cites="imperfect-occu">Darryl I. MacKenzie et al. (<a href="#ref-imperfect-occu" role="doc-biblioref">2003</a>)</span>). Tags are made using count-removal (see <span class="citation" data-cites="farnsworth2002removal">Farnsworth et al. (<a href="#ref-farnsworth2002removal" role="doc-biblioref">2002</a>)</span>, <span class="citation" data-cites="time-removal">Sólymos et al. (<a href="#ref-time-removal" role="doc-biblioref">2018</a>)</span>) where tags are only made at the time of first detection of each individual heard on the recordings. In case a species was overly abundant a TMTT (‘too many to tag’) flag was used (see <a href="#tbl-tmtt">Table&nbsp;5</a>). 1% of the total tags were TMTT but were subsequently converted to numeric using <code>wildRtrax::wt_replace_tmtt</code>. We also verified that all tags that were created were checked by a second observer (n = 67.46) to ensure accuracy of detections (see <a href="#tbl-verified">Table&nbsp;4</a>). Amphibian abundance was estimated at the time of first detection using the <a href="https://www.usgs.gov/centers/eesc/science/north-american-amphibian-monitoring-program">North American Amphibian Monitoring Program</a> with abundance of species being estimated on the scale of “calling intensity index” (CI) of 1 - 3. Mammals such as Red Squirrel, were also noted on the recordings. After the data are processed in WildTrax, the <a href="https://abbiodiversity.github.io/wildRtrax/">wildRtrax</a> package is use to download the data into a standard format prepared for analysis. The <code>wt_download_report</code> function downloads the data directly to a R framework for easy manipulation (see <a href="https://abbiodiversity.github.io/wildRtrax/articles/apis.html">wildRtrax APIs</a>).</p>
+<div class="no-row-height column-margin column-container"><div id="ref-imperfect-occu" class="csl-entry" role="listitem">
+MacKenzie, Darryl I., James D. Nichols, James E. Hines, Melinda G. Knutson, and Alan B. Franklin. 2003. <span>“ESTIMATING SITE OCCUPANCY, COLONIZATION, AND LOCAL EXTINCTION WHEN a SPECIES IS DETECTED IMPERFECTLY.”</span> <em>Ecology</em> 84 (8): 2200–2207. https://doi.org/<a href="https://doi.org/10.1890/02-3090">https://doi.org/10.1890/02-3090</a>.
+</div><div id="ref-farnsworth2002removal" class="csl-entry" role="listitem">
+Farnsworth, George L, Kenneth H Pollock, James D Nichols, Theodore R Simons, James E Hines, and John R Sauer. 2002. <span>“A Removal Model for Estimating Detection Probabilities from Point-Count Surveys.”</span> <em>The Auk</em> 119 (2): 414–25.
+</div><div id="ref-time-removal" class="csl-entry" role="listitem">
+Sólymos, Péter, Steven M. Matsuoka, Steven G. Cumming, Diana Stralberg, Patricia Fontaine, Fiona K. A. Schmiegelow, Samantha J. Song, and Erin M. Bayne. 2018. <span>“<span class="nocase">Evaluating time-removal models for estimating availability of boreal birds during point count surveys: Sample size requirements and model complexity</span>.”</span> <em>The Condor</em> 120 (4): 765–86. <a href="https://doi.org/10.1650/CONDOR-18-32.1">https://doi.org/10.1650/CONDOR-18-32.1</a>.
+</div></div><div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pei_projects <span class="ot">&lt;-</span> wildRtrax<span class="sc">::</span><span class="fu">wt_get_download_summary</span>(<span class="at">sensor =</span> <span class="st">'ARU'</span>) <span class="sc">|&gt;</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">grepl</span>(<span class="st">'^Prince Edward Island National Park Forest Songbird'</span>, project)) <span class="sc">|&gt;</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(project_id) <span class="sc">|&gt;</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>()</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>pei_main <span class="ot">&lt;-</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map_dfr</span>(</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">.x =</span> pei_projects,</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">.f =</span> <span class="sc">~</span> wildRtrax<span class="sc">::</span><span class="fu">wt_download_report</span>(</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>      <span class="at">project_id =</span> .x,</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>      <span class="at">sensor_id =</span> <span class="st">"ARU"</span>,</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>      <span class="at">weather_cols =</span> T,</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>      <span class="at">reports =</span> <span class="st">"main"</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div id="tbl-loc-repl" class="anchored">
+<table data-quarto-postprocess="true" class="table table-sm table-striped small">
+<caption>Table&nbsp;3: Example of tasks and unit replication for listening at PENP-1-1</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">location</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">year</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">task_duration</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">typ</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">n</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">PENP-1-1</td>
+<td style="text-align: right;">2019</td>
+<td style="text-align: left;">180s</td>
+<td style="text-align: left;">Dawn</td>
+<td style="text-align: right;">6</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">PENP-1-1</td>
+<td style="text-align: right;">2019</td>
+<td style="text-align: left;">180s</td>
+<td style="text-align: left;">Day</td>
+<td style="text-align: right;">7</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">PENP-1-1</td>
+<td style="text-align: right;">2020</td>
+<td style="text-align: left;">180s</td>
+<td style="text-align: left;">Dawn</td>
+<td style="text-align: right;">9</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">PENP-1-1</td>
+<td style="text-align: right;">2020</td>
+<td style="text-align: left;">180s</td>
+<td style="text-align: left;">Day</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">PENP-1-1</td>
+<td style="text-align: right;">2021</td>
+<td style="text-align: left;">180s</td>
+<td style="text-align: left;">Night</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">PENP-1-1</td>
+<td style="text-align: right;">2022</td>
+<td style="text-align: left;">180s</td>
+<td style="text-align: left;">Dawn</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">PENP-1-1</td>
+<td style="text-align: right;">2023</td>
+<td style="text-align: left;">180s</td>
+<td style="text-align: left;">Dawn</td>
+<td style="text-align: right;">4</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div id="tbl-verified" class="anchored">
+<table data-quarto-postprocess="true" class="table table-sm table-striped small">
+<caption>Table&nbsp;4: Proportion of tags verified</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Tag is verified</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Count</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Proportion</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: right;">137</td>
+<td style="text-align: right;">1.32</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">f</td>
+<td style="text-align: right;">3239</td>
+<td style="text-align: right;">31.22</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">t</td>
+<td style="text-align: right;">6998</td>
+<td style="text-align: right;">67.46</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div id="tbl-tmtt" class="anchored">
+<table data-quarto-postprocess="true" class="table table-sm table-striped small">
+<caption>Table&nbsp;5: TMTT tags</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">location</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">recording_date_time</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">species_code</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">individual_count</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">PENP-1-1</td>
+<td style="text-align: left;">2019-06-01 05:25:00</td>
+<td style="text-align: left;">AMCR</td>
+<td style="text-align: left;">TMTT</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">PENP-1-1</td>
+<td style="text-align: left;">2019-06-01 05:25:00</td>
+<td style="text-align: left;">AMRE</td>
+<td style="text-align: left;">TMTT</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">PENP-1-1</td>
+<td style="text-align: left;">2019-06-02 06:24:00</td>
+<td style="text-align: left;">YEWA</td>
+<td style="text-align: left;">TMTT</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">PENP-1-1</td>
+<td style="text-align: left;">2019-06-02 06:24:00</td>
+<td style="text-align: left;">AMCR</td>
+<td style="text-align: left;">TMTT</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">PENP-1-1</td>
+<td style="text-align: left;">2019-06-02 06:24:00</td>
+<td style="text-align: left;">AMRE</td>
+<td style="text-align: left;">TMTT</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">PENP-1-1</td>
+<td style="text-align: left;">2019-06-04 07:23:00</td>
+<td style="text-align: left;">AMRE</td>
+<td style="text-align: left;">TMTT</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+</div>
+</div>
+</section>
+<section id="visual-scanning" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="visual-scanning">Visual scanning</h2>
+<p>Visual scanning is the concept of visually examining spectrograms in order to find a signal within an audio recording. Visual scanning can be a useful processing method allowing trained users to process recordings much faster than traditional listening. It has been used for detecting different taxa (amphibians: <span class="citation" data-cites="vis-scan-amphs">Cameron et al. (<a href="#ref-vis-scan-amphs" role="doc-biblioref">2020</a>)</span>, mammals: <span class="citation" data-cites="aru-vs-cams-wolves">Garland et al. (<a href="#ref-aru-vs-cams-wolves" role="doc-biblioref">2020</a>)</span>) with comparable biological metrics, as well as helping to maximize species detection in large acoustic monitoring data sets (<span class="citation" data-cites="all-the-scans">Ware et al. (<a href="#ref-all-the-scans" role="doc-biblioref">2023</a>)</span>). WildTrax’s project settings and dynamic spectrogram settings in the processing interface allow users to upload many recordings, while also allowing frequency-limited or time-limited spectrograms. These changes are easily made by adjusting project settings in WildTrax (see <a href="#fig-project-dynamic">Figure&nbsp;4</a>).</p>
+<div class="no-row-height column-margin column-container"><div id="ref-vis-scan-amphs" class="csl-entry" role="listitem">
+Cameron, J., A. Crosby, C. Paszkowski, and E. Bayne. 2020. <span>“Visual Spectrogram Scanning Paired with an Observation–Confirmation Occupancy Model Improves the Efficiency and Accuracy of Bioacoustic Anuran Data.”</span> <em>Canadian Journal of Zoology</em> 98 (11): 733–42. <a href="https://doi.org/10.1139/cjz-2020-0103">https://doi.org/10.1139/cjz-2020-0103</a>.
+</div><div id="ref-aru-vs-cams-wolves" class="csl-entry" role="listitem">
+Garland, Laura, Andrew Crosby, Richard Hedley, Stan Boutin, and Erin Bayne. 2020. <span>“Acoustic Vs. Photographic Monitoring of Gray Wolves (<span class="nocase">Canis lupus</span>): A Methodological Comparison of Two Passive Monitoring Techniques.”</span> <em>Canadian Journal of Zoology</em> 98 (3): 219–28. <a href="https://doi.org/10.1139/cjz-2019-0081">https://doi.org/10.1139/cjz-2019-0081</a>.
+</div><div id="ref-all-the-scans" class="csl-entry" role="listitem">
+Ware, Lena, C. Lisa Mahon, Logan McLeod, and Jean-François Jetté. 2023. <span>“Artificial Intelligence (BirdNET) Supplements Manual Methods to Maximize Bird Species Richness from Acoustic Data Sets Generated from Regional Monitoring.”</span> <em>Canadian Journal of Zoology</em> 101 (12): 1031–51. <a href="https://doi.org/10.1139/cjz-2023-0044">https://doi.org/10.1139/cjz-2023-0044</a>.
+</div></div><div id="fig-project-dynamic" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="project-dynamic.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">Figure&nbsp;4: Dynamic spectrogram and project settings in WildTrax</figcaption>
+</figure>
+</div>
+<p>In order to determine presence of Bank Swallow (BANS) at <code>PENP-BS-*</code> site, visual scanning was employed to identify the time of first detection of the species on recordings at these locations. A total of 630 recordings were visually scanned for BANS. Tags were made at the time of first detection in each minute interval.</p>
+</section>
+<section id="automated-recognition" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="automated-recognition">Automated recognition</h2>
+<p>Automated recognition is a well-known process to help detect rare and elusive species (<span class="citation" data-cites="knight2019classification">Knight and Bayne (<a href="#ref-knight2019classification" role="doc-biblioref">2019</a>)</span>. <span class="citation" data-cites="shonfield2018utility">Shonfield, Heemskerk, and Bayne (<a href="#ref-shonfield2018utility" role="doc-biblioref">2018</a>)</span>) as well as species that may have a low detectability by collecting large data sets. In order to determine We constructed a recognizer for Eastern Wood-Pewee (EAWP) and used three previously constructed Wildlife Acoustics SongScope recognizers for Olive-sided Flycatcher (OSFL), Rusty Blackbird (RUBL) and Canada Warbler (CAWA) to detect for the presence of these species in the 2019 data set. All recognizers are freely available on WildTrax under Methods and Protocols &gt; <a href="https://wildtrax.ca/resources/methods-protocols/automated-recognizers/">Automated Recognizers</a>. Hits were verified and true positives for presence at each location (recording where the species was first positively detected) were uploaded to WildTrax via the <code>wt_songscope_tags</code> function in <code>wildRtrax</code>.</p>
+<div class="no-row-height column-margin column-container"><div id="ref-knight2019classification" class="csl-entry" role="listitem">
+Knight, Elly C, and Erin M Bayne. 2019. <span>“Classification Threshold and Training Data Affect the Quality and Utility of Focal Species Data Processed with Automated Audio-Recognition Software.”</span> <em>Bioacoustics</em> 28 (6): 539–54.
+</div><div id="ref-shonfield2018utility" class="csl-entry" role="listitem">
+Shonfield, Julia, Sarah Heemskerk, and Erin M Bayne. 2018. <span>“Utility of Automated Species Recognition for Acoustic Monitoring of Owls.”</span> <em>Journal of Raptor Research</em> 52 (1): 42–55.
+</div></div></section>
+<section id="analyses" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="analyses">Analyses</h2>
+<p>Species richness, diversity and occupancy were calculated using the 21 forest songbird monitoring locations (<code>PENP-</code>). We calculated species richness as distinct species found at each location and year surveyed (see <a href="#fig-spp-rich-locs">Figure&nbsp;5</a>), omitting species using <code>wildRtrax::wt_tidy_species()</code> for abiotic, amphibians, unknowns and insects. To determine if there were any changes to species diversity, we used Shannon’s diversity index over years using <code>vegan::diversity</code> (see <a href="#fig-shannon">Figure&nbsp;8</a>).</p>
+<p>For testing species occupancy, we selected locations with a minimum of four dawn visits for each year across all five years, focusing on forest obligate species for ecological relevance (see <a href="#tbl-bird-guilds">Table&nbsp;6</a>). Utilizing a single-season single-species occupancy model from <span class="citation" data-cites="mackenzie2002estimating">Darryl I. MacKenzie et al. (<a href="#ref-mackenzie2002estimating" role="doc-biblioref">2002</a>)</span>, we calculated the predicted occupancy of species at all locations surveyed in each year across years. Site-specific covariates included the distance to ocean edge (in meters) and the proportional area of each cover type from the <a href="https://data.princeedwardisland.ca/Environment-and-Food/OD0144-Corporate-Landuse-Inventory-2010/tc7z-7rpy">Prince Edward Island 2010 Corporate Land Use Inventory</a> at 150 meter radius surrounding the ARU categorized into anthropogenic (pavement, soy), open (grass, sand dune, bare soil), deciduous (red maple, white birch, alder, poplar) and conifer (white spruce, black spruce, balsam fir). Observation covariates incorporated day of the year, hour, observer, and a quadratic term for both day of year (<span class="math inline">\(doy^{2}\)</span>) and hour (<span class="math inline">\(hr^{2}\)</span>). See <a href="#tbl-obvs-and-covs">Table&nbsp;2</a> for more information. Despite variations in processing methodology between 2019 - 2020 (1SPM - species-individual detected per minute, i.e.&nbsp;repeat sampling each minute for 3 minute) and subsequent years (2021 - 2023; 1SPT), we maintained consistency by exclusively utilizing the time to the first detection of individuals from the 1SPM recordings. Model predictions were generated, with goodness-of-fit testing using methods from <span class="citation" data-cites="occu-fit">Darryl I. MacKenzie and Bailey (<a href="#ref-occu-fit" role="doc-biblioref">2004</a>)</span> and the best model selected based on AIC and through <code>MuMIn::dregde</code>, <code>MuMIn::get.models</code> and <code>MuMIn::model.sel</code>. If more than one model existed, the average model was used using <code>MuMIn::model.avg</code>. The final predictions were then made and plotted over years and sorted by nesting guilds of species into conifer, deciduous, treed / shrubby and open.</p>
+<div class="no-row-height column-margin column-container"><div id="ref-mackenzie2002estimating" class="csl-entry" role="listitem">
+MacKenzie, Darryl I, James D Nichols, Gideon B Lachman, Sam Droege, J Andrew Royle, and Catherine A Langtimm. 2002. <span>“Estimating Site Occupancy Rates When Detection Probabilities Are Less Than One.”</span> <em>Ecology</em> 83 (8): 2248–55.
+</div><div id="ref-occu-fit" class="csl-entry" role="listitem">
+MacKenzie, Darryl I., and Larissa L. Bailey. 2004. <span>“Assessing the Fit of Site-Occupancy Models.”</span> <em>Journal of Agricultural, Biological, and Environmental Statistics</em> 9 (3): 300–318. <a href="http://www.jstor.org/stable/1400484">http://www.jstor.org/stable/1400484</a>.
+</div></div><hr>
+</section>
+</section>
+<section id="results" class="level1 page-columns page-full">
+<h1>Results</h1>
+<section id="species-richness" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="species-richness">Species richness</h2>
+<p>A total of 100 species were found across the five years. <a href="#fig-spp-rich-locs">Figure&nbsp;5</a> describes the relationship of species richness across each location and survey year with <a href="#fig-spp-rich-annual">Figure&nbsp;6</a> showing the relationship between species richness and survey effort.</p>
+<div class="cell page-columns page-full" data-layout-align="center">
+<div class="cell-output-display page-columns page-full">
+<div id="fig-spp-rich-locs" class="quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="figure page-columns page-full">
+<p><img src="peinp_files/figure-html/fig-spp-rich-locs-1.png" class="img-fluid figure-img" width="960"></p>
+<figcaption class="figure-caption margin-caption">Figure&nbsp;5: Species richness at forest monitoring locations across years</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell page-columns page-full" data-layout-align="center">
+<div class="cell-output-display page-columns page-full">
+<div id="fig-spp-rich-annual" class="quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="figure page-columns page-full">
+<p><img src="peinp_files/figure-html/fig-spp-rich-annual-1.png" class="img-fluid figure-img" width="960"></p>
+<figcaption class="figure-caption margin-caption">Figure&nbsp;6: Species richness at forest monitoring locations across years considering sampling effort</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div id="tbl-bird-guilds" class="anchored">
+<table data-quarto-postprocess="true" class="table table-sm table-striped small">
+<caption>Table&nbsp;6: Bird guilds. For nesting habitat; Ag = Agricultural, Be = Beach, Bo = Bog, CW = Coniferous Woodlands, ES = Early Successional, MW = Mixed Woodlands, OW = Open Woodlands, TSS = Treed/Shrubby Swamp, Ur = Urban. Species from CW, MW, OW, TSS were used for analysis.</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">species_common_name</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">general_type</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">migration</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">feeding</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">breeding_substrate</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">foraging_type</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">substrate_nesting</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">habitat_nesting</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Alder Flycatcher</td>
+<td style="text-align: left;">S</td>
+<td style="text-align: left;">NM</td>
+<td style="text-align: left;">In</td>
+<td style="text-align: left;">Air</td>
+<td style="text-align: left;">Sal</td>
+<td style="text-align: left;">Sh</td>
+<td style="text-align: left;">TSS</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">American Redstart</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">MW</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Baltimore Oriole</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">OW</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Bay-breasted Warbler</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">CW</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Black-and-white Warbler</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">MW</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Black-backed Woodpecker</td>
+<td style="text-align: left;">S</td>
+<td style="text-align: left;">R</td>
+<td style="text-align: left;">In</td>
+<td style="text-align: left;">Ba</td>
+<td style="text-align: left;">Sca</td>
+<td style="text-align: left;">Sn</td>
+<td style="text-align: left;">CW</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Black-throated Blue Warbler</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">MW</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Black-throated Green Warbler</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">CW</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Blackburnian Warbler</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">CW</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Blackpoll Warbler</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">CW</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Blue Jay</td>
+<td style="text-align: left;">G</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">OW</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Blue-headed Vireo</td>
+<td style="text-align: left;">S</td>
+<td style="text-align: left;">SDM</td>
+<td style="text-align: left;">In</td>
+<td style="text-align: left;">LCS</td>
+<td style="text-align: left;">Gl</td>
+<td style="text-align: left;">CT</td>
+<td style="text-align: left;">MW</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Boreal Chickadee</td>
+<td style="text-align: left;">S</td>
+<td style="text-align: left;">R</td>
+<td style="text-align: left;">In</td>
+<td style="text-align: left;">LCS</td>
+<td style="text-align: left;">Gl</td>
+<td style="text-align: left;">Sn</td>
+<td style="text-align: left;">CW</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Brown Creeper</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">CW</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Canada Jay</td>
+<td style="text-align: left;">G</td>
+<td style="text-align: left;">R</td>
+<td style="text-align: left;">Om</td>
+<td style="text-align: left;">UC</td>
+<td style="text-align: left;">Fo</td>
+<td style="text-align: left;">CT</td>
+<td style="text-align: left;">CW</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Canada Warbler</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">MW</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Cape May Warbler</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">CW</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Chestnut-sided Warbler</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">MW</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Chipping Sparrow</td>
+<td style="text-align: left;">G</td>
+<td style="text-align: left;">SDM</td>
+<td style="text-align: left;">Om</td>
+<td style="text-align: left;">Gr</td>
+<td style="text-align: left;">Fo</td>
+<td style="text-align: left;">CT</td>
+<td style="text-align: left;">OW</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Common Nighthawk</td>
+<td style="text-align: left;">S</td>
+<td style="text-align: left;">NM</td>
+<td style="text-align: left;">In</td>
+<td style="text-align: left;">Air</td>
+<td style="text-align: left;">Scr</td>
+<td style="text-align: left;">Gr</td>
+<td style="text-align: left;">OW</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Dark-eyed Junco</td>
+<td style="text-align: left;">G</td>
+<td style="text-align: left;">SDM</td>
+<td style="text-align: left;">Om</td>
+<td style="text-align: left;">Gr</td>
+<td style="text-align: left;">Fo</td>
+<td style="text-align: left;">Gr</td>
+<td style="text-align: left;">CW</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Downy Woodpecker</td>
+<td style="text-align: left;">G</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">MW</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Eastern Wood-Pewee</td>
+<td style="text-align: left;">S</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">OW</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Fox Sparrow</td>
+<td style="text-align: left;">G</td>
+<td style="text-align: left;">SDM</td>
+<td style="text-align: left;">Om</td>
+<td style="text-align: left;">Gr</td>
+<td style="text-align: left;">Fo</td>
+<td style="text-align: left;">Gr</td>
+<td style="text-align: left;">OW</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Golden-crowned Kinglet</td>
+<td style="text-align: left;">S</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">CW</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Gray Catbird</td>
+<td style="text-align: left;">S</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">MW</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Hairy Woodpecker</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">MW</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Hermit Thrush</td>
+<td style="text-align: left;">S</td>
+<td style="text-align: left;">SDM</td>
+<td style="text-align: left;">In</td>
+<td style="text-align: left;">Gr</td>
+<td style="text-align: left;">Gl</td>
+<td style="text-align: left;">Gr</td>
+<td style="text-align: left;">CW</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Lincoln's Sparrow</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">TSS</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Magnolia Warbler</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">MW</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Mountain Bluebird</td>
+<td style="text-align: left;">S</td>
+<td style="text-align: left;">SDM</td>
+<td style="text-align: left;">In</td>
+<td style="text-align: left;">Gr</td>
+<td style="text-align: left;">Gl</td>
+<td style="text-align: left;">Sn</td>
+<td style="text-align: left;">OW</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Mourning Warbler</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">MW</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Northern Flicker</td>
+<td style="text-align: left;">S</td>
+<td style="text-align: left;">SDM</td>
+<td style="text-align: left;">In</td>
+<td style="text-align: left;">Gr</td>
+<td style="text-align: left;">Gl</td>
+<td style="text-align: left;">Sn</td>
+<td style="text-align: left;">MW</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Northern Parula</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">OW</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Orange-crowned Warbler</td>
+<td style="text-align: left;">S</td>
+<td style="text-align: left;">SDM</td>
+<td style="text-align: left;">In</td>
+<td style="text-align: left;">LCS</td>
+<td style="text-align: left;">Gl</td>
+<td style="text-align: left;">Gr</td>
+<td style="text-align: left;">OW</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Philadelphia Vireo</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">MW</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Pileated Woodpecker</td>
+<td style="text-align: left;">S</td>
+<td style="text-align: left;">R</td>
+<td style="text-align: left;">In</td>
+<td style="text-align: left;">Ba</td>
+<td style="text-align: left;">Ex</td>
+<td style="text-align: left;">Sn</td>
+<td style="text-align: left;">MW</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Pine Warbler</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">CW</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Red-eyed Vireo</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">MW</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ruby-crowned Kinglet</td>
+<td style="text-align: left;">S</td>
+<td style="text-align: left;">SDM</td>
+<td style="text-align: left;">In</td>
+<td style="text-align: left;">UC</td>
+<td style="text-align: left;">Gl</td>
+<td style="text-align: left;">CT</td>
+<td style="text-align: left;">CW</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ruffed Grouse</td>
+<td style="text-align: left;">G</td>
+<td style="text-align: left;">R</td>
+<td style="text-align: left;">Om</td>
+<td style="text-align: left;">Gr</td>
+<td style="text-align: left;">Fo</td>
+<td style="text-align: left;">Gr</td>
+<td style="text-align: left;">MW</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Rusty Blackbird</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">TSS</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Swainson's Thrush</td>
+<td style="text-align: left;">G</td>
+<td style="text-align: left;">NM</td>
+<td style="text-align: left;">Om</td>
+<td style="text-align: left;">Gr</td>
+<td style="text-align: left;">Fo</td>
+<td style="text-align: left;">CT</td>
+<td style="text-align: left;">MW</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Veery</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">MW</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Warbling Vireo</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">MW</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Western Wood-Pewee</td>
+<td style="text-align: left;">S</td>
+<td style="text-align: left;">NM</td>
+<td style="text-align: left;">In</td>
+<td style="text-align: left;">Air</td>
+<td style="text-align: left;">Sal</td>
+<td style="text-align: left;">CT</td>
+<td style="text-align: left;">OW</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Yellow-bellied Sapsucker</td>
+<td style="text-align: left;">G</td>
+<td style="text-align: left;">SDM</td>
+<td style="text-align: left;">Om</td>
+<td style="text-align: left;">Ba</td>
+<td style="text-align: left;">Ex</td>
+<td style="text-align: left;">DT</td>
+<td style="text-align: left;">MW</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Yellow-rumped Warbler</td>
+<td style="text-align: left;">S</td>
+<td style="text-align: left;">SDM</td>
+<td style="text-align: left;">In</td>
+<td style="text-align: left;">LCS</td>
+<td style="text-align: left;">Gl</td>
+<td style="text-align: left;">CT</td>
+<td style="text-align: left;">CW</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+</div>
+</div>
+<div class="cell page-columns page-full" data-layout-align="center">
+<div class="cell-output-display page-columns page-full">
+<div id="fig-spp-activity" class="quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="figure page-columns page-full">
+<p><img src="peinp_files/figure-html/fig-spp-activity-1.png" class="img-fluid figure-img" width="960"></p>
+<figcaption class="figure-caption margin-caption">Figure&nbsp;7: Seasonal detection activity of most commonly detected forest species</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="species-diversity" class="level2">
+<h2 class="anchored" data-anchor-id="species-diversity">Species diversity</h2>
+<p>Shannon’s diversity was stable based on results. (see <a href="#fig-shannon">Figure&nbsp;8</a>.)</p>
+<div class="cell" data-fig-column="page-right">
+<div class="cell-output-display">
+<div id="fig-shannon" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="peinp_files/figure-html/fig-shannon-1.png" class="img-fluid figure-img" width="768"></p>
+<figcaption class="figure-caption">Figure&nbsp;8: Shannon’s diversity across years for all locations surveyed.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="species-occupancy" class="level2">
+<h2 class="anchored" data-anchor-id="species-occupancy">Species occupancy</h2>
+<p>We selected <code>20</code> species to represent the forest songbird community into 4 separate habitat nesting guilds (see <a href="#tbl-bird-guilds">Table&nbsp;6</a>): conifer (<a href="#fig-spp-occ-conifer">Figure&nbsp;9</a>), deciduous (<a href="#fig-spp-occ-decid">Figure&nbsp;10</a>), treed / shrubby (<a href="#fig-spp-occ-tss">Figure&nbsp;11</a>) and open (<a href="#fig-spp-occ-open">Figure&nbsp;12</a>). Analysis of species occupancy revealed diverse and varied changes across these species. Analytically, many models were singular, and a few exhibited overdispersion (indicated by <em>c-hat</em> in <strong>?@tbl-c-hat</strong>), likely due to low detections or a limited sample size of spatial locations. Ubiquitous species such as Yed-eyed Vireo, Yellow-rumped Warbler, Magnolia Warbler and Northern Parula, demonstrated stable site occupancy across the years. Generalist species or those capable of capitalizing on utilizing mixed habitats, exemplified by the Northern Parula, also maintained consistent occupancy levels. The occurrence of Hurricane Fiona in 2023 led to notable breakpoints in the occupancy of certain species: coniferous species, including the Black-throated Green Warbler, Black-throated Blue Warbler, Blackburnian Warbler, Golden-crowned Kinglet, and Mourning Warbler, experienced declines. Conversely, increases were observed in guilds of species that favor more open or shrubby habitats, such as the Alder Flycatcher and American Redstart. Thrushes (American Robin, Swainson’s Thrush, Hermit Thrush) had notably wavering occupancy throughout the years.</p>
+<div class="cell" data-fig-column="page-right">
+<div class="cell-output-display">
+<div id="fig-spp-occ-conifer" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="peinp_files/figure-html/fig-spp-occ-conifer-1.png" class="img-fluid figure-img" width="1152"></p>
+<figcaption class="figure-caption">Figure&nbsp;9: Predicted single-season occupancy of forest species (Habitat nesting = Conifer) within Prince Edward Island National Park. The data represents the average species occupancy across all surveyed locations for each respective year.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-fig-column="page-right">
+<div class="cell-output-display">
+<div id="fig-spp-occ-decid" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="peinp_files/figure-html/fig-spp-occ-decid-1.png" class="img-fluid figure-img" width="1152"></p>
+<figcaption class="figure-caption">Figure&nbsp;10: Predicted single-season occupancy of forest species (Habitat nesting = Deciduous) within Prince Edward Island National Park. The data represents the average species occupancy across all surveyed locations for each respective year.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-fig-column="page-right">
+<div class="cell-output-display">
+<div id="fig-spp-occ-tss" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="peinp_files/figure-html/fig-spp-occ-tss-1.png" class="img-fluid figure-img" width="1152"></p>
+<figcaption class="figure-caption">Figure&nbsp;11: Predicted single-season occupancy of forest species (Habitat nesting = Treed / Shrubby) within Prince Edward Island National Park. The data represents the average species occupancy across all surveyed locations for each respective year.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-fig-column="page-right">
+<div class="cell-output-display">
+<div id="fig-spp-occ-open" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="peinp_files/figure-html/fig-spp-occ-open-1.png" class="img-fluid figure-img" width="1152"></p>
+<figcaption class="figure-caption">Figure&nbsp;12: Predicted single-season occupancy of forest species (Habitat nesting = Open) within Prince Edward Island National Park. The data represents the average species occupancy across all surveyed locations for each respective year.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="visual-scanning-1" class="level2">
+<h2 class="anchored" data-anchor-id="visual-scanning-1">Visual scanning</h2>
+<p>BANS were detected at 3 distinct locations (PENP-BS-1).</p>
+</section>
+<section id="automated-recognition-1" class="level2">
+<h2 class="anchored" data-anchor-id="automated-recognition-1">Automated recognition</h2>
+<p>We found that there was no advantage to utilizing the recognizer to find Eastern Wood-Pewee over human transcribing as the species was very detectable (see <strong>?@tbl-recog-results</strong>).</p>
+<hr>
+</section>
+<section id="amphibians" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="amphibians">Amphibians</h2>
+<p>A total of 7 were detected: SPPE, AMTO, NLFR, GRFG, WOFR, MIFR, BULL. A preliminary pattern of amphibian activity can be seen in <a href="#fig-spp-amphs-day">Figure&nbsp;13</a> for Green Frog and Spring Peeper where there were enough detections to generate activity patterns. Spring peeper activity commenced much earlier than Green Frog although seasonal patterns are consistent with the species’ phenology <span class="citation" data-cites="lovett2013peepers">Lovett (<a href="#ref-lovett2013peepers" role="doc-biblioref">2013</a>)</span>, <span class="citation" data-cites="ackleh2010measuring">Ackleh et al. (<a href="#ref-ackleh2010measuring" role="doc-biblioref">2010</a>)</span>.</p>
+<div class="no-row-height column-margin column-container"><div id="ref-lovett2013peepers" class="csl-entry" role="listitem">
+Lovett, Gary M. 2013. <span>“When Do Peepers Peep? Climate and the Date of First Calling in the Spring Peeper (Pseudacris Crucifer) in Southeastern New York State.”</span> <em>Northeastern Naturalist</em> 20 (2): 333–40.
+</div><div id="ref-ackleh2010measuring" class="csl-entry" role="listitem">
+Ackleh, Azmy S, Jacoby Carter, Lauren Cole, Tom Nguyen, Jay Monte, and Claire Pettit. 2010. <span>“Measuring and Modeling the Seasonal Changes of an Urban Green Treefrog (Hyla Cinerea) Population.”</span> <em>Ecological Modelling</em> 221 (2): 281–89.
+</div></div><div class="cell" data-fig-column="page-right">
+<div class="cell-output-display">
+<div id="fig-spp-amphs-day" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="peinp_files/figure-html/fig-spp-amphs-day-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;13: Seasonal and yearly activity plots for Green Frog and Spring Peeper</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="discussion" class="level1">
+<h1>Discussion</h1>
+<p>Considering the natural disturbance effects seen in the Park, species richness and diversity stayed relatively stable. Individuals of conifer dominant stands likely moved to more suitable habitat outside the park, suggesting the potential utility of metapopulation analysis through passive acoustic monitoring via citizen science. Further analysis may utilize dynamic occupancy models, multi-species multi-season occupancy models, or community shifts to describe richness and diversity while accounting for decreases in species that may rely on specific habitat structures within the park. Additional geospatial assets could improve the accuracy of modelling apporaches as well. This study underscores the efficacy of autonomous recording units (ARUs) as a powerful tool for monitoring climatic and habitat shifts with a relatively low sample size and area coverage.</p>
+<p>Avian species within the Park forest demonstrate a non-uniform distribution. Recommendations for optimizing the efficiency and reliability of the ARU program include:</p>
+<ul>
+<li>Prioritizing monitoring of historical locations, particularly emphasizing repeats at PENP-1-1, PENP-1-2, PENP-2-3, PENP-3-1, PENP-3-2, PENP-4-1, PENP-4-2, PENP-4-3, PENP-4-4 as baselines for evaluating ecological changes over time.</li>
+<li>Adjusting monitoring times to dawn and dusk and extending deployment periods to 4-7 days between May 15 and July 15 to maximize vocalizations during peak activity periods.</li>
+<li>Regular servicing of ARUs, focusing on testing microphone sensitivity degradation to ensure optimal functionality, data reliability, and longevity.</li>
+<li>Continuing high-quality verification of tags to create annotated datasets for building and automating classifiers within WildTrax.</li>
+</ul>
+
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

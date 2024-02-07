@@ -222,7 +222,7 @@
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
 \urlstyle{same} % disable monospaced font for URLs
 \hypersetup{
-  pdftitle={Report on the use of passive acoustic monitoring for evaluating ecological integrity in Prince Edward Island National Park},
+  pdftitle={Report on the use of passive acoustic monitoring in Prince Edward Island National Park},
   pdfauthor={Alex MacPhail},
   colorlinks=true,
   linkcolor={blue},
@@ -231,14 +231,14 @@
   urlcolor={Blue},
   pdfcreator={LaTeX via pandoc}}
 
-\title{Report on the use of passive acoustic monitoring for evaluating
-ecological integrity in Prince Edward Island National Park}
+\title{Report on the use of passive acoustic monitoring in Prince Edward
+Island National Park}
 \author{Alex MacPhail}
-\date{2024-01-31}
+\date{2024-02-06}
 
 \begin{document}
 \maketitle
-\ifdefined\Shaded\renewenvironment{Shaded}{\begin{tcolorbox}[boxrule=0pt, borderline west={3pt}{0pt}{shadecolor}, sharp corners, frame hidden, breakable, enhanced, interior hidden]}{\end{tcolorbox}}\fi
+\ifdefined\Shaded\renewenvironment{Shaded}{\begin{tcolorbox}[borderline west={3pt}{0pt}{shadecolor}, breakable, frame hidden, sharp corners, enhanced, boxrule=0pt, interior hidden]}{\end{tcolorbox}}\fi
 
 \renewcommand*\contentsname{Table of contents}
 {
@@ -246,18 +246,6 @@ ecological integrity in Prince Edward Island National Park}
 \setcounter{tocdepth}{3}
 \tableofcontents
 }
-\begin{Shaded}
-\begin{Highlighting}[]
-\DocumentationTok{\#\#\# To run this locally}
-
-\CommentTok{\# Open RStudio or your preferred IDE}
-\CommentTok{\# Create a new project and set up for version control using the GitHub repository}
-\CommentTok{\# Pull from remote main}
-\CommentTok{\# Load the pei.RData file}
-\CommentTok{\# Render the document and review the results}
-\end{Highlighting}
-\end{Shaded}
-
 \begin{figure}
 
 {\centering \includegraphics{peinpheader.png}
@@ -266,35 +254,126 @@ ecological integrity in Prince Edward Island National Park}
 
 \end{figure}
 
+To run this report locally:
+
+\begin{itemize}
+\tightlist
+\item
+  Open RStudio or your preferred IDE
+\item
+  Create a new project and set up for version control using the GitHub
+  repository
+\item
+  Pull from remote main
+\item
+  Load the \texttt{pei.RData} file in the first chunk
+\item
+  Render the document and review the results
+\end{itemize}
+
 \hypertarget{abstract}{%
 \section{Abstract}\label{abstract}}
 
+Passive acoustic monitoring has proven to be a valuable tool for
+monitoring vocalizing species. Environmental sensors are becoming
+increasingly easy to program and can autonomously generating extensive
+data sets of the soundscape, an invaluable resource for ecological
+integrity monitoring. Prince Edward Island National deployed autonomous
+recording units (ARUs) across 30 locations during a comprehensive
+five-year survey. The analysis revealed that species richness and
+diversity remained relatively stable, while single-species species
+occupancy exhibited diverse patterns. Common and generalist species
+showed consistent occupancy, but there was a notable reduction in
+conifer-nesting species in 2023, likely attributed to forest structural
+loss. Ongoing monitoring and dynamic models can yield more detailed and
+predictive results to ensure the continued maintenance of ecological
+integrity in the Park.
+
 \begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{land-acknowledgement}{%
+\section{Land Acknowledgement}\label{land-acknowledgement}}
+
+In the spirit of Reconciliation, we\,acknowledge that the\,land\,upon
+which this data was gathered is unceeded Mi'kmaq territory. Epekwitk
+(Prince Edward Island), Mi'kma'ki, is covered by the historic Treaties
+of Peace and Friendship. We pay our respects to the Indigenous Mi'kmaq
+People who have occupied this Island\,for over 12,000 years; past,
+present and future.
 
 \hypertarget{introduction}{%
 \section{Introduction}\label{introduction}}
 
-Human activities have been identified as key contributors to the global
-decline in forest wildlife. The repercussions of habitat fragmentation
-and loss, climate change, and increased access to sensitive areas exert
-direct and indirect pressures on forest biodiversity, particularly in
-managed regions.
+Human activities have been identified as key pressures and contributors
+to the global decline in forest wildlife (Allan et al.
+(2017)\marginpar{\begin{footnotesize}\leavevmode\vadjust pre{\protect\hypertarget{ref-allan2017recent}{}}%
+Allan, James R, Oscar Venter, Sean Maxwell, Bastian Bertzky, Kendall
+Jones, Yichuan Shi, and James EM Watson. 2017. {``Recent Increases in
+Human Pressure and Forest Loss Threaten Many Natural World Heritage
+Sites.''} \emph{Biological Conservation} 206: 47--55.\vspace{2mm}\par\end{footnotesize}}).
+The repercussions of habitat fragmentation (Fahrig
+(2003)\marginpar{\begin{footnotesize}\leavevmode\vadjust pre{\protect\hypertarget{ref-fahrig2003effects}{}}%
+Fahrig, Lenore. 2003. {``Effects of Habitat Fragmentation on
+Biodiversity.''} \emph{Annual Review of Ecology, Evolution, and
+Systematics} 34 (1): 487--515.\vspace{2mm}\par\end{footnotesize}})
+and loss (Hanski
+(2011)\marginpar{\begin{footnotesize}\leavevmode\vadjust pre{\protect\hypertarget{ref-hanski2011habitat}{}}%
+Hanski, Ilkka. 2011. {``Habitat Loss, the Dynamics of Biodiversity, and
+a Perspective on Conservation.''} \emph{Ambio} 40 (3): 248--55.\vspace{2mm}\par\end{footnotesize}}),
+climate change (Mantyka-pringle, Martin, and Rhodes
+(2012)\marginpar{\begin{footnotesize}\leavevmode\vadjust pre{\protect\hypertarget{ref-mantyka2012interactions}{}}%
+Mantyka-pringle, Chrystal S, Tara G Martin, and Jonathan R Rhodes. 2012.
+{``Interactions Between Climate and Habitat Loss Effects on
+Biodiversity: A Systematic Review and Meta-Analysis.''} \emph{Global
+Change Biology} 18 (4): 1239--52.\vspace{2mm}\par\end{footnotesize}},
+Sattar et al.
+(2021)\marginpar{\begin{footnotesize}\leavevmode\vadjust pre{\protect\hypertarget{ref-sattar2021review}{}}%
+Sattar, Q, ME Maqbool, R Ehsan, S Akhtar, Q Sattar, ME Maqbool, R Ehsan,
+and S Akhtar. 2021. {``Review on Climate Change and Its Effect on
+Wildlife and Ecosystem.''} \emph{Open J Environ Biol} 6 (1): 008--14.\vspace{2mm}\par\end{footnotesize}},
+Abrahms et al.
+(2023)\marginpar{\begin{footnotesize}\leavevmode\vadjust pre{\protect\hypertarget{ref-abrahms2023climate}{}}%
+Abrahms, Briana, Neil H Carter, TJ Clark-Wolf, Kaitlyn M Gaynor, Erik
+Johansson, Alex McInturff, Anna C Nisi, Kasim Rafiq, and Leigh West.
+2023. {``Climate Change as a Global Amplifier of Human--Wildlife
+Conflict.''} \emph{Nature Climate Change} 13 (3): 224--34.\vspace{2mm}\par\end{footnotesize}}),
+and increased access to sensitive areas exert direct and indirect
+pressures on forest biodiversity, particularly in managed regions in
+Canada (Lemieux et al.
+(2011)\marginpar{\begin{footnotesize}\leavevmode\vadjust pre{\protect\hypertarget{ref-lemieux2011state}{}}%
+Lemieux, Christopher J, Thomas J Beechey, Daniel J Scott, and Paul A
+Gray. 2011. {``The State of Climate Change Adaptation in Canada's
+Protected Areas Sector.''} \emph{The Canadian Geographer/Le G{é}ographe
+Canadien} 55 (3): 301--17.\vspace{2mm}\par\end{footnotesize}}).
 
 In 2019, Prince Edward Island National Park initiated a program
 incorporating autonomous recording units (ARUs) for passive acoustic
 monitoring (PAM) of the Park's wildlife. ARUs are compact environmental
-sensors that are designed to passively record the environment, capturing
-vocalizing species like birds and amphibians. This technology enables
-resource managers to conduct prolonged surveys with minimal human
-interference. The species detected by these units contribute valuable
-information to ecological integrity metrics such as species richness,
-diversity, occupancy, and trends over time. This data aids
-decision-making and management within the Park. Given the rapid and ease
-of accumulating data from these units, maintaining a high standard of
-data integrity is paramount to ensure future data interoperability and
-sharing. WildTrax, an online platform tailored for users of
-environmental sensors, addresses this challenge by providing a solution
-to standardize, harmonize, and share data.
+sensors that are designed to passively record the environment (Shonfield
+and Bayne
+(2017)\marginpar{\begin{footnotesize}\leavevmode\vadjust pre{\protect\hypertarget{ref-aru-overview}{}}%
+Shonfield, Julia, and Erin M Bayne. 2017. {``Autonomous Recording Units
+in Avian Ecological Research: Current Use and Future Applications.''}
+\emph{Avian Conservation \& Ecology} 12 (1).\vspace{2mm}\par\end{footnotesize}}),
+capturing vocalizing species like birds and amphibians, which is growing
+in use across the globe (Sugai et al.
+(2018)\marginpar{\begin{footnotesize}\leavevmode\vadjust pre{\protect\hypertarget{ref-lots-of-pam}{}}%
+Sugai, Larissa Sayuri Moreira, Thiago Sanna Freire Silva, Jr Ribeiro
+José Wagner, and Diego Llusia. 2018. {``{Terrestrial Passive Acoustic
+Monitoring: Review and Perspectives}.''} \emph{BioScience} 69 (1):
+15--25. \url{https://doi.org/10.1093/biosci/biy147}.\vspace{2mm}\par\end{footnotesize}}).
+This technology enables resource managers to conduct prolonged surveys
+with minimal human interference. The subsequent data collected by these
+units contribute valuable information to ecological integrity metrics
+such as species richness, diversity, occupancy, and trends over time.
+This data aids decision-making and management within the Park. Given the
+rapid and ease of accumulating data from these units, maintaining a high
+standard of data integrity is paramount to ensure future data
+interoperability and sharing. \href{https://www.wildtrax.ca}{WildTrax}
+is an online platform developed by the \href{https://abmi.ca}{Alberta
+Biodiversity Monitoring Institute (\textbf{ABMI})} for users of
+environmental sensors to help addresses these big data challenges by
+providing solutions to standardize, harmonize, and share data.
 
 The objectives of this report are to:
 
@@ -302,20 +381,21 @@ The objectives of this report are to:
 \tightlist
 \item
   Describe the data management and processing procedures for the
-  acoustic data collected from 2019 to 2023
+  acoustic data collected from 2019 to 2023;
 \item
-  Identify all audible species and quantify the abundance of each
-  species within each recording
+  Utilize traditional human tagging, visual scanning and automated
+  recognition techniques to detect and count species and individuals
+  heard on recordings;
 \item
-  Define straightforward methods and robust ecological integrity metrics
-  for evaluating species presence, species richness, and species
-  occupancy over time at various locations
+  Define straightforward methods for evaluating species presence,
+  species richness, and species occupancy over time at various
+  locations;
 \item
   Offer recommendations for ongoing monitoring approaches to contribute
-  to the assessment of ecological integrity in forest ecosystems
+  to the assessment of ecological integrity in forest ecosystems;
 \item
   Facilitate data publication to the public, resource managers, academic
-  institutions, and other relevant agencies
+  institutions, and any other relevant agencies
 \end{itemize}
 
 \begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
@@ -342,37 +422,36 @@ Data were collected during the spring and summer seasons from 2019 to
   (\texttt{ASC-1,\ LXI-1}) to complement the forest songbird and evening
   schedules,
 \item
-  And one location for events (\texttt{PENP-E1}), which was to examine
-  the effects of a single public event
+  And one location (\texttt{PENP-E1}), which was to examine the effects
+  of a single public event
 \end{itemize}
 
-Nine locations (PENP-1-1, PENP-1-2, PENP-2-3, PENP-3-1, PENP-3-2,
-PENP-4-1, PENP-4-2, PENP-4-3, PENP-4-4) were surveyed each year, while
-the remaining locations were surveyed on rotation as best as possible.
-Details can be found in Table 1 (Table~\ref{tbl-loc-summary}) and
-illustrated in Figure 1 (Figure~\ref{fig-locs}). ARUs were deployed at
-the beginning of the breeding season in April and May. These ARUs
-rotated through locations during the spring and summer until their final
-retrieval in July and August. At each location, the ARUs were set to
-record for 30 minutes continuously every hour for four hours, starting
-one hour before dawn and ending three hours after dawn. For Bank Swallow
-Monitoring locations, recordings were made every 5 minutes for a
-duration of 3 minutes each from 1.5 hours before dusk to 1.5 hours after
-dusk. On average, each ARU recorded for 11.27 +/- 8.03 days.
+Locations were surveyed on rotation with 9 locations (PENP-1-1,
+PENP-1-2, PENP-2-3, PENP-3-1, PENP-3-2, PENP-4-1, PENP-4-2, PENP-4-3,
+PENP-4-4) surveyed each year. A detailed list of all survey years can be
+found in Table 1 (Table~\ref{tbl-loc-summary}) and illustrated in Figure
+1 (Figure~\ref{fig-locs}). ARUs were deployed at the beginning of the
+breeding season in April-May, and rotated locations until their final
+retrieval in July-August. At the forest songbird locations
+(\texttt{PENP-*}), the ARUs were set to record for 30 minutes
+continuously every hour for four hours, starting one hour before dawn
+and ending three hours after dawn. For Bank Swallow Monitoring locations
+(\texttt{PENP-BS}), recordings were made every 5 minutes for a duration
+of 3 minutes each from 1.5 hours before dusk to 1.5 hours after dusk. On
+average, each ARU recorded for 11.27 +/- 8.03 days.
 
 \begin{figure}
+
+\sidecaption{\label{fig-locs}ARU monitoring locations surveyed each year
+as part of the songbird monitoring program.}
 
 {\centering \includegraphics{peinp_files/figure-pdf/fig-locs-1.pdf}
 
 }
 
-\caption{\label{fig-locs}Locations surveyed each year}
-
 \end{figure}
 
 \hypertarget{tbl-loc-summary}{}
-\begin{margintable}
-
 \begin{table}
 
 \caption{\label{tbl-loc-summary}Locations surveyed across years. Ones indicated a deployment in that
@@ -445,7 +524,63 @@ PENP-BS-6 & 0 & 0 & 0 & 0 & 1 & Bank Swallow Monitoring\\
 \end{tabular}
 \end{table}
 
-\end{margintable}
+\hypertarget{tbl-obvs-and-covs}{}
+\begin{table}
+
+\caption{\label{tbl-obvs-and-covs}Site covariates for each forest songbird monitoring (PENP-*) location.
+Landcover is measured as proportion cover at 150 meter radius
+surrounding the ARU categorized into anthropogenic (pavement, soy), open
+(grass, sand dune, bare soil), deciduous (red maple, white birch, alder,
+poplar) and conifer (white spruce, black spruce, balsam fir). }Location summary for ARUs deployed}
+\centering
+\begin{tabular}[t]{l|r|r|r|r|r}
+\hline
+location & Distance from coast (m) & Anthro & Deciduous & Open & Conifer\\
+\hline
+PENP-1-1 & 751 & 0.05 & 0.60 & 0.35 & 0.00\\
+\hline
+PENP-1-2 & 491 & 0.06 & 0.00 & 0.00 & 0.94\\
+\hline
+PENP-1-3 & 1540 & 0.03 & 0.00 & 0.13 & 0.85\\
+\hline
+PENP-1-4 & 820 & 0.09 & 0.00 & 0.00 & 0.91\\
+\hline
+PENP-1-5 & 2050 & 0.00 & 0.91 & 0.01 & 0.08\\
+\hline
+PENP-1-6 & 1640 & 0.00 & 0.00 & 0.97 & 0.03\\
+\hline
+PENP-2-3 & 78 & 0.11 & 0.02 & 0.12 & 0.75\\
+\hline
+PENP-3-1 & 678 & 0.32 & 0.01 & 0.00 & 0.67\\
+\hline
+PENP-3-2 & 672 & 0.09 & 0.38 & 0.00 & 0.53\\
+\hline
+PENP-3-4 & 355 & 0.31 & 0.00 & 0.00 & 0.69\\
+\hline
+PENP-3-5 & 63 & 0.10 & 0.04 & 0.57 & 0.29\\
+\hline
+PENP-3-6 & 1198 & 0.00 & 0.46 & 0.00 & 0.54\\
+\hline
+PENP-3-7 & 408 & 0.02 & 0.00 & 0.10 & 0.89\\
+\hline
+PENP-3-8 & 65 & 0.39 & 0.00 & 0.17 & 0.43\\
+\hline
+PENP-4-1 & 447 & 0.00 & 0.34 & 0.25 & 0.41\\
+\hline
+PENP-4-2 & 912 & 0.00 & 0.05 & 0.21 & 0.75\\
+\hline
+PENP-4-3 & 1271 & 0.06 & 0.14 & 0.00 & 0.80\\
+\hline
+PENP-4-4 & 902 & 0.00 & 0.01 & 0.00 & 0.99\\
+\hline
+PENP-4-5 & 576 & 0.57 & 0.43 & 0.00 & 0.00\\
+\hline
+PENP-4-6 & 789 & 0.00 & 0.84 & 0.00 & 0.16\\
+\hline
+PENP-5-1 & 137 & 0.00 & 0.00 & 0.36 & 0.64\\
+\hline
+\end{tabular}
+\end{table}
 
 \hypertarget{data-management}{%
 \subsection{Data management}\label{data-management}}
@@ -475,12 +610,12 @@ WildTrax}
 
 \begin{figure}
 
+\sidecaption{\label{fig-recs-collect}Ridgeplot of recordings collected
+for each location over each survey year}
+
 {\centering \includegraphics{peinp_files/figure-pdf/fig-recs-collect-1.pdf}
 
 }
-
-\caption{\label{fig-recs-collect}Ridgeplot of recordings collected for
-each location over each survey year}
 
 \end{figure}
 
@@ -494,21 +629,73 @@ each location and year surveyed, four randomly selected recordings were
 processed for 3-minutes between the hours of 4:00 AM - 7:59 AM ideally
 on four separate dates (see Table~\ref{tbl-loc-repl}). Four recordings
 will ensure that we have the minimum number of samples for a simple
-occupancy analysis. Tags are made in a count-removal framework, only
-tagging the time of first detection of each individual heard on the
-recordings. In case a species was overly abundant a TMTT (`too many to
-tag') flag was used (see Table~\ref{tbl-tmtt}). Amphibian abundance was
-estimated at the time of first detection using the
+occupancy analysis (Darryl I. MacKenzie et al.
+(2002)\marginpar{\begin{footnotesize}\leavevmode\vadjust pre{\protect\hypertarget{ref-mackenzie2002estimating}{}}%
+MacKenzie, Darryl I, James D Nichols, Gideon B Lachman, Sam Droege, J
+Andrew Royle, and Catherine A Langtimm. 2002. {``Estimating Site
+Occupancy Rates When Detection Probabilities Are Less Than One.''}
+\emph{Ecology} 83 (8): 2248--55.\vspace{2mm}\par\end{footnotesize}}
+and Darryl I. MacKenzie et al.
+(2003)\marginpar{\begin{footnotesize}\leavevmode\vadjust pre{\protect\hypertarget{ref-imperfect-occu}{}}%
+MacKenzie, Darryl I., James D. Nichols, James E. Hines, Melinda G.
+Knutson, and Alan B. Franklin. 2003. {``ESTIMATING SITE OCCUPANCY,
+COLONIZATION, AND LOCAL EXTINCTION WHEN a SPECIES IS DETECTED
+IMPERFECTLY.''} \emph{Ecology} 84 (8): 2200--2207.
+https://doi.org/\url{https://doi.org/10.1890/02-3090}.\vspace{2mm}\par\end{footnotesize}}).
+Tags are made using count-removal (see Farnsworth et al.
+(2002)\marginpar{\begin{footnotesize}\leavevmode\vadjust pre{\protect\hypertarget{ref-farnsworth2002removal}{}}%
+Farnsworth, George L, Kenneth H Pollock, James D Nichols, Theodore R
+Simons, James E Hines, and John R Sauer. 2002. {``A Removal Model for
+Estimating Detection Probabilities from Point-Count Surveys.''}
+\emph{The Auk} 119 (2): 414--25.\vspace{2mm}\par\end{footnotesize}},
+Sólymos et al.
+(2018)\marginpar{\begin{footnotesize}\leavevmode\vadjust pre{\protect\hypertarget{ref-time-removal}{}}%
+Sólymos, Péter, Steven M. Matsuoka, Steven G. Cumming, Diana Stralberg,
+Patricia Fontaine, Fiona K. A. Schmiegelow, Samantha J. Song, and Erin
+M. Bayne. 2018. {``{Evaluating time-removal models for estimating
+availability of boreal birds during point count surveys: Sample size
+requirements and model complexity}.''} \emph{The Condor} 120 (4):
+765--86. \url{https://doi.org/10.1650/CONDOR-18-32.1}.\vspace{2mm}\par\end{footnotesize}})
+where tags are only made at the time of first detection of each
+individual heard on the recordings. In case a species was overly
+abundant a TMTT (`too many to tag') flag was used (see
+Table~\ref{tbl-tmtt}). 1\% of the total tags were TMTT but were
+subsequently converted to numeric using
+\texttt{wildRtrax::wt\_replace\_tmtt}. We also verified that all tags
+that were created were checked by a second observer (n = 67.46) to
+ensure accuracy of detections (see Table~\ref{tbl-verified}). Amphibian
+abundance was estimated at the time of first detection using the
 \href{https://www.usgs.gov/centers/eesc/science/north-american-amphibian-monitoring-program}{North
 American Amphibian Monitoring Program} with abundance of species being
-estimated on the scale of ``calling intensity index'' of 1 - 3. Mammals
-such as Red Squirrel, were also noted on the recordings. After the data
-are processed in WildTrax, the
+estimated on the scale of ``calling intensity index'' (CI) of 1 - 3.
+Mammals such as Red Squirrel, were also noted on the recordings. After
+the data are processed in WildTrax, the
 \href{https://abbiodiversity.github.io/wildRtrax/}{wildRtrax} package is
 use to download the data into a standard format prepared for analysis.
-We also verified that all tags that were created were checked by a
-second observer to ensure accuracy of detections (see
-Table~\ref{tbl-verified}).
+The \texttt{wt\_download\_report} function downloads the data directly
+to a R framework for easy manipulation (see
+\href{https://abbiodiversity.github.io/wildRtrax/articles/apis.html}{wildRtrax
+APIs}).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{pei\_projects }\OtherTok{\textless{}{-}}\NormalTok{ wildRtrax}\SpecialCharTok{::}\FunctionTok{wt\_get\_download\_summary}\NormalTok{(}\AttributeTok{sensor =} \StringTok{\textquotesingle{}ARU\textquotesingle{}}\NormalTok{) }\SpecialCharTok{|\textgreater{}}
+  \FunctionTok{filter}\NormalTok{(}\FunctionTok{grepl}\NormalTok{(}\StringTok{\textquotesingle{}\^{}Prince Edward Island National Park Forest Songbird\textquotesingle{}}\NormalTok{, project)) }\SpecialCharTok{|\textgreater{}}
+  \FunctionTok{select}\NormalTok{(project\_id) }\SpecialCharTok{|\textgreater{}}
+  \FunctionTok{pull}\NormalTok{()}
+
+\NormalTok{pei\_main }\OtherTok{\textless{}{-}}
+  \FunctionTok{map\_dfr}\NormalTok{(}
+    \AttributeTok{.x =}\NormalTok{ pei\_projects,}
+    \AttributeTok{.f =} \SpecialCharTok{\textasciitilde{}}\NormalTok{ wildRtrax}\SpecialCharTok{::}\FunctionTok{wt\_download\_report}\NormalTok{(}
+      \AttributeTok{project\_id =}\NormalTok{ .x,}
+      \AttributeTok{sensor\_id =} \StringTok{"ARU"}\NormalTok{,}
+      \AttributeTok{weather\_cols =}\NormalTok{ T,}
+      \AttributeTok{reports =} \StringTok{"main"}
+\NormalTok{    )}
+\NormalTok{  )}
+\end{Highlighting}
+\end{Shaded}
 
 \hypertarget{tbl-loc-repl}{}
 \begin{table}
@@ -545,11 +732,11 @@ PENP-1-1 & 2023 & 180s & Dawn & 4\\
 \hline
 Tag is verified & Count & Proportion\\
 \hline
- & 168 & 1.65\\
+ & 137 & 1.32\\
 \hline
-f & 2927 & 28.82\\
+f & 3239 & 31.22\\
 \hline
-t & 7060 & 69.52\\
+t & 6998 & 67.46\\
 \hline
 \end{tabular}
 \end{table}
@@ -581,50 +768,143 @@ PENP-1-1 & 2019-06-04 07:23:00 & AMRE & TMTT\\
 \hypertarget{visual-scanning}{%
 \subsection{Visual scanning}\label{visual-scanning}}
 
-Visual scanning is the concept of visually examining recordings en masse
-in order to find the signal in question in audio recordings. It has been
-a well-proven method for detecting many different taxa (Cameron et al.
+Visual scanning is the concept of visually examining spectrograms in
+order to find a signal within an audio recording. Visual scanning can be
+a useful processing method allowing trained users to process recordings
+much faster than traditional listening. It has been used for detecting
+different taxa (amphibians: Cameron et al.
 (2020)\marginpar{\begin{footnotesize}\leavevmode\vadjust pre{\protect\hypertarget{ref-vis-scan-amphs}{}}%
 Cameron, J., A. Crosby, C. Paszkowski, and E. Bayne. 2020. {``Visual
 Spectrogram Scanning Paired with an Observation--Confirmation Occupancy
 Model Improves the Efficiency and Accuracy of Bioacoustic Anuran
 Data.''} \emph{Canadian Journal of Zoology} 98 (11): 733--42.
 \url{https://doi.org/10.1139/cjz-2020-0103}.\vspace{2mm}\par\end{footnotesize}},
-(\textbf{arus-vs-cams-wolves?})\marginpar{\begin{footnotesize}arus-vs-cams-wolves\vspace{2mm}\par\end{footnotesize}})
-with comparable biological metrics to other traditional methods. Visual
-scanning allows a user to use frequency-limited or time-limited
-spectrograms and scan lots of them visually much faster than listening
-to the audio. These changes are easily made by adjusting project
-settings in WildTrax. Visual scanning for Bank Swallow was conducted at
-each \texttt{PENP-BS-*} location. A total of 0 recordings. Tags were
-made at the time of first detection in each minute interval.
+mammals: Garland et al.
+(2020)\marginpar{\begin{footnotesize}\leavevmode\vadjust pre{\protect\hypertarget{ref-aru-vs-cams-wolves}{}}%
+Garland, Laura, Andrew Crosby, Richard Hedley, Stan Boutin, and Erin
+Bayne. 2020. {``Acoustic Vs. Photographic Monitoring of Gray Wolves
+({Canis lupus}): A Methodological Comparison of Two Passive Monitoring
+Techniques.''} \emph{Canadian Journal of Zoology} 98 (3): 219--28.
+\url{https://doi.org/10.1139/cjz-2019-0081}.\vspace{2mm}\par\end{footnotesize}})
+with comparable biological metrics, as well as helping to maximize
+species detection in large acoustic monitoring data sets (Ware et al.
+(2023)\marginpar{\begin{footnotesize}\leavevmode\vadjust pre{\protect\hypertarget{ref-all-the-scans}{}}%
+Ware, Lena, C. Lisa Mahon, Logan McLeod, and Jean-François Jetté. 2023.
+{``Artificial Intelligence (BirdNET) Supplements Manual Methods to
+Maximize Bird Species Richness from Acoustic Data Sets Generated from
+Regional Monitoring.''} \emph{Canadian Journal of Zoology} 101 (12):
+1031--51. \url{https://doi.org/10.1139/cjz-2023-0044}.\vspace{2mm}\par\end{footnotesize}}).
+WildTrax's project settings and dynamic spectrogram settings in the
+processing interface allow users to upload many recordings, while also
+allowing frequency-limited or time-limited spectrograms. These changes
+are easily made by adjusting project settings in WildTrax (see
+Figure~\ref{fig-project-dynamic}).
+
+\begin{figure}
+
+{\centering \includegraphics{project-dynamic.png}
+
+}
+
+\caption{\label{fig-project-dynamic}Dynamic spectrogram and project
+settings in WildTrax}
+
+\end{figure}
+
+In order to determine presence of Bank Swallow (BANS) at
+\texttt{PENP-BS-*} site, visual scanning was employed to identify the
+time of first detection of the species on recordings at these locations.
+A total of 630 recordings were visually scanned for BANS. Tags were made
+at the time of first detection in each minute interval.
 
 \hypertarget{automated-recognition}{%
 \subsection{Automated recognition}\label{automated-recognition}}
 
 Automated recognition is a well-known process to help detect rare and
-elusive species, as well as species that may have low detectability in
-large data sets. We constructed a recognizer for EAWP and used three
-previously constructed Wildlife Acoustics SongScope recognizer for OSFL,
-RUBL and CAWA. Hits were uploaded to WildTrax via the
-\texttt{wt\_songscope\_tags} function in \texttt{wildRtrax}.
+elusive species (Knight and Bayne
+(2019)\marginpar{\begin{footnotesize}\leavevmode\vadjust pre{\protect\hypertarget{ref-knight2019classification}{}}%
+Knight, Elly C, and Erin M Bayne. 2019. {``Classification Threshold and
+Training Data Affect the Quality and Utility of Focal Species Data
+Processed with Automated Audio-Recognition Software.''}
+\emph{Bioacoustics} 28 (6): 539--54.\vspace{2mm}\par\end{footnotesize}}.
+Shonfield, Heemskerk, and Bayne
+(2018)\marginpar{\begin{footnotesize}\leavevmode\vadjust pre{\protect\hypertarget{ref-shonfield2018utility}{}}%
+Shonfield, Julia, Sarah Heemskerk, and Erin M Bayne. 2018. {``Utility of
+Automated Species Recognition for Acoustic Monitoring of Owls.''}
+\emph{Journal of Raptor Research} 52 (1): 42--55.\vspace{2mm}\par\end{footnotesize}})
+as well as species that may have a low detectability by collecting large
+data sets. In order to determine We constructed a recognizer for Eastern
+Wood-Pewee (EAWP) and used three previously constructed Wildlife
+Acoustics SongScope recognizers for Olive-sided Flycatcher (OSFL), Rusty
+Blackbird (RUBL) and Canada Warbler (CAWA) to detect for the presence of
+these species in the 2019 data set. All recognizers are freely available
+on WildTrax under Methods and Protocols \textgreater{}
+\href{https://wildtrax.ca/resources/methods-protocols/automated-recognizers/}{Automated
+Recognizers}. Hits were verified and true positives for presence at each
+location (recording where the species was first positively detected)
+were uploaded to WildTrax via the \texttt{wt\_songscope\_tags} function
+in \texttt{wildRtrax}.
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{wt\_songscope\_tags}\NormalTok{()}
-\end{Highlighting}
-\end{Shaded}
+\hypertarget{analyses}{%
+\subsection{Analyses}\label{analyses}}
+
+Species richness, diversity and occupancy were calculated using the 21
+forest songbird monitoring locations (\texttt{PENP-}). We calculated
+species richness as distinct species found at each location and year
+surveyed (see Figure~\ref{fig-spp-rich-locs}), omitting species using
+\texttt{wildRtrax::wt\_tidy\_species()} for abiotic, amphibians,
+unknowns and insects. To determine if there were any changes to species
+diversity, we used Shannon's diversity index over years using
+\texttt{vegan::diversity} (see Figure~\ref{fig-shannon}).
+
+For testing species occupancy, we selected locations with a minimum of
+four dawn visits for each year across all five years, focusing on forest
+obligate species for ecological relevance (see
+Table~\ref{tbl-bird-guilds}). Utilizing a single-season single-species
+occupancy model from Darryl I. MacKenzie et al.
+(2002)\marginpar{\begin{footnotesize}\leavevmode\vadjust pre{\protect\hypertarget{ref-mackenzie2002estimating}{}}%
+MacKenzie, Darryl I, James D Nichols, Gideon B Lachman, Sam Droege, J
+Andrew Royle, and Catherine A Langtimm. 2002. {``Estimating Site
+Occupancy Rates When Detection Probabilities Are Less Than One.''}
+\emph{Ecology} 83 (8): 2248--55.\vspace{2mm}\par\end{footnotesize}},
+we calculated the predicted occupancy of species at all locations
+surveyed in each year across years. Site-specific covariates included
+the distance to ocean edge (in meters) and the proportional area of each
+cover type from the
+\href{https://data.princeedwardisland.ca/Environment-and-Food/OD0144-Corporate-Landuse-Inventory-2010/tc7z-7rpy}{Prince
+Edward Island 2010 Corporate Land Use Inventory} at 150 meter radius
+surrounding the ARU categorized into anthropogenic (pavement, soy), open
+(grass, sand dune, bare soil), deciduous (red maple, white birch, alder,
+poplar) and conifer (white spruce, black spruce, balsam fir).
+Observation covariates incorporated day of the year, hour, observer, and
+a quadratic term for both day of year (\(doy^{2}\)) and hour
+(\(hr^{2}\)). See Table~\ref{tbl-obvs-and-covs} for more information.
+Despite variations in processing methodology between 2019 - 2020 (1SPM -
+species-individual detected per minute, i.e.~repeat sampling each minute
+for 3 minute) and subsequent years (2021 - 2023; 1SPT), we maintained
+consistency by exclusively utilizing the time to the first detection of
+individuals from the 1SPM recordings. Model predictions were generated,
+with goodness-of-fit testing using methods from Darryl I. MacKenzie and
+Bailey
+(2004)\marginpar{\begin{footnotesize}\leavevmode\vadjust pre{\protect\hypertarget{ref-occu-fit}{}}%
+MacKenzie, Darryl I., and Larissa L. Bailey. 2004. {``Assessing the Fit
+of Site-Occupancy Models.''} \emph{Journal of Agricultural, Biological,
+and Environmental Statistics} 9 (3): 300--318.
+\url{http://www.jstor.org/stable/1400484}.\vspace{2mm}\par\end{footnotesize}}
+and the best model selected based on AIC and through
+\texttt{MuMIn::dregde}, \texttt{MuMIn::get.models} and
+\texttt{MuMIn::model.sel}. If more than one model existed, the average
+model was used using \texttt{MuMIn::model.avg}. The final predictions
+were then made and plotted over years and sorted by nesting guilds of
+species into conifer, deciduous, treed / shrubby and open.
 
 \begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
 
 \hypertarget{results}{%
 \section{Results}\label{results}}
 
-\hypertarget{avian-species}{%
-\subsection{Avian species}\label{avian-species}}
-
 \hypertarget{species-richness}{%
-\subsubsection{Species richness}\label{species-richness}}
+\subsection{Species richness}\label{species-richness}}
 
 A total of 100 species were found across the five years.
 Figure~\ref{fig-spp-rich-locs} describes the relationship of species
@@ -634,596 +914,332 @@ species richness and survey effort.
 
 \begin{figure}
 
+\sidecaption{\label{fig-spp-rich-locs}Species richness at forest
+monitoring locations across years}
+
 {\centering \includegraphics{peinp_files/figure-pdf/fig-spp-rich-locs-1.pdf}
 
 }
 
-\caption{\label{fig-spp-rich-locs}Species richness at forest monitoring
-locations across years}
-
 \end{figure}
 
 \begin{figure}
+
+\sidecaption{\label{fig-spp-rich-annual}Species richness at forest
+monitoring locations across years considering sampling effort}
 
 {\centering \includegraphics{peinp_files/figure-pdf/fig-spp-rich-annual-1.pdf}
 
 }
 
-\caption{\label{fig-spp-rich-annual}Species richness at forest
-monitoring locations across years considering sampling effort}
-
 \end{figure}
 
+\hypertarget{tbl-bird-guilds}{}
+\begin{table}
+\caption{\label{tbl-bird-guilds}Bird guilds. For nesting habitat; Ag = Agricultural, Be = Beach, Bo =
+Bog, CW = Coniferous Woodlands, ES = Early Successional, MW = Mixed
+Woodlands, OW = Open Woodlands, TSS = Treed/Shrubby Swamp, Ur = Urban.
+Species from CW, MW, OW, TSS were used for analysis. }\tabularnewline
+
+\centering
+\begin{tabular}{l|l|l|l|l|l|l|l}
+\hline
+species\_common\_name & general\_type & migration & feeding & breeding\_substrate & foraging\_type & substrate\_nesting & habitat\_nesting\\
+\hline
+Alder Flycatcher & S & NM & In & Air & Sal & Sh & TSS\\
+\hline
+American Redstart & NA & NA & NA & NA & NA & NA & MW\\
+\hline
+Baltimore Oriole & NA & NA & NA & NA & NA & NA & OW\\
+\hline
+Bay-breasted Warbler & NA & NA & NA & NA & NA & NA & CW\\
+\hline
+Black-and-white Warbler & NA & NA & NA & NA & NA & NA & MW\\
+\hline
+Black-backed Woodpecker & S & R & In & Ba & Sca & Sn & CW\\
+\hline
+Black-throated Blue Warbler & NA & NA & NA & NA & NA & NA & MW\\
+\hline
+Black-throated Green Warbler & NA & NA & NA & NA & NA & NA & CW\\
+\hline
+Blackburnian Warbler & NA & NA & NA & NA & NA & NA & CW\\
+\hline
+Blackpoll Warbler & NA & NA & NA & NA & NA & NA & CW\\
+\hline
+Blue Jay & G & NA & NA & NA & NA & NA & OW\\
+\hline
+Blue-headed Vireo & S & SDM & In & LCS & Gl & CT & MW\\
+\hline
+Boreal Chickadee & S & R & In & LCS & Gl & Sn & CW\\
+\hline
+Brown Creeper & NA & NA & NA & NA & NA & NA & CW\\
+\hline
+Canada Jay & G & R & Om & UC & Fo & CT & CW\\
+\hline
+Canada Warbler & NA & NA & NA & NA & NA & NA & MW\\
+\hline
+Cape May Warbler & NA & NA & NA & NA & NA & NA & CW\\
+\hline
+Chestnut-sided Warbler & NA & NA & NA & NA & NA & NA & MW\\
+\hline
+Chipping Sparrow & G & SDM & Om & Gr & Fo & CT & OW\\
+\hline
+Common Nighthawk & S & NM & In & Air & Scr & Gr & OW\\
+\hline
+Dark-eyed Junco & G & SDM & Om & Gr & Fo & Gr & CW\\
+\hline
+Downy Woodpecker & G & NA & NA & NA & NA & NA & MW\\
+\hline
+Eastern Wood-Pewee & S & NA & NA & NA & NA & NA & OW\\
+\hline
+Fox Sparrow & G & SDM & Om & Gr & Fo & Gr & OW\\
+\hline
+Golden-crowned Kinglet & S & NA & NA & NA & NA & NA & CW\\
+\hline
+Gray Catbird & S & NA & NA & NA & NA & NA & MW\\
+\hline
+Hairy Woodpecker & NA & NA & NA & NA & NA & NA & MW\\
+\hline
+Hermit Thrush & S & SDM & In & Gr & Gl & Gr & CW\\
+\hline
+Lincoln's Sparrow & NA & NA & NA & NA & NA & NA & TSS\\
+\hline
+Magnolia Warbler & NA & NA & NA & NA & NA & NA & MW\\
+\hline
+Mountain Bluebird & S & SDM & In & Gr & Gl & Sn & OW\\
+\hline
+Mourning Warbler & NA & NA & NA & NA & NA & NA & MW\\
+\hline
+Northern Flicker & S & SDM & In & Gr & Gl & Sn & MW\\
+\hline
+Northern Parula & NA & NA & NA & NA & NA & NA & OW\\
+\hline
+Orange-crowned Warbler & S & SDM & In & LCS & Gl & Gr & OW\\
+\hline
+Philadelphia Vireo & NA & NA & NA & NA & NA & NA & MW\\
+\hline
+Pileated Woodpecker & S & R & In & Ba & Ex & Sn & MW\\
+\hline
+Pine Warbler & NA & NA & NA & NA & NA & NA & CW\\
+\hline
+Red-eyed Vireo & NA & NA & NA & NA & NA & NA & MW\\
+\hline
+Ruby-crowned Kinglet & S & SDM & In & UC & Gl & CT & CW\\
+\hline
+Ruffed Grouse & G & R & Om & Gr & Fo & Gr & MW\\
+\hline
+Rusty Blackbird & NA & NA & NA & NA & NA & NA & TSS\\
+\hline
+Swainson's Thrush & G & NM & Om & Gr & Fo & CT & MW\\
+\hline
+Veery & NA & NA & NA & NA & NA & NA & MW\\
+\hline
+Warbling Vireo & NA & NA & NA & NA & NA & NA & MW\\
+\hline
+Western Wood-Pewee & S & NM & In & Air & Sal & CT & OW\\
+\hline
+Yellow-bellied Sapsucker & G & SDM & Om & Ba & Ex & DT & MW\\
+\hline
+Yellow-rumped Warbler & S & SDM & In & LCS & Gl & CT & CW\\
+\hline
+\end{tabular}
+\end{table}
+
 \begin{figure}
+
+\sidecaption{\label{fig-spp-activity}Seasonal detection activity of most
+commonly detected forest species}
 
 {\centering \includegraphics{peinp_files/figure-pdf/fig-spp-activity-1.pdf}
 
 }
 
-\caption{\label{fig-spp-activity}Seasonal detection activity of most
-commonly detected forest species}
+\end{figure}
+
+\hypertarget{species-diversity}{%
+\subsection{Species diversity}\label{species-diversity}}
+
+Shannon's diversity was stable based on results. (see
+Figure~\ref{fig-shannon}.)
+
+\begin{figure}
+
+{\centering \includegraphics{peinp_files/figure-pdf/fig-shannon-1.pdf}
+
+}
+
+\caption{\label{fig-shannon}Shannon's diversity across years for all
+locations surveyed.}
 
 \end{figure}
 
-A quick test to show proximity to ocean is the major effect of noise and
-species richness on audio data so that we can use that site covariate in
-the occupany models.
-
-\hypertarget{species-diversity}{%
-\subsubsection{Species diversity}\label{species-diversity}}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{raw\_dog }\OtherTok{\textless{}{-}}\NormalTok{ pei\_main }\SpecialCharTok{|\textgreater{}} 
-  \FunctionTok{as\_tibble}\NormalTok{() }\SpecialCharTok{|\textgreater{}}
-  \FunctionTok{wt\_tidy\_species}\NormalTok{(}\AttributeTok{remove =} \FunctionTok{c}\NormalTok{(}\StringTok{"mammal"}\NormalTok{,}\StringTok{"amphibian"}\NormalTok{,}\StringTok{"abiotic"}\NormalTok{,}\StringTok{"insect"}\NormalTok{,}\StringTok{"unknown"}\NormalTok{), }\AttributeTok{zerofill =}\NormalTok{ T) }\SpecialCharTok{|\textgreater{}}
-  \FunctionTok{filter}\NormalTok{(}\SpecialCharTok{!}\FunctionTok{grepl}\NormalTok{(}\StringTok{\textquotesingle{}BS|ASC|LXI\textquotesingle{}}\NormalTok{,location)) }\SpecialCharTok{|\textgreater{}}
-  \FunctionTok{wt\_replace\_tmtt}\NormalTok{() }\SpecialCharTok{|\textgreater{}}
-  \FunctionTok{select}\NormalTok{(location, recording\_date\_time, species\_code, species\_common\_name, individual\_order, individual\_count) }\SpecialCharTok{|\textgreater{}}
-  \FunctionTok{distinct}\NormalTok{() }\SpecialCharTok{|\textgreater{}}
-  \FunctionTok{group\_by}\NormalTok{(location, recording\_date\_time, species\_code, species\_common\_name) }\SpecialCharTok{|\textgreater{}}
-  \FunctionTok{summarise}\NormalTok{(}\AttributeTok{count =} \FunctionTok{max}\NormalTok{(individual\_order)) }\SpecialCharTok{|\textgreater{}}
-  \FunctionTok{ungroup}\NormalTok{() }\SpecialCharTok{|\textgreater{}}
-  \FunctionTok{pivot\_wider}\NormalTok{(}\AttributeTok{names\_from =}\NormalTok{ species\_code, }\AttributeTok{values\_from =}\NormalTok{ count, }\AttributeTok{values\_fill =} \DecValTok{0}\NormalTok{) }\SpecialCharTok{|\textgreater{}}
-  \FunctionTok{as.data.frame}\NormalTok{()}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-
-Downloading: 8.2 kB     
-Downloading: 8.2 kB     
-Downloading: 8.2 kB     
-Downloading: 8.2 kB     
-Downloading: 8.2 kB     
-Downloading: 8.2 kB     
-Downloading: 8.2 kB     
-Downloading: 8.2 kB     
-Downloading: 16 kB     
-Downloading: 16 kB     
-Downloading: 16 kB     
-Downloading: 16 kB     
-Downloading: 16 kB     
-Downloading: 16 kB     
-Downloading: 25 kB     
-Downloading: 25 kB     
-Downloading: 25 kB     
-Downloading: 25 kB     
-Downloading: 25 kB     
-Downloading: 25 kB     
-Downloading: 33 kB     
-Downloading: 33 kB     
-Downloading: 33 kB     
-Downloading: 33 kB     
-Downloading: 33 kB     
-Downloading: 33 kB     
-Downloading: 33 kB     
-Downloading: 33 kB     
-Downloading: 41 kB     
-Downloading: 41 kB     
-Downloading: 41 kB     
-Downloading: 41 kB     
-Downloading: 41 kB     
-Downloading: 41 kB     
-Downloading: 49 kB     
-Downloading: 49 kB     
-Downloading: 49 kB     
-Downloading: 49 kB     
-Downloading: 49 kB     
-Downloading: 49 kB     
-Downloading: 57 kB     
-Downloading: 57 kB     
-Downloading: 57 kB     
-Downloading: 57 kB     
-Downloading: 57 kB     
-Downloading: 57 kB     
-Downloading: 65 kB     
-Downloading: 65 kB     
-Downloading: 65 kB     
-Downloading: 65 kB     
-Downloading: 65 kB     
-Downloading: 65 kB     
-Downloading: 74 kB     
-Downloading: 74 kB     
-Downloading: 74 kB     
-Downloading: 74 kB     
-Downloading: 74 kB     
-Downloading: 74 kB     
-Downloading: 82 kB     
-Downloading: 82 kB     
-Downloading: 82 kB     
-Downloading: 82 kB     
-Downloading: 82 kB     
-Downloading: 82 kB     
-Downloading: 90 kB     
-Downloading: 90 kB     
-Downloading: 90 kB     
-Downloading: 90 kB     
-Downloading: 90 kB     
-Downloading: 90 kB     
-Downloading: 90 kB     
-Downloading: 90 kB     
-Downloading: 98 kB     
-Downloading: 98 kB     
-Downloading: 98 kB     
-Downloading: 98 kB     
-Downloading: 98 kB     
-Downloading: 98 kB     
-Downloading: 110 kB     
-Downloading: 110 kB     
-Downloading: 110 kB     
-Downloading: 110 kB     
-Downloading: 110 kB     
-Downloading: 110 kB     
-Downloading: 110 kB     
-Downloading: 110 kB     
-Downloading: 110 kB     
-Downloading: 110 kB     
-Downloading: 110 kB     
-Downloading: 110 kB     
-Downloading: 120 kB     
-Downloading: 120 kB     
-Downloading: 120 kB     
-Downloading: 120 kB     
-Downloading: 120 kB     
-Downloading: 120 kB     
-Downloading: 130 kB     
-Downloading: 130 kB     
-Downloading: 130 kB     
-Downloading: 130 kB     
-Downloading: 130 kB     
-Downloading: 130 kB     
-Downloading: 140 kB     
-Downloading: 140 kB     
-Downloading: 140 kB     
-Downloading: 140 kB     
-Downloading: 140 kB     
-Downloading: 140 kB     
-Downloading: 150 kB     
-Downloading: 150 kB     
-Downloading: 150 kB     
-Downloading: 150 kB     
-Downloading: 150 kB     
-Downloading: 150 kB     
-Downloading: 160 kB     
-Downloading: 160 kB     
-Downloading: 160 kB     
-Downloading: 160 kB     
-Downloading: 160 kB     
-Downloading: 160 kB     
-Downloading: 160 kB     
-Downloading: 160 kB     
-Downloading: 160 kB     
-Downloading: 160 kB     
-Downloading: 160 kB     
-Downloading: 160 kB     
-Downloading: 170 kB     
-Downloading: 170 kB     
-Downloading: 170 kB     
-Downloading: 170 kB     
-Downloading: 170 kB     
-Downloading: 170 kB     
-Downloading: 180 kB     
-Downloading: 180 kB     
-Downloading: 180 kB     
-Downloading: 180 kB     
-Downloading: 180 kB     
-Downloading: 180 kB     
-Downloading: 190 kB     
-Downloading: 190 kB     
-Downloading: 190 kB     
-Downloading: 190 kB     
-Downloading: 190 kB     
-Downloading: 190 kB     
-Downloading: 200 kB     
-Downloading: 200 kB     
-Downloading: 200 kB     
-Downloading: 200 kB     
-Downloading: 200 kB     
-Downloading: 200 kB     
-Downloading: 200 kB     
-Downloading: 200 kB     
-Downloading: 200 kB     
-Downloading: 200 kB     
-Downloading: 200 kB     
-Downloading: 200 kB     
-Downloading: 200 kB     
-Downloading: 200 kB     
-Downloading: 210 kB     
-Downloading: 210 kB     
-Downloading: 210 kB     
-Downloading: 210 kB     
-Downloading: 210 kB     
-Downloading: 210 kB     
-Downloading: 220 kB     
-Downloading: 220 kB     
-Downloading: 220 kB     
-Downloading: 220 kB     
-Downloading: 220 kB     
-Downloading: 220 kB     
-Downloading: 230 kB     
-Downloading: 230 kB     
-Downloading: 230 kB     
-Downloading: 230 kB     
-Downloading: 230 kB     
-Downloading: 230 kB     
-Downloading: 240 kB     
-Downloading: 240 kB     
-Downloading: 240 kB     
-Downloading: 240 kB     
-Downloading: 240 kB     
-Downloading: 240 kB     
-Downloading: 250 kB     
-Downloading: 250 kB     
-Downloading: 250 kB     
-Downloading: 250 kB     
-Downloading: 250 kB     
-Downloading: 250 kB     
-Downloading: 250 kB     
-Downloading: 250 kB     
-Downloading: 250 kB     
-Downloading: 250 kB     
-Downloading: 250 kB     
-Downloading: 250 kB     
-Downloading: 260 kB     
-Downloading: 260 kB     
-Downloading: 260 kB     
-Downloading: 260 kB     
-Downloading: 260 kB     
-Downloading: 260 kB     
-Downloading: 270 kB     
-Downloading: 270 kB     
-Downloading: 270 kB     
-Downloading: 270 kB     
-Downloading: 270 kB     
-Downloading: 270 kB     
-Downloading: 280 kB     
-Downloading: 280 kB     
-Downloading: 280 kB     
-Downloading: 280 kB     
-Downloading: 280 kB     
-Downloading: 280 kB     
-Downloading: 290 kB     
-Downloading: 290 kB     
-Downloading: 290 kB     
-Downloading: 290 kB     
-Downloading: 290 kB     
-Downloading: 290 kB     
-Downloading: 290 kB     
-Downloading: 290 kB     
-Downloading: 290 kB     
-Downloading: 290 kB     
-Downloading: 290 kB     
-Downloading: 290 kB     
-Downloading: 300 kB     
-Downloading: 300 kB     
-Downloading: 300 kB     
-Downloading: 300 kB     
-Downloading: 300 kB     
-Downloading: 300 kB     
-Downloading: 310 kB     
-Downloading: 310 kB     
-Downloading: 310 kB     
-Downloading: 310 kB     
-Downloading: 310 kB     
-Downloading: 310 kB     
-Downloading: 320 kB     
-Downloading: 320 kB     
-Downloading: 320 kB     
-Downloading: 320 kB     
-Downloading: 320 kB     
-Downloading: 320 kB     
-Downloading: 330 kB     
-Downloading: 330 kB     
-Downloading: 330 kB     
-Downloading: 330 kB     
-Downloading: 330 kB     
-Downloading: 330 kB     
-Downloading: 340 kB     
-Downloading: 340 kB     
-Downloading: 340 kB     
-Downloading: 340 kB     
-Downloading: 340 kB     
-Downloading: 340 kB     
-Downloading: 340 kB     
-Downloading: 340 kB     
-Downloading: 340 kB     
-Downloading: 340 kB     
-Downloading: 340 kB     
-Downloading: 340 kB     
-Downloading: 350 kB     
-Downloading: 350 kB     
-Downloading: 350 kB     
-Downloading: 350 kB     
-Downloading: 350 kB     
-Downloading: 350 kB     
-Downloading: 360 kB     
-Downloading: 360 kB     
-Downloading: 360 kB     
-Downloading: 360 kB     
-Downloading: 360 kB     
-Downloading: 360 kB     
-Downloading: 370 kB     
-Downloading: 370 kB     
-Downloading: 370 kB     
-Downloading: 370 kB     
-Downloading: 370 kB     
-Downloading: 370 kB     
-Downloading: 380 kB     
-Downloading: 380 kB     
-Downloading: 380 kB     
-Downloading: 380 kB     
-Downloading: 380 kB     
-Downloading: 380 kB     
-Downloading: 380 kB     
-Downloading: 380 kB     
-Downloading: 380 kB     
-Downloading: 380 kB     
-Downloading: 380 kB     
-Downloading: 380 kB     
-Downloading: 390 kB     
-Downloading: 390 kB     
-Downloading: 390 kB     
-Downloading: 390 kB     
-Downloading: 390 kB     
-Downloading: 390 kB     
-Downloading: 400 kB     
-Downloading: 400 kB     
-Downloading: 400 kB     
-Downloading: 400 kB     
-Downloading: 400 kB     
-Downloading: 400 kB     
-Downloading: 410 kB     
-Downloading: 410 kB     
-Downloading: 410 kB     
-Downloading: 410 kB     
-Downloading: 410 kB     
-Downloading: 410 kB     
-Downloading: 410 kB     
-Downloading: 410 kB     
-Downloading: 420 kB     
-Downloading: 420 kB     
-Downloading: 420 kB     
-Downloading: 420 kB     
-Downloading: 420 kB     
-Downloading: 420 kB     
-Downloading: 430 kB     
-Downloading: 430 kB     
-Downloading: 430 kB     
-Downloading: 430 kB     
-Downloading: 430 kB     
-Downloading: 430 kB     
-Downloading: 430 kB     
-Downloading: 430 kB     
-Downloading: 430 kB     
-Downloading: 430 kB     
-Downloading: 430 kB     
-Downloading: 430 kB     
-Downloading: 440 kB     
-Downloading: 440 kB     
-Downloading: 440 kB     
-Downloading: 440 kB     
-Downloading: 440 kB     
-Downloading: 440 kB     
-Downloading: 450 kB     
-Downloading: 450 kB     
-Downloading: 450 kB     
-Downloading: 450 kB     
-Downloading: 450 kB     
-Downloading: 450 kB     
-Downloading: 460 kB     
-Downloading: 460 kB     
-Downloading: 460 kB     
-Downloading: 460 kB     
-Downloading: 460 kB     
-Downloading: 460 kB     
-Downloading: 470 kB     
-Downloading: 470 kB     
-Downloading: 470 kB     
-Downloading: 470 kB     
-Downloading: 470 kB     
-Downloading: 470 kB     
-Downloading: 470 kB     
-Downloading: 470 kB     
-Downloading: 470 kB     
-Downloading: 470 kB     
-Downloading: 470 kB     
-Downloading: 470 kB     
-Downloading: 480 kB     
-Downloading: 480 kB     
-Downloading: 480 kB     
-Downloading: 480 kB     
-Downloading: 480 kB     
-Downloading: 480 kB     
-Downloading: 490 kB     
-Downloading: 490 kB     
-Downloading: 490 kB     
-Downloading: 490 kB     
-Downloading: 490 kB     
-Downloading: 490 kB     
-Downloading: 500 kB     
-Downloading: 500 kB     
-Downloading: 500 kB     
-Downloading: 500 kB     
-Downloading: 500 kB     
-Downloading: 500 kB     
-Downloading: 510 kB     
-Downloading: 510 kB     
-Downloading: 510 kB     
-Downloading: 510 kB     
-Downloading: 510 kB     
-Downloading: 510 kB     
-Downloading: 520 kB     
-Downloading: 520 kB     
-Downloading: 520 kB     
-Downloading: 520 kB     
-Downloading: 520 kB     
-Downloading: 520 kB     
-Downloading: 520 kB     
-Downloading: 520 kB     
-Downloading: 520 kB     
-Downloading: 520 kB     
-Downloading: 520 kB     
-Downloading: 520 kB     
-Downloading: 530 kB     
-Downloading: 530 kB     
-Downloading: 530 kB     
-Downloading: 530 kB     
-Downloading: 530 kB     
-Downloading: 530 kB     
-Downloading: 540 kB     
-Downloading: 540 kB     
-Downloading: 540 kB     
-Downloading: 540 kB     
-Downloading: 540 kB     
-Downloading: 540 kB     
-Downloading: 550 kB     
-Downloading: 550 kB     
-Downloading: 550 kB     
-Downloading: 550 kB     
-Downloading: 550 kB     
-Downloading: 550 kB     
-Downloading: 560 kB     
-Downloading: 560 kB     
-Downloading: 560 kB     
-Downloading: 560 kB     
-Downloading: 560 kB     
-Downloading: 560 kB     
-Downloading: 560 kB     
-Downloading: 560 kB     
-Downloading: 560 kB     
-Downloading: 560 kB     
-Downloading: 560 kB     
-Downloading: 560 kB     
-Downloading: 570 kB     
-Downloading: 570 kB     
-Downloading: 570 kB     
-Downloading: 570 kB     
-Downloading: 570 kB     
-Downloading: 570 kB     
-Downloading: 580 kB     
-Downloading: 580 kB     
-Downloading: 580 kB     
-Downloading: 580 kB     
-Downloading: 580 kB     
-Downloading: 580 kB     
-Downloading: 590 kB     
-Downloading: 590 kB     
-Downloading: 590 kB     
-Downloading: 590 kB     
-Downloading: 590 kB     
-Downloading: 590 kB     
-Downloading: 600 kB     
-Downloading: 600 kB     
-Downloading: 600 kB     
-Downloading: 600 kB     
-Downloading: 600 kB     
-Downloading: 600 kB     
-Downloading: 610 kB     
-Downloading: 610 kB     
-Downloading: 610 kB     
-Downloading: 610 kB     
-Downloading: 610 kB     
-Downloading: 610 kB     
-Downloading: 610 kB     
-Downloading: 610 kB     
-Downloading: 610 kB     
-Downloading: 610 kB     
-Downloading: 610 kB     
-Downloading: 610 kB     
-Downloading: 620 kB     
-Downloading: 620 kB     
-Downloading: 620 kB     
-Downloading: 620 kB     
-Downloading: 620 kB     
-Downloading: 620 kB     
-Downloading: 630 kB     
-Downloading: 630 kB     
-Downloading: 630 kB     
-Downloading: 630 kB     
-Downloading: 630 kB     
-Downloading: 630 kB     
-Downloading: 630 kB     
-Downloading: 630 kB     
-\end{verbatim}
-
-\begin{verbatim}
-Successfully downloaded the species table!
-\end{verbatim}
-
-\begin{verbatim}
-`summarise()` has grouped output by 'location', 'recording_date_time',
-'species_code'. You can override using the `.groups` argument.
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{\#betadiver(raw\_dog[,4:103])}
-\CommentTok{\#diversity(raw\_dog[,4:103], index="shannon")}
-\end{Highlighting}
-\end{Shaded}
-
 \hypertarget{species-occupancy}{%
-\subsubsection{Species occupancy}\label{species-occupancy}}
+\subsection{Species occupancy}\label{species-occupancy}}
 
-For testing species occupancy, we selected locations with a minimum of
-four dawn visits across five years, focusing on forest obligate species
-for ecological relevance (see \textbf{?@tbl-bird-guilds}). Utilizing a
-single-season single-species occupancy model (see
-\textbf{?@fig-spp-occ}) from Mackenzie et al.~2003. Site-specific
-covariates included the distance to the ocean edge and the proportion of
-forested area surrounding the ARU. Observation covariates incorporated
-day of the year, hour, observer details, and a quadratic term for both
-year and hour. Despite variations in methodology between 2019 (1SPM) and
-subsequent years (2020 - 2023), we maintained consistency by exclusively
-utilizing the time to the first detection of individuals from the 1SPM
-recordings. Model predictions were then generated, and the best model
-was selected based on the Aikaike Information Criterion (AIC).
+We selected \texttt{20} species to represent the forest songbird
+community into 4 separate habitat nesting guilds (see
+Table~\ref{tbl-bird-guilds}): conifer
+(Figure~\ref{fig-spp-occ-conifer}), deciduous
+(Figure~\ref{fig-spp-occ-decid}), treed / shrubby
+(Figure~\ref{fig-spp-occ-tss}) and open (Figure~\ref{fig-spp-occ-open}).
+Analysis of species occupancy revealed diverse and varied changes across
+these species. Analytically, many models were singular, and a few
+exhibited overdispersion (indicated by \emph{c-hat} in
+\textbf{?@tbl-c-hat}), likely due to low detections or a limited sample
+size of spatial locations. Ubiquitous species such as Yed-eyed Vireo,
+Yellow-rumped Warbler, Magnolia Warbler and Northern Parula,
+demonstrated stable site occupancy across the years. Generalist species
+or those capable of capitalizing on utilizing mixed habitats,
+exemplified by the Northern Parula, also maintained consistent occupancy
+levels. The occurrence of Hurricane Fiona in 2023 led to notable
+breakpoints in the occupancy of certain species: coniferous species,
+including the Black-throated Green Warbler, Black-throated Blue Warbler,
+Blackburnian Warbler, Golden-crowned Kinglet, and Mourning Warbler,
+experienced declines. Conversely, increases were observed in guilds of
+species that favor more open or shrubby habitats, such as the Alder
+Flycatcher and American Redstart. Thrushes (American Robin, Swainson's
+Thrush, Hermit Thrush) had notably wavering occupancy throughout the
+years.
 
-\hypertarget{species-at-risk}{%
-\subsubsection{Species-at-risk}\label{species-at-risk}}
+\begin{figure}
+
+{\centering \includegraphics{peinp_files/figure-pdf/fig-spp-occ-conifer-1.pdf}
+
+}
+
+\caption{\label{fig-spp-occ-conifer}Predicted single-season occupancy of
+forest species (Habitat nesting = Conifer) within Prince Edward Island
+National Park. The data represents the average species occupancy across
+all surveyed locations for each respective year.}
+
+\end{figure}
+
+\begin{figure}
+
+{\centering \includegraphics{peinp_files/figure-pdf/fig-spp-occ-decid-1.pdf}
+
+}
+
+\caption{\label{fig-spp-occ-decid}Predicted single-season occupancy of
+forest species (Habitat nesting = Deciduous) within Prince Edward Island
+National Park. The data represents the average species occupancy across
+all surveyed locations for each respective year.}
+
+\end{figure}
+
+\begin{figure}
+
+{\centering \includegraphics{peinp_files/figure-pdf/fig-spp-occ-tss-1.pdf}
+
+}
+
+\caption{\label{fig-spp-occ-tss}Predicted single-season occupancy of
+forest species (Habitat nesting = Treed / Shrubby) within Prince Edward
+Island National Park. The data represents the average species occupancy
+across all surveyed locations for each respective year.}
+
+\end{figure}
+
+\begin{figure}
+
+{\centering \includegraphics{peinp_files/figure-pdf/fig-spp-occ-open-1.pdf}
+
+}
+
+\caption{\label{fig-spp-occ-open}Predicted single-season occupancy of
+forest species (Habitat nesting = Open) within Prince Edward Island
+National Park. The data represents the average species occupancy across
+all surveyed locations for each respective year.}
+
+\end{figure}
 
 \hypertarget{visual-scanning-1}{%
 \subsection{Visual scanning}\label{visual-scanning-1}}
+
+BANS were detected at 3 distinct locations (PENP-BS-1).
+
+\hypertarget{automated-recognition-1}{%
+\subsection{Automated recognition}\label{automated-recognition-1}}
+
+We found that there was no advantage to utilizing the recognizer to find
+Eastern Wood-Pewee over human transcribing as the species was very
+detectable (see \textbf{?@tbl-recog-results}).
 
 \begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
 
 \hypertarget{amphibians}{%
 \subsection{Amphibians}\label{amphibians}}
 
-\includegraphics{peinp_files/figure-pdf/unnamed-chunk-22-1.pdf}
+A total of 7 were detected: SPPE, AMTO, NLFR, GRFG, WOFR, MIFR, BULL. A
+preliminary pattern of amphibian activity can be seen in
+Figure~\ref{fig-spp-amphs-day} for Green Frog and Spring Peeper where
+there were enough detections to generate activity patterns. Spring
+peeper activity commenced much earlier than Green Frog although seasonal
+patterns are consistent with the species' phenology Lovett
+(2013)\marginpar{\begin{footnotesize}\leavevmode\vadjust pre{\protect\hypertarget{ref-lovett2013peepers}{}}%
+Lovett, Gary M. 2013. {``When Do Peepers Peep? Climate and the Date of
+First Calling in the Spring Peeper (Pseudacris Crucifer) in Southeastern
+New York State.''} \emph{Northeastern Naturalist} 20 (2): 333--40.\vspace{2mm}\par\end{footnotesize}},
+Ackleh et al.
+(2010)\marginpar{\begin{footnotesize}\leavevmode\vadjust pre{\protect\hypertarget{ref-ackleh2010measuring}{}}%
+Ackleh, Azmy S, Jacoby Carter, Lauren Cole, Tom Nguyen, Jay Monte, and
+Claire Pettit. 2010. {``Measuring and Modeling the Seasonal Changes of
+an Urban Green Treefrog (Hyla Cinerea) Population.''} \emph{Ecological
+Modelling} 221 (2): 281--89.\vspace{2mm}\par\end{footnotesize}}.
+
+\begin{figure}
+
+{\centering \includegraphics{peinp_files/figure-pdf/fig-spp-amphs-day-1.pdf}
+
+}
+
+\caption{\label{fig-spp-amphs-day}Seasonal and yearly activity plots for
+Green Frog and Spring Peeper}
+
+\end{figure}
 
 \begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
 
 \hypertarget{discussion}{%
 \section{Discussion}\label{discussion}}
 
-\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+Considering the natural disturbance effects seen in the Park, species
+richness and diversity stayed relatively stable. Individuals of conifer
+dominant stands likely moved to more suitable habitat outside the park,
+suggesting the potential utility of metapopulation analysis through
+passive acoustic monitoring via citizen science. Further analysis may
+utilize dynamic occupancy models, multi-species multi-season occupancy
+models, or community shifts to describe richness and diversity while
+accounting for decreases in species that may rely on specific habitat
+structures within the park. Additional geospatial assets could improve
+the accuracy of modelling apporaches as well. This study underscores the
+efficacy of autonomous recording units (ARUs) as a powerful tool for
+monitoring climatic and habitat shifts with a relatively low sample size
+and area coverage.
 
-\hypertarget{references}{%
-\subsubsection{References}\label{references}}
+Avian species within the Park forest demonstrate a non-uniform
+distribution. Recommendations for optimizing the efficiency and
+reliability of the ARU program include:
 
-\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+\begin{itemize}
+\tightlist
+\item
+  Prioritizing monitoring of historical locations, particularly
+  emphasizing repeats at PENP-1-1, PENP-1-2, PENP-2-3, PENP-3-1,
+  PENP-3-2, PENP-4-1, PENP-4-2, PENP-4-3, PENP-4-4 as baselines for
+  evaluating ecological changes over time.
+\item
+  Adjusting monitoring times to dawn and dusk and extending deployment
+  periods to 4-7 days between May 15 and July 15 to maximize
+  vocalizations during peak activity periods.
+\item
+  Regular servicing of ARUs, focusing on testing microphone sensitivity
+  degradation to ensure optimal functionality, data reliability, and
+  longevity.
+\item
+  Continuing high-quality verification of tags to create annotated
+  datasets for building and automating classifiers within WildTrax.
+\end{itemize}
 
 
 

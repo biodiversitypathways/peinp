@@ -22,15 +22,15 @@ citation-location: margin
 
 ![](peinpheader.png){style="float:left`;" fig-alt="Photo of the ocean" fig-align="center"}
 
-::: fullwidth
+<div style="background-color: #f4f4f4; padding: 20px;">
 To run this report locally:
 
--   Open RStudio or your preferred IDE
--   Create a new project and set up for version control using the GitHub repository
--   Pull from remote main
--   Load the `pei.RData` file in the first chunk
--   Render the document and review the results
-:::
+- Open RStudio or your preferred IDE
+- Create a new project and set up for version control using the GitHub repository
+- Pull from remote main
+- Load the `pei.RData` file in the first chunk
+- Render the document and review the results
+</div>
 
 ```{r}
 #| label: load-packages and authenticate
@@ -508,7 +508,7 @@ In order to determine presence of Bank Swallow (BANS) at `PENP-BS-*` site, visua
 
 ## Automated recognition
 
-Automated recognition is a well-known process to help detect rare and elusive species (@knight2019classification. @shonfield2018utility) as well as species that may have a low detectability by collecting large data sets. In order to determine We constructed a recognizer for Eastern Wood-Pewee (EAWP) and used three previously constructed Wildlife Acoustics SongScope recognizers for Olive-sided Flycatcher (OSFL), Rusty Blackbird (RUBL) and Canada Warbler (CAWA) to detect for the presence of these species in the 2019 data set. All recognizers are freely available on WildTrax under Methods and Protocols \> [Automated Recognizers](https://wildtrax.ca/resources/methods-protocols/automated-recognizers/). Hits were verified and true positives for presence at each location (recording where the species was first positively detected) were uploaded to WildTrax via the `wt_songscope_tags` function in `wildRtrax`.
+Automated recognition is a well-known process to help detect rare and elusive species (@knight2019classification. @shonfield2018utility) as well as species that may have a low detectability by collecting large data sets. In order to determine the presence of a few key species-at-risk, we utilized automated recognizers and deployed them across all the recordings in the 2019 data set. We constructed a recognizer for Eastern Wood-Pewee (EAWP) and used three previously constructed Wildlife Acoustics SongScope recognizers for Olive-sided Flycatcher (OSFL), Rusty Blackbird (RUBL) and Canada Warbler (CAWA) to detect for the presence of these species in the 2019 data set. All recognizers are freely available on WildTrax under Methods and Protocols \> [Automated Recognizers](https://wildtrax.ca/resources/methods-protocols/automated-recognizers/). Hits were verified and true positives for presence at each location (recording where the species was first positively detected) were uploaded to WildTrax via the `wt_songscope_tags` function in `wildRtrax`.
 
 ## Analyses
 
@@ -637,10 +637,11 @@ spp_rich_annual_plot
 #| message: false
 #| include: true
 #| label: tbl-bird-guilds
-#| tbl-cap: Bird guilds. For nesting habitat; Ag = Agricultural, Be = Beach, Bo = Bog, CW = Coniferous Woodlands, ES = Early Successional, MW = Mixed Woodlands, OW = Open Woodlands, TSS = Treed/Shrubby Swamp, Ur = Urban. Species from CW, MW, OW, TSS were used for analysis.
+#| tbl-cap: Common bird forest species guilds. For nesting habitat; Ag = Agricultural, Be = Beach, Bo = Bog, CW = Coniferous Woodlands, ES = Early Successional, MW = Mixed Woodlands, OW = Open Woodlands, TSS = Treed/Shrubby Swamp, Ur = Urban. Species from CW, MW, OW, TSS were used for analysis.
 
 guilds <- read_csv("bird_guilds.csv") |>
-  filter(habitat_nesting %in% c("CW","MW","OW","TSS"))
+  select(species_common_name, habitat_nesting) |>
+  filter(habitat_nesting %in% c("CW","MW","OW","TSS")) 
 
 kable(guilds)
 
@@ -1204,7 +1205,7 @@ We found that there was no advantage to utilizing the recognizer to find Eastern
 
 ## Amphibians
 
-A total of `r amphs_only |> select(species_code) |> distinct() |> tally()` were detected: `r amphs_only |> select(species_code) |> distinct() |> pull()`. A preliminary pattern of amphibian activity can be seen in @fig-spp-amphs-day for Green Frog and Spring Peeper where there were enough detections to generate activity patterns. Spring peeper activity commenced much earlier than Green Frog although seasonal patterns are consistent with the species' phenology @lovett2013peepers, @ackleh2010measuring.
+A total of `r amphs_only |> select(species_code) |> distinct() |> tally()` were detected: `r amphs_only |> select(species_code) |> distinct() |> pull()`. A preliminary pattern of amphibian activity can be seen in @fig-spp-amphs-day for Green Frog and Spring Peeper where there were enough detections to generate activity patterns. Spring peeper activity commenced much earlier than Green Frog although seasonal patterns are consistent with the species' phenology (see @lovett2013peepers, @ackleh2010measuring).
 
 ```{r}
 #| warning: false
@@ -1249,11 +1250,12 @@ amphs_only %>%
 
 # Discussion
 
-Considering the natural disturbance effects seen in the Park, species richness and diversity stayed relatively stable. Individuals of conifer dominant stands likely moved to more suitable habitat outside the park, suggesting the potential utility of metapopulation analysis through passive acoustic monitoring outside of the park via citizen science. Further analysis may utilize dynamic occupancy models, multi-species multi-season occupancy models, or community shifts to describe richness and diversity while accounting for decreases in species that may rely on specific habitat structures within the park. Additional geospatial assets could improve the accuracy of modelling apporaches as well. This study demostrates the efficacy of autonomous recording units (ARUs) as a powerful tool for monitoring climatic and habitat shifts with a relatively low sample size and area coverage.
+Considering the recent (2022) natural disturbance effects seen in the Park, species richness and diversity stayed relatively stable. Individuals nesting in conifer dominant stands likely moved to more suitable habitat outside the park, suggesting the potential utility of metapopulation analysis through passive acoustic monitoring outside of the park via citizen science participation. 
 
-Avian species within the Park forest demonstrate a non-uniform distribution. Recommendations for optimizing the efficiency and reliability of the ARU program include:
+Further analysis may utilize dynamic occupancy models (@mackenzie2009), multi-species multi-season occupancy models (@devarajan2020multi), or community shifts (@oksanen2010canonical) to describe richness and diversity while accounting for decreases in species that may rely on specific habitat structures within the park. Additional geospatial assets could improve the accuracy of modelling apporaches as well. Nevertheless, this study demostrates the efficacy of autonomous recording units (ARUs) as a powerful tool for monitoring climatic and habitat shifts with a relatively low sample size and area coverage. As Avian species within the Park forest demonstrate a non-uniform distribution relative to habitat, the following recommendations for optimizing the efficiency and reliability of the ARU program include:
 
 -   Prioritizing monitoring of historical locations, particularly emphasizing repeats at `r repeats` as baselines for evaluating ecological changes over time.
 -   Adjusting monitoring times to dawn and dusk and extending deployment periods to 4-7 days between May 15 and July 15 to maximize vocalizations during peak activity periods.
 -   Regular servicing of ARUs, focusing on testing microphone sensitivity degradation to ensure optimal functionality, data reliability, and longevity.
 -   Continuing high-quality verification of tags to create annotated datasets for building and automating classifiers within WildTrax.
+- Data publication WildTrax can further the dissemination of information and participation of others in the park network

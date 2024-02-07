@@ -97,18 +97,18 @@ PENP-E1, 2022-06-21 06:01:00,1SPT,180,Transcribed,Marcus Sommers,None,Light,Ligh
 PENP-E1, 2022-07-03 08:06:00,1SPT,180,Transcribed,Alex MacPhail,None,Light,None,None,None,,609291
 PENP-E1, 2022-07-03 21:09:00,1SPT,180,Transcribed,Alex MacPhail,None,Light,None,None,None,,609290
 PENP-E1, 2022-07-04 06:06:00,1SPT,180,Transcribed,Bronwyn Robinson,None,Light,None,None,None,,609289
-PENP-1-5, 2022-06-13 05:20:00,1SPT,180,New,Not Assigned,,,,,,,967874
-PENP-1-5, 2022-06-09 04:21:00,1SPT,180,New,Not Assigned,,,,,,,967875
-PENP-3-2, 2022-05-29 05:26:00,1SPT,180,New,Not Assigned,,,,,,,967876
-PENP-3-2, 2022-05-30 05:25:00,1SPT,180,New,Not Assigned,,,,,,,967877
-PENP-3-4, 2022-06-13 05:19:00,1SPT,180,New,Not Assigned,,,,,,,967878
-PENP-3-4, 2022-06-08 06:20:00,1SPT,180,New,Not Assigned,,,,,,,967879
-PENP-3-5, 2022-05-28 05:26:00,1SPT,180,New,Not Assigned,,,,,,,967880
-PENP-3-5, 2022-05-30 04:25:00,1SPT,180,New,Not Assigned,,,,,,,967881
-PENP-3-6, 2022-05-19 05:34:00,1SPT,180,New,Not Assigned,,,,,,,967882
-PENP-3-6, 2022-05-16 04:38:00,1SPT,180,New,Not Assigned,,,,,,,967883
-PENP-3-6, 2022-05-14 05:40:00,1SPT,180,New,Not Assigned,,,,,,,967884
-PENP-4-2, 2022-06-22 05:18:00,1SPT,180,New,Not Assigned,,,,,,,967885
-PENP-4-4, 2022-06-09 05:18:00,1SPT,180,New,Not Assigned,,,,,,,967886
-PENP-4-6, 2022-07-09 05:28:00,1SPT,180,New,Not Assigned,,,,,,,967887
-PENP-5-1, 2022-06-20 05:21:00,1SPT,180,New,Not Assigned,,,,,,,967888
+PENP-1-5, 2022-06-13 05:20:00,1SPT,180,Transcribed,Alex MacPhail,None,Light,None,None,None,,967874
+PENP-3-2, 2022-05-30 05:25:00,1SPT,180,Transcribed,Alex MacPhail,,,,,,,967877
+PENP-3-5, 2022-05-28 05:26:00,1SPT,180,Transcribed,Marcus Sommers,None,Light,None,None,Both Sides Extra Static,,967880
+PENP-4-2, 2022-06-22 05:18:00,1SPT,180,Transcribed,Marcus Sommers,None,None,None,None,None,,967885
+PENP-3-6, 2022-05-19 05:34:00,1SPT,180,Transcribed,Alex MacPhail,None,Light,None,None,None,,967882
+PENP-1-5, 2022-06-09 04:21:00,1SPT,180,Bad Weather,Alex MacPhail,,,,,,,967875
+PENP-3-2, 2022-05-29 05:26:00,1SPT,180,Transcribed,Not Assigned,None,None,None,Moderate,None,Anthro noise in the background,967876
+PENP-3-4, 2022-06-13 05:19:00,1SPT,180,Transcribed,Alex MacPhail,,,,,,,967878
+PENP-3-4, 2022-06-08 06:20:00,1SPT,180,Transcribed,Alex MacPhail,,,,,,,967879
+PENP-3-6, 2022-05-16 04:38:00,1SPT,180,Transcribed,Not Assigned,None,Light,None,Light,None,,967883
+PENP-3-5, 2022-05-30 04:25:00,1SPT,180,Transcribed,Alex MacPhail,None,Moderate,None,None,None,,967881
+PENP-4-6, 2022-07-09 05:28:00,1SPT,180,Transcribed,Marcus Sommers,None,None,Light,None,None,,967887
+PENP-3-6, 2022-05-14 05:40:00,1SPT,180,Transcribed,Marcus Sommers,None,None,None,None,None,,967884
+PENP-5-1, 2022-06-20 05:21:00,1SPT,180,Transcribed,Marcus Sommers,Light,Light,None,Light,None,,967888
+PENP-4-4, 2022-06-09 05:18:00,1SPT,180,Transcribed,Marcus Sommers,Light,Light,Light,None,None,,967886

@@ -66,7 +66,7 @@ load('pei.RData')
 
 # Abstract
 
-Passive acoustic monitoring has proven to be a valuable tool for monitoring vocalizing species. Environmental sensors are becoming increasingly easy to program and can autonomously generating extensive data sets of the soundscape, an invaluable resource for ecological integrity monitoring. Prince Edward Island National deployed autonomous recording units (ARUs) across `r pei_locs |> st_drop_geometry() |> select(location) |> distinct() |> tally()` locations during a comprehensive five-year survey. The analysis revealed that species richness and diversity remained relatively stable, while single-species occupancy exhibited diverse patterns. Common and generalist species showed consistent occupancy, but there was a notable reduction in conifer-nesting species in 2023, likely attributed to forest structural loss. Ongoing monitoring and dynamic models can yield more detailed and predictive results to ensure the continued maintenance of ecological integrity in the Park.
+Passive acoustic monitoring has proven to be a valuable tool for monitoring vocalizing species. Environmental sensors are becoming increasingly easy to program and can autonomously generating extensive data sets of the soundscape, an invaluable resource for ecological integrity monitoring. Prince Edward Island National deployed autonomous recording units (ARUs) across `r pei_locs |> st_drop_geometry() |> select(location) |> distinct() |> tally()` locations during a comprehensive five-year survey. ARUs detected a total of `r nrow(distinct_spp)` species including birds, amphibians and mammals. The analysis revealed that songbird species richness and diversity remained relatively stable, while single-species occupancy exhibited diverse patterns. Common and generalist species showed consistent occupancy, but there was a notable reduction in conifer-nesting species in 2023, likely attributed to forest structural loss. Ongoing monitoring and dynamic models can yield more detailed and predictive results to ensure the continued maintenance of ecological integrity in the Park.
 
 ------------------------------------------------------------------------
 
@@ -232,11 +232,11 @@ ggplot() +
   theme_void() +
   facet_wrap(~year, ncol=1) +
   theme(
-    legend.position = "right",
+    legend.position = "bottom",
     panel.background = element_rect(fill = "#A2C8EC")  # Change the background color here
   ) +
   xlim(-63.47902,-62.56987) +
-  ylim(46.38308,46.51148)
+  ylim(46.18308,46.51148)
 
 ```
 
@@ -403,7 +403,7 @@ pei_tasks <- pei_main |>
   group_by(location, year, task_duration, typ) |>
   tally() |>
   ungroup() |>
-  filter(location == "PENP-1-1")
+  filter(location == "PENP-4-1")
 
 
 task_info <- fs::dir_ls('tasks', regexp = "*.csv") |>
@@ -420,7 +420,7 @@ task_info <- fs::dir_ls('tasks', regexp = "*.csv") |>
 #| message: false
 #| include: true
 #| label: tbl-loc-repl
-#| tbl-cap: Example of tasks and unit replication for listening at PENP-1-1
+#| tbl-cap: Example of tasks and unit replication for listening at PENP-4-1
 
 kable(pei_tasks)
 ```
@@ -815,7 +815,7 @@ shannon
 
 ## Species occupancy
 
-We selected `20` species to represent the forest songbird community into 4 separate habitat nesting guilds (see @tbl-bird-guilds): conifer (@fig-spp-occ-conifer), deciduous (@fig-spp-occ-decid), treed / shrubby (@fig-spp-occ-tss) and open (@fig-spp-occ-open). Analysis of species occupancy revealed diverse and varied changes across these species. Analytically, many models were singular, and a few exhibited overdispersion (indicated by *c-hat* in @tbl-c-hat), likely due to low detections or a limited sample size of spatial locations. Ubiquitous species such as Yed-eyed Vireo, Yellow-rumped Warbler, Magnolia Warbler and Northern Parula, demonstrated stable site occupancy across the years. Generalist species or those capable of capitalizing on utilizing mixed habitats, exemplified by the Northern Parula, also maintained consistent occupancy levels. The occurrence of Hurricane Fiona in 2023 led to notable breakpoints in the occupancy of certain species: coniferous species, including the Black-throated Green Warbler, Black-throated Blue Warbler, Blackburnian Warbler, Golden-crowned Kinglet, and Mourning Warbler, experienced declines. Conversely, increases were observed in guilds of species that favor more open or shrubby habitats, such as the Alder Flycatcher and American Redstart. Thrushes (American Robin, Swainson's Thrush, Hermit Thrush) had notably wavering occupancy throughout the years.
+We selected 15 species to represent the forest songbird community into 4 separate habitat nesting guilds (see @tbl-bird-guilds): conifer (@fig-spp-occ-conifer), deciduous (@fig-spp-occ-decid), treed / shrubby (@fig-spp-occ-tss) and open (@fig-spp-occ-open). Analysis of species occupancy revealed diverse and varied changes across these species. Analytically, many models were singular, and a few exhibited overdispersion (indicated by *c-hat* in @tbl-c-hat), likely due to low detections or a limited sample size of spatial locations. Ubiquitous species such as Yed-eyed Vireo, Yellow-rumped Warbler, Magnolia Warbler and Northern Parula, demonstrated stable site occupancy across the years. Generalist species or those capable of capitalizing on utilizing mixed habitats, exemplified by the Northern Parula, also maintained consistent occupancy levels. The occurrence of Hurricane Fiona in 2023 led to notable breakpoints in the occupancy of certain species: coniferous species, including the Black-throated Green Warbler, Black-throated Blue Warbler, Blackburnian Warbler, Golden-crowned Kinglet, and Mourning Warbler, experienced declines. Conversely, increases were observed in guilds of species that favor more open or shrubby habitats, such as the Alder Flycatcher and American Redstart. Thrushes (American Robin, Swainson's Thrush, Hermit Thrush) had notably wavering occupancy throughout the years.
 
 ```{r}
 #| warning: false
@@ -864,7 +864,7 @@ ss_occ_plot_loop <- function(input, species_choice) {
   
   data <- input
   
-  pei_occu_all <- pei_main |>
+  pei_occu_all <- data |>
     as_tibble() |>
     filter(aru_task_status == "Transcribed") |>
     filter(!grepl('BS|ASC|LXI|E1',location)) |>
@@ -1017,7 +1017,7 @@ occ_dredge_19 <- dredge(occu_model_19)
 occ_dredge_delta_19 <- get.models(occ_dredge_19, subset = delta <= 2.5)
 if(length(occ_dredge_delta_19) == 1){occ_avg_19 <- NULL} else {occ_avg_19 <- model.avg(occ_dredge_delta_19, fit = TRUE)}
 if (is.null(occ_avg_19)) {occ_fit_19 <- predict(occu_model_19, site_covariates_19, type="state",interval="confidence")}  else {occ_fit_19 <- predict(occ_avg_19, site_covariates_19, type="state",interval="confidence")}
-if ("fit" %in% colnames(occ_fit_19 %>% as_tibble())) {occ_graph_19 <- occ_fit_19 %>% as_tibble() %>% bind_cols(., site_covariates_19)} else {occ_graph_19 <- occ_fit_19 %>% as_tibble() %>% bind_cols(., site_covariates_19) %>% rename("fit" = Predicted)}
+if ("fit" %in% colnames(occ_fit_19 %>% as_tibble())) {occ_graph_19 <- occ_fit_19 %>% as_tibble() %>% bind_cols(., site_covariates_19)} else {occ_graph_19 <- occ_fit_19 %>% as_tibble() %>% bind_cols(., site_covariates_19) %>% rename("Fit" = Predicted)}
 
 print('Breaking her65???S??')
 
@@ -1025,7 +1025,7 @@ occ_dredge_20 <- dredge(occu_model_20)
 occ_dredge_delta_20 <- get.models(occ_dredge_20, subset = delta <= 2.5)
 if(length(occ_dredge_delta_20) == 1){occ_avg_20 <- NULL} else {occ_avg_20 <- model.avg(occ_dredge_delta_20, fit = TRUE)}
 if (is.null(occ_avg_20)) {occ_fit_20 <- predict(occu_model_20, site_covariates_20, type="state",interval="confidence")} else {occ_fit_20 <- predict(occ_avg_20, site_covariates_20, type="state",interval="confidence")}
-if ("fit" %in% colnames(occ_fit_20 %>% as_tibble())) {occ_graph_20 <- occ_fit_20 %>% as_tibble() %>% bind_cols(., site_covariates_20)} else {occ_graph_20 <- occ_fit_20 %>% as_tibble() %>% bind_cols(., site_covariates_20) %>% rename("fit" = Predicted)}
+if ("fit" %in% colnames(occ_fit_20 %>% as_tibble())) {occ_graph_20 <- occ_fit_20 %>% as_tibble() %>% bind_cols(., site_covariates_20)} else {occ_graph_20 <- occ_fit_20 %>% as_tibble() %>% bind_cols(., site_covariates_20) %>% rename("Fit" = Predicted)}
 
 print('Breaking her65kjdslkhsdj?')
 
@@ -1033,7 +1033,7 @@ occ_dredge_21 <- dredge(occu_model_21)
 occ_dredge_delta_21 <- get.models(occ_dredge_21, subset = delta <= 2.5)
 if(length(occ_dredge_delta_21) == 1){occ_avg_21 <- NULL} else {occ_avg_21 <- model.avg(occ_dredge_delta_21, fit = TRUE)}
 if (is.null(occ_avg_21)) {occ_fit_21 <- predict(occu_model_21, site_covariates_21, type="state",interval="confidence")} else {occ_fit_21 <- predict(occ_avg_21, site_covariates_21, type="state",interval="confidence")}
-if ("fit" %in% colnames(occ_fit_21 %>% as_tibble())) {occ_graph_21 <- occ_fit_21 %>% as_tibble() %>% bind_cols(., site_covariates_21)} else {occ_graph_21 <- occ_fit_21 %>% as_tibble() %>% bind_cols(., site_covariates_21) %>% rename("fit" = Predicted)}
+if ("fit" %in% colnames(occ_fit_21 %>% as_tibble())) {occ_graph_21 <- occ_fit_21 %>% as_tibble() %>% bind_cols(., site_covariates_21)} else {occ_graph_21 <- occ_fit_21 %>% as_tibble() %>% bind_cols(., site_covariates_21) %>% rename("Fit" = Predicted)}
 
 print('Breaking her65kjdssdsaflkhsdj?')
 
@@ -1041,7 +1041,7 @@ occ_dredge_22 <- dredge(occu_model_22)
 occ_dredge_delta_22 <- get.models(occ_dredge_22, subset = delta <= 2.5)
 if(length(occ_dredge_delta_22) == 1){occ_avg_22 <- NULL} else {occ_avg_22 <- model.avg(occ_dredge_delta_22, fit = TRUE)}
 if (is.null(occ_avg_22)) {occ_fit_22 <- predict(occu_model_22, site_covariates_22, type="state",interval="confidence")} else {occ_fit_22 <- predict(occ_avg_22, site_covariates_22, type="state",interval="confidence")}
-if ("fit" %in% colnames(occ_fit_22 %>% as_tibble())) {occ_graph_22 <- occ_fit_22 %>% as_tibble() %>% bind_cols(., site_covariates_22)} else {occ_graph_22 <- occ_fit_22 %>% as_tibble() %>% bind_cols(., site_covariates_22) %>% rename("fit" = Predicted)}
+if ("fit" %in% colnames(occ_fit_22 %>% as_tibble())) {occ_graph_22 <- occ_fit_22 %>% as_tibble() %>% bind_cols(., site_covariates_22)} else {occ_graph_22 <- occ_fit_22 %>% as_tibble() %>% bind_cols(., site_covariates_22) %>% rename("Fit" = Predicted)}
 
 print('Breaking aaaaa?')
 
@@ -1049,7 +1049,7 @@ occ_dredge_23 <- dredge(occu_model_23)
 occ_dredge_delta_23 <- get.models(occ_dredge_23, subset = delta <= 2.5)
 if(length(occ_dredge_delta_23) == 1){occ_avg_23 <- NULL} else {occ_avg_23 <- model.avg(occ_dredge_delta_23, fit = TRUE)}
 if (is.null(occ_avg_23)) {occ_fit_23 <- predict(occu_model_23, site_covariates_23, type="state",interval="confidence")} else {occ_fit_23 <- predict(occ_avg_23, site_covariates_23, type="state",interval="confidence")}
-if ("fit" %in% colnames(occ_fit_23 %>% as_tibble())) {occ_graph_23 <- occ_fit_23 %>% as_tibble() %>% bind_cols(., site_covariates_23)} else {occ_graph_23 <- occ_fit_23 %>% as_tibble() %>% bind_cols(., site_covariates_23) %>% rename("fit" = Predicted)}
+if ("fit" %in% colnames(occ_fit_23 %>% as_tibble())) {occ_graph_23 <- occ_fit_23 %>% as_tibble() %>% bind_cols(., site_covariates_23)} else {occ_graph_23 <- occ_fit_23 %>% as_tibble() %>% bind_cols(., site_covariates_23) %>% rename("Fit" = Predicted)}
 
 print('Breaking her58?')
 
@@ -1252,7 +1252,7 @@ amphs_only %>%
 
 Considering the recent (2022) natural disturbance effects seen in the Park, species richness and diversity stayed relatively stable. Individuals nesting in conifer dominant stands likely moved to more suitable habitat outside the park, suggesting the potential utility of metapopulation analysis through passive acoustic monitoring outside of the park via citizen science participation. 
 
-Further analysis may utilize dynamic occupancy models (@mackenzie2009), multi-species multi-season occupancy models (@devarajan2020multi), or community shifts (@oksanen2010canonical) to describe richness and diversity while accounting for decreases in species that may rely on specific habitat structures within the park. Additional geospatial assets could improve the accuracy of modelling apporaches as well. Nevertheless, this study demostrates the efficacy of autonomous recording units (ARUs) as a powerful tool for monitoring climatic and habitat shifts with a relatively low sample size and area coverage. As Avian species within the Park forest demonstrate a non-uniform distribution relative to habitat, the following recommendations for optimizing the efficiency and reliability of the ARU program include:
+Further analysis may utilize dynamic occupancy models (@mackenzie2009modeling), multi-species multi-season occupancy models (@devarajan2020multi), or community shifts (@oksanen2010canonical) to describe richness and diversity while accounting for decreases in species that may rely on specific habitat structures within the park. Additional geospatial assets could improve the accuracy of modelling apporaches as well. Nevertheless, this study demostrates the efficacy of autonomous recording units (ARUs) as a powerful tool for monitoring climatic and habitat shifts with a relatively low sample size and area coverage. As Avian species within the Park forest demonstrate a non-uniform distribution relative to habitat, the following recommendations for optimizing the efficiency and reliability of the ARU program include:
 
 -   Prioritizing monitoring of historical locations, particularly emphasizing repeats at `r repeats` as baselines for evaluating ecological changes over time.
 -   Adjusting monitoring times to dawn and dusk and extending deployment periods to 4-7 days between May 15 and July 15 to maximize vocalizations during peak activity periods.

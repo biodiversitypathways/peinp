@@ -57,7 +57,7 @@ library(vegan)
 library(MuMIn)
 library(AICcmodavg)
 
-wt_auth()
+wt_auth(force = T)
 
 load('pei.RData')
 #save.image('pei.RData')
@@ -230,7 +230,7 @@ ggplot() +
   xlab("Longitude") +
   ylab("Latitude") +
   theme_void() +
-  facet_wrap(~year, ncol=1) +
+  facet_wrap(~year) +
   theme(
     legend.position = "bottom",
     panel.background = element_rect(fill = "#A2C8EC")  # Change the background color here
@@ -512,9 +512,9 @@ Automated recognition is a well-known process to help detect rare and elusive sp
 
 ## Analyses
 
-Species richness, diversity and occupancy were calculated using the `r nrow(locs_summary) - 9` forest songbird monitoring locations (`PENP-`). We calculated species richness as distinct species found at each location and year surveyed (see @fig-spp-rich-locs), omitting species using `wildRtrax::wt_tidy_species()` for abiotic, amphibians, unknowns and insects. To determine if there were any changes to species diversity, we used Shannon's diversity index over years using `vegan::diversity` (see @fig-shannon).
+Species richness, diversity and occupancy were calculated using the `r nrow(locs_summary) - 9` forest songbird monitoring locations (`PENP-`). We calculated species richness as distinct species found at each location and year surveyed (see @fig-spp-rich-locs), omitting species using `wildRtrax::wt_tidy_species()` for abiotic, amphibians, unknowns and insects. To determine if there were any changes to species diversity, we used Shannon's diversity index (@shannon1948mathematical) over years using `vegan::diversity(index="shannon")` (see @fig-shannon).
 
-For testing species occupancy, we selected locations with a minimum of four dawn visits for each year across all five years, focusing on forest obligate species for ecological relevance (see @tbl-bird-guilds). Utilizing a single-season single-species occupancy model from @mackenzie2002estimating, we calculated the predicted occupancy of species at all locations surveyed in each year across years. Site-specific covariates included the distance to ocean edge (in meters) and the proportional area of each cover type from the [Prince Edward Island 2010 Corporate Land Use Inventory](https://data.princeedwardisland.ca/Environment-and-Food/OD0144-Corporate-Landuse-Inventory-2010/tc7z-7rpy) at 150 meter radius surrounding the ARU categorized into anthropogenic (pavement, soy), open (grass, sand dune, bare soil), deciduous (red maple, white birch, alder, poplar) and conifer (white spruce, black spruce, balsam fir). Observation covariates incorporated day of the year, hour, observer, and a quadratic term for both day of year ($doy^{2}$) and hour ($hr^{2}$). See @tbl-obvs-and-covs for more information. Despite variations in processing methodology between 2019 - 2020 (1SPM - species-individual detected per minute, i.e. repeat sampling each minute for 3 minute) and subsequent years (2021 - 2023; 1SPT), we maintained consistency by exclusively utilizing the time to the first detection of individuals from the 1SPM recordings. Model predictions were generated, with goodness-of-fit testing using methods from @occu-fit and the best model selected based on AIC and through `MuMIn::dregde`, `MuMIn::get.models` and `MuMIn::model.sel`. If more than one model existed, the average model was used using `MuMIn::model.avg`. The final predictions were then made and plotted over years and sorted by nesting guilds of species into conifer, deciduous, treed / shrubby and open.
+For testing species occupancy, we selected locations with a minimum of four dawn visits for each year across all five years, focusing on forest obligate species for ecological relevance (see @tbl-bird-guilds). Utilizing a single-season single-species occupancy model from @mackenzie2002estimating, we calculated the predicted occupancy of species at all locations surveyed in each year across years. Site-specific covariates included the distance to ocean edge (in meters) and the proportional area of each cover type from the [Prince Edward Island 2010 Corporate Land Use Inventory](https://data.princeedwardisland.ca/Environment-and-Food/OD0144-Corporate-Landuse-Inventory-2010/tc7z-7rpy) at 150 meter radius surrounding the ARU categorized into anthropogenic (pavement, soy), open (grass, sand dune, bare soil), deciduous (red maple, white birch, alder, poplar) and conifer (white spruce, black spruce, balsam fir). Observation covariates incorporated day of the year, hour, observer, and a quadratic term for both day of year ($doy^{2}$) and hour ($hr^{2}$). See @tbl-obvs-and-covs for more information. Despite variations in processing methodology between 2019 - 2021 (1SPM - species-individual detected per minute, i.e. repeat sampling each minute for 3 minute) and subsequent years (2022 - 2023; 1SPT), we maintained consistency by exclusively utilizing the time to the first detection of individuals from the 1SPM recordings. Model predictions were generated, with goodness-of-fit testing using methods from @occu-fit and the best model selected based on AIC and through `MuMIn::dregde`, `MuMIn::get.models` and `MuMIn::model.sel`. If more than one model existed, the average model was used using `MuMIn::model.avg`. The final predictions were then made and plotted over years and sorted by nesting guilds of species into conifer, deciduous, treed / shrubby and open.
 
 ------------------------------------------------------------------------
 

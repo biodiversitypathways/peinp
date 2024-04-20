@@ -22,16 +22,6 @@ citation-location: margin
 
 ![](peinpheader.png){style="float:left`;" fig-alt="Photo of the ocean" fig-align="center"}
 
-<div style="background-color: #f4f4f4; padding: 20px;">
-To run this report locally:
-
-- Open RStudio or your preferred IDE
-- Create a new project and set up for version control using the GitHub repository
-- Pull from remote main
-- Load the `pei.RData` file in the first chunk
-- Render the document and review the results
-</div>
-
 ```{r}
 #| label: load-packages and authenticate
 #| include: false
@@ -67,6 +57,19 @@ load('pei.RData')
 # Abstract
 
 Passive acoustic monitoring has proven to be a valuable tool for monitoring vocalizing species. Environmental sensors are becoming increasingly easy to program and can autonomously generating extensive data sets of the soundscape, an invaluable resource for ecological integrity monitoring. Prince Edward Island National deployed autonomous recording units (ARUs) across `r pei_locs |> st_drop_geometry() |> select(location) |> distinct() |> tally()` locations during a comprehensive five-year survey. ARUs detected a total of `r nrow(distinct_spp)` species including birds, amphibians and mammals. The analysis revealed that songbird species richness and diversity remained relatively stable, while single-species occupancy exhibited diverse patterns. Common and generalist species showed consistent occupancy, but there was a notable reduction in conifer-nesting species in 2023, likely attributed to forest structural loss. Ongoing monitoring and dynamic models can yield more detailed and predictive results to ensure the continued maintenance of ecological integrity in the Park.
+
+<div style="background-color: #f4f4f4; padding: 20px;">
+This is a dynamic report. Results may change as new or more data is added, or analyses conducted. 
+
+To run the report locally:
+
+- Open RStudio or your preferred IDE
+- Create a new project and set up for version control using the GitHub repository
+- Pull from remote main
+- Set your WildTrax username and password either through `Sys.setenv` or using the `keyring` package; authorize into WildTrax
+- Load the `.RData` file in the first chunk
+- Render the document and review the results
+</div>
 
 ------------------------------------------------------------------------
 
@@ -129,6 +132,8 @@ repeats <- pei_locs |>
 
 ######## Define geospatial assets
 
+
+natlpark_shp <- read_sf('assets/National_Parks_and_National_Park_Reserves_of_Canada_Legislative_Boundaries.shp')
 pei_shp <- read_sf('assets/PEI.shp')
 peinp_shp <- read_sf('assets/peinp.shp')
 peinp_shp <- st_transform(peinp_shp, st_crs(pei_locs)) |> st_make_valid()
@@ -520,7 +525,7 @@ For testing species occupancy, we selected locations with a minimum of four dawn
 
 # Results
 
-## Species richness
+## Species richness and diversity
 
 A total of `r nrow(distinct_spp)` species were found across the five years. @fig-spp-rich-locs describes the relationship of species richness across each location and survey year with @fig-spp-rich-annual showing the relationship between species richness and survey effort.
 
@@ -693,6 +698,7 @@ pei_main |>
   ylab("Species")
 
 ```
+Shannon's diversity was stable based on results. (see @fig-shannon.) 
 
 ```{r}
 #| warning: false
@@ -752,10 +758,6 @@ ocean_richness <- cbind(ocean_richness, dist_new=predict(BC_model, ocean_richnes
 lm(dist_new ~ coast_dist, data = ocean_richness)
 ```
 
-## Species diversity
-
-Shannon's diversity was stable based on results. (see @fig-shannon.)
-
 ```{r}
 #| warning: false
 #| eval: false
@@ -778,12 +780,12 @@ raw_dog <- pei_main |>
   as.data.frame()
 
 shannon <- raw_dog |>
-  pivot_longer(cols = -(location:species_common_name), names_to = "species", values_to = "count") %>%
-  group_by(location, year = lubridate::year(recording_date_time), species) %>%
-  summarise(total_count = sum(count)) %>%
-  ungroup() %>%
-  filter(!total_count == 0) %>%
-  group_by(year) %>%
+  pivot_longer(cols = -(location:species_common_name), names_to = "species", values_to = "count") |>
+  group_by(location, year = lubridate::year(recording_date_time), species) |>
+  summarise(total_count = sum(count)) |>
+  ungroup() |>
+  filter(!total_count == 0) |>
+  group_by(year) |>
   summarise(shannon_index = diversity(total_count, index = "shannon")) |>
   ungroup() |>
   ggplot(aes(x = year, y = shannon_index, color = year)) +
@@ -801,7 +803,7 @@ shannon <- raw_dog |>
 ```{r}
 #| warning: false
 #| echo: false
-#| eval: true
+#| eval: false
 #| include: true
 #| fig-width: 8
 #| fig-height: 8

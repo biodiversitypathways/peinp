@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Alex MacPhail">
-<meta name="dcterms.date" content="2024-02-07">
+<meta name="dcterms.date" content="2024-04-19">
 
 <title>Report on the use of passive acoustic monitoring in Prince Edward Island National Park</title>
 <style>
@@ -116,8 +116,7 @@ div.csl-indent {
   </ul></li>
   <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results">Results</a>
   <ul class="collapse">
-  <li><a href="#species-richness" id="toc-species-richness" class="nav-link" data-scroll-target="#species-richness">Species richness</a></li>
-  <li><a href="#species-diversity" id="toc-species-diversity" class="nav-link" data-scroll-target="#species-diversity">Species diversity</a></li>
+  <li><a href="#species-richness-and-diversity" id="toc-species-richness-and-diversity" class="nav-link" data-scroll-target="#species-richness-and-diversity">Species richness and diversity</a></li>
   <li><a href="#species-occupancy" id="toc-species-occupancy" class="nav-link" data-scroll-target="#species-occupancy">Species occupancy</a></li>
   <li><a href="#visual-scanning-1" id="toc-visual-scanning-1" class="nav-link" data-scroll-target="#visual-scanning-1">Visual scanning</a></li>
   <li><a href="#automated-recognition-1" id="toc-automated-recognition-1" class="nav-link" data-scroll-target="#automated-recognition-1">Automated recognition</a></li>
@@ -150,7 +149,7 @@ div.csl-indent {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">February 7, 2024</p>
+      <p class="date">April 19, 2024</p>
     </div>
   </div>
   
@@ -165,19 +164,21 @@ div.csl-indent {
 <p><img src="peinpheader.png" class="img-fluid figure-img" alt="Photo of the ocean"></p>
 </figure>
 </div>
+<section id="abstract" class="level1">
+<h1>Abstract</h1>
+<p>Passive acoustic monitoring has proven to be a valuable tool for monitoring vocalizing species. Environmental sensors are becoming increasingly easy to program and can autonomously generating extensive data sets of the soundscape, an invaluable resource for ecological integrity monitoring. Prince Edward Island National deployed autonomous recording units (ARUs) across 30 locations during a comprehensive five-year survey. ARUs detected a total of 101 species including birds, amphibians and mammals. The analysis revealed that songbird species richness and diversity remained relatively stable, while single-species occupancy exhibited diverse patterns. Common and generalist species showed consistent occupancy, but there was a notable reduction in conifer-nesting species in 2023, likely attributed to forest structural loss. Ongoing monitoring and dynamic models can yield more detailed and predictive results to ensure the continued maintenance of ecological integrity in the Park.</p>
 <div style="background-color: #f4f4f4; padding: 20px;">
-<p>To run this report locally:</p>
+<p>This is a dynamic report. Results may change as new or more data is added, or analyses conducted.</p>
+<p>To run the report locally:</p>
 <ul>
 <li>Open RStudio or your preferred IDE</li>
 <li>Create a new project and set up for version control using the GitHub repository</li>
 <li>Pull from remote main</li>
-<li>Load the <code>pei.RData</code> file in the first chunk</li>
+<li>Set your WildTrax username and password either through <code>Sys.setenv</code> or using the <code>keyring</code> package; authorize into WildTrax</li>
+<li>Load the <code>.RData</code> file in the first chunk</li>
 <li>Render the document and review the results</li>
 </ul>
 </div>
-<section id="abstract" class="level1">
-<h1>Abstract</h1>
-<p>Passive acoustic monitoring has proven to be a valuable tool for monitoring vocalizing species. Environmental sensors are becoming increasingly easy to program and can autonomously generating extensive data sets of the soundscape, an invaluable resource for ecological integrity monitoring. Prince Edward Island National deployed autonomous recording units (ARUs) across 30 locations during a comprehensive five-year survey. ARUs detected a total of 100 species including birds, amphibians and mammals. The analysis revealed that songbird species richness and diversity remained relatively stable, while single-species occupancy exhibited diverse patterns. Common and generalist species showed consistent occupancy, but there was a notable reduction in conifer-nesting species in 2023, likely attributed to forest structural loss. Ongoing monitoring and dynamic models can yield more detailed and predictive results to ensure the continued maintenance of ecological integrity in the Park.</p>
 <hr>
 </section>
 <section id="land-acknowledgement" class="level1">
@@ -726,7 +727,7 @@ Sugai, Larissa Sayuri Moreira, Thiago Sanna Freire Silva, Jr Ribeiro José Wagne
 </section>
 <section id="data-management" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="data-management">Data management</h2>
-<p>A total of 10078 recordings were collected (see <a href="#fig-recs-collect">Figure&nbsp;3</a>). From 2019 - 2021, data were transferred via hard drive to the University of Alberta in Edmonton, where they are redundantly stored on a server known as Cirrus. The recordings were standardized to ensure adherence to the naming convention of <code>LOCATION_DATETIME</code>, such as <code>PENP-1-1_20230625_053500.wav</code>. The remaining recordings (2022 - 2023) were directly uploaded to WildTrax by Parks Canada staff and can be downloaded from the platform’s Recording tab, accessible under Manage &gt; Download list of recordings (see <a href="#fig-download-recs">Figure&nbsp;2</a>).</p>
+<p>A total of 10092 recordings were collected (see <a href="#fig-recs-collect">Figure&nbsp;3</a>). From 2019 - 2021, data were transferred via hard drive to the University of Alberta in Edmonton, where they are redundantly stored on a server known as Cirrus. The recordings were standardized to ensure adherence to the naming convention of <code>LOCATION_DATETIME</code>, such as <code>PENP-1-1_20230625_053500.wav</code>. The remaining recordings (2022 - 2023) were directly uploaded to WildTrax by Parks Canada staff and can be downloaded from the platform’s Recording tab, accessible under Manage &gt; Download list of recordings (see <a href="#fig-download-recs">Figure&nbsp;2</a>).</p>
 <div id="fig-download-recs" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="download-recs.png" class="img-fluid figure-img"></p>
@@ -746,7 +747,7 @@ Sugai, Larissa Sayuri Moreira, Thiago Sanna Freire Silva, Jr Ribeiro José Wagne
 </section>
 <section id="community-data-processing" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="community-data-processing">Community data processing</h2>
-<p>The principal goal for data processing was to describe the acoustic community of species heard at locations while choosing a large enough subset of recordings for analyses. To ensure balanced replication, for each location and year surveyed, four randomly selected recordings were processed for 3-minutes between the hours of 4:00 AM - 7:59 AM ideally on four separate dates (see <a href="#tbl-loc-repl">Table&nbsp;3</a>). Four recordings will ensure that we have the minimum number of samples for a simple occupancy analysis (<span class="citation" data-cites="mackenzie2002estimating">Darryl I. MacKenzie et al. (<a href="#ref-mackenzie2002estimating" role="doc-biblioref">2002</a>)</span> and <span class="citation" data-cites="imperfect-occu">Darryl I. MacKenzie et al. (<a href="#ref-imperfect-occu" role="doc-biblioref">2003</a>)</span>). Tags are made using count-removal (see <span class="citation" data-cites="farnsworth2002removal">Farnsworth et al. (<a href="#ref-farnsworth2002removal" role="doc-biblioref">2002</a>)</span>, <span class="citation" data-cites="time-removal">Sólymos et al. (<a href="#ref-time-removal" role="doc-biblioref">2018</a>)</span>) where tags are only made at the time of first detection of each individual heard on the recordings. In case a species was overly abundant a TMTT (‘too many to tag’) flag was used (see <a href="#tbl-tmtt">Table&nbsp;5</a>). 1% of the total tags were TMTT but were subsequently converted to numeric using <code>wildRtrax::wt_replace_tmtt</code>. We also verified that all tags that were created were checked by a second observer (n = 67.46) to ensure accuracy of detections (see <a href="#tbl-verified">Table&nbsp;4</a>). Amphibian abundance was estimated at the time of first detection using the <a href="https://www.usgs.gov/centers/eesc/science/north-american-amphibian-monitoring-program">North American Amphibian Monitoring Program</a> with abundance of species being estimated on the scale of “calling intensity index” (CI) of 1 - 3. Mammals such as Red Squirrel, were also noted on the recordings. After the data are processed in WildTrax, the <a href="https://abbiodiversity.github.io/wildRtrax/">wildRtrax</a> package is use to download the data into a standard format prepared for analysis. The <code>wt_download_report</code> function downloads the data directly to a R framework for easy manipulation (see <a href="https://abbiodiversity.github.io/wildRtrax/articles/apis.html">wildRtrax APIs</a>).</p>
+<p>The principal goal for data processing was to describe the acoustic community of species heard at locations while choosing a large enough subset of recordings for analyses. To ensure balanced replication, for each location and year surveyed, four randomly selected recordings were processed for 3-minutes between the hours of 4:00 AM - 7:59 AM ideally on four separate dates (see <a href="#tbl-loc-repl">Table&nbsp;3</a>). Four recordings will ensure that we have the minimum number of samples for a simple occupancy analysis (<span class="citation" data-cites="mackenzie2002estimating">Darryl I. MacKenzie et al. (<a href="#ref-mackenzie2002estimating" role="doc-biblioref">2002</a>)</span> and <span class="citation" data-cites="imperfect-occu">Darryl I. MacKenzie et al. (<a href="#ref-imperfect-occu" role="doc-biblioref">2003</a>)</span>). Tags are made using count-removal (see <span class="citation" data-cites="farnsworth2002removal">Farnsworth et al. (<a href="#ref-farnsworth2002removal" role="doc-biblioref">2002</a>)</span>, <span class="citation" data-cites="time-removal">Sólymos et al. (<a href="#ref-time-removal" role="doc-biblioref">2018</a>)</span>) where tags are only made at the time of first detection of each individual heard on the recordings. In case a species was overly abundant a TMTT (‘too many to tag’) flag was used (see <a href="#tbl-tmtt">Table&nbsp;5</a>). 1% of the total tags were TMTT but were subsequently converted to numeric using <code>wildRtrax::wt_replace_tmtt</code>. We also verified that all tags that were created were checked by a second observer (n = 0.79) to ensure accuracy of detections (see <a href="#tbl-verified">Table&nbsp;4</a>). Amphibian abundance was estimated at the time of first detection using the <a href="https://www.usgs.gov/centers/eesc/science/north-american-amphibian-monitoring-program">North American Amphibian Monitoring Program</a> with abundance of species being estimated on the scale of “calling intensity index” (CI) of 1 - 3. Mammals such as Red Squirrel, were also noted on the recordings. After the data are processed in WildTrax, the <a href="https://abbiodiversity.github.io/wildRtrax/">wildRtrax</a> package is use to download the data into a standard format prepared for analysis. The <code>wt_download_report</code> function downloads the data directly to a R framework for easy manipulation (see <a href="https://abbiodiversity.github.io/wildRtrax/articles/apis.html">wildRtrax APIs</a>).</p>
 <div class="no-row-height column-margin column-container"><div id="ref-imperfect-occu" class="csl-entry" role="listitem">
 MacKenzie, Darryl I., James D. Nichols, James E. Hines, Melinda G. Knutson, and Alan B. Franklin. 2003. <span>“ESTIMATING SITE OCCUPANCY, COLONIZATION, AND LOCAL EXTINCTION WHEN a SPECIES IS DETECTED IMPERFECTLY.”</span> <em>Ecology</em> 84 (8): 2200–2207. https://doi.org/<a href="https://doi.org/10.1890/02-3090">https://doi.org/10.1890/02-3090</a>.
 </div><div id="ref-farnsworth2002removal" class="csl-entry" role="listitem">
@@ -779,7 +780,7 @@ Sólymos, Péter, Steven M. Matsuoka, Steven G. Cumming, Diana Stralberg, Patric
 <tr class="header">
 <th style="text-align: left;" data-quarto-table-cell-role="th">location</th>
 <th style="text-align: right;" data-quarto-table-cell-role="th">year</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">task_duration</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">task_duration</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th">typ</th>
 <th style="text-align: right;" data-quarto-table-cell-role="th">n</th>
 </tr>
@@ -788,63 +789,63 @@ Sólymos, Péter, Steven M. Matsuoka, Steven G. Cumming, Diana Stralberg, Patric
 <tr class="odd">
 <td style="text-align: left;">PENP-4-1</td>
 <td style="text-align: right;">2019</td>
-<td style="text-align: left;">180s</td>
+<td style="text-align: right;">180</td>
 <td style="text-align: left;">Dawn</td>
 <td style="text-align: right;">6</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">PENP-4-1</td>
 <td style="text-align: right;">2019</td>
-<td style="text-align: left;">180s</td>
+<td style="text-align: right;">180</td>
 <td style="text-align: left;">Night</td>
 <td style="text-align: right;">1</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">PENP-4-1</td>
 <td style="text-align: right;">2020</td>
-<td style="text-align: left;">180s</td>
+<td style="text-align: right;">180</td>
 <td style="text-align: left;">Dawn</td>
 <td style="text-align: right;">10</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">PENP-4-1</td>
 <td style="text-align: right;">2020</td>
-<td style="text-align: left;">180s</td>
+<td style="text-align: right;">180</td>
 <td style="text-align: left;">Day</td>
 <td style="text-align: right;">3</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">PENP-4-1</td>
 <td style="text-align: right;">2021</td>
-<td style="text-align: left;">180s</td>
+<td style="text-align: right;">180</td>
 <td style="text-align: left;">Dawn</td>
 <td style="text-align: right;">1</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">PENP-4-1</td>
 <td style="text-align: right;">2021</td>
-<td style="text-align: left;">180s</td>
+<td style="text-align: right;">180</td>
 <td style="text-align: left;">Night</td>
 <td style="text-align: right;">3</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">PENP-4-1</td>
 <td style="text-align: right;">2022</td>
-<td style="text-align: left;">180s</td>
+<td style="text-align: right;">180</td>
 <td style="text-align: left;">Dawn</td>
 <td style="text-align: right;">4</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">PENP-4-1</td>
 <td style="text-align: right;">2023</td>
-<td style="text-align: left;">180s</td>
+<td style="text-align: right;">180</td>
 <td style="text-align: left;">Dawn</td>
 <td style="text-align: right;">5</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">PENP-4-1</td>
 <td style="text-align: right;">2023</td>
-<td style="text-align: left;">180s</td>
+<td style="text-align: right;">180</td>
 <td style="text-align: left;">Day</td>
 <td style="text-align: right;">2</td>
 </tr>
@@ -869,19 +870,19 @@ Sólymos, Péter, Steven M. Matsuoka, Steven G. Cumming, Diana Stralberg, Patric
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;"></td>
-<td style="text-align: right;">137</td>
-<td style="text-align: right;">1.32</td>
+<td style="text-align: left;">FALSE</td>
+<td style="text-align: right;">3990</td>
+<td style="text-align: right;">36.43</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">f</td>
-<td style="text-align: right;">3239</td>
-<td style="text-align: right;">31.22</td>
+<td style="text-align: left;">TRUE</td>
+<td style="text-align: right;">6875</td>
+<td style="text-align: right;">62.77</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">t</td>
-<td style="text-align: right;">6998</td>
-<td style="text-align: right;">67.46</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: right;">87</td>
+<td style="text-align: right;">0.79</td>
 </tr>
 </tbody>
 </table>
@@ -975,7 +976,7 @@ Shonfield, Julia, Sarah Heemskerk, and Erin M Bayne. 2018. <span>“Utility of A
 </div></div></section>
 <section id="analyses" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="analyses">Analyses</h2>
-<p>Species richness, diversity and occupancy were calculated using the 21 forest songbird monitoring locations (<code>PENP-</code>). We calculated species richness as distinct species found at each location and year surveyed (see <a href="#fig-spp-rich-locs">Figure&nbsp;5</a>), omitting species using <code>wildRtrax::wt_tidy_species()</code> for abiotic, amphibians, unknowns and insects. To determine if there were any changes to species diversity, we used Shannon’s diversity index (<span class="citation" data-cites="shannon1948mathematical">Shannon (<a href="#ref-shannon1948mathematical" role="doc-biblioref">1948</a>)</span>) over years using <code>vegan::diversity(index="shannon")</code> (see <a href="#fig-shannon">Figure&nbsp;8</a>).</p>
+<p>Species richness, diversity and occupancy were calculated using the 21 forest songbird monitoring locations (<code>PENP-</code>). We calculated species richness as distinct species found at each location and year surveyed (see <a href="#fig-spp-rich-locs">Figure&nbsp;5</a>), omitting species using <code>wildRtrax::wt_tidy_species()</code> for abiotic, amphibians, unknowns and insects. To determine if there were any changes to species diversity, we used Shannon’s diversity index (<span class="citation" data-cites="shannon1948mathematical">Shannon (<a href="#ref-shannon1948mathematical" role="doc-biblioref">1948</a>)</span>) over years using <code>vegan::diversity(index="shannon")</code> (see <strong>?@fig-shannon</strong>).</p>
 <div class="no-row-height column-margin column-container"><div id="ref-shannon1948mathematical" class="csl-entry" role="listitem">
 Shannon, Claude Elwood. 1948. <span>“A Mathematical Theory of Communication.”</span> <em>The Bell System Technical Journal</em> 27 (3): 379–423.
 </div><div id="ref-mackenzie2002estimating" class="csl-entry" role="listitem">
@@ -988,9 +989,9 @@ MacKenzie, Darryl I., and Larissa L. Bailey. 2004. <span>“Assessing the Fit of
 </section>
 <section id="results" class="level1 page-columns page-full">
 <h1>Results</h1>
-<section id="species-richness" class="level2 page-columns page-full">
-<h2 class="anchored" data-anchor-id="species-richness">Species richness</h2>
-<p>A total of 100 species were found across the five years. <a href="#fig-spp-rich-locs">Figure&nbsp;5</a> describes the relationship of species richness across each location and survey year with <a href="#fig-spp-rich-annual">Figure&nbsp;6</a> showing the relationship between species richness and survey effort.</p>
+<section id="species-richness-and-diversity" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="species-richness-and-diversity">Species richness and diversity</h2>
+<p>A total of 101 species were found across the five years. <a href="#fig-spp-rich-locs">Figure&nbsp;5</a> describes the relationship of species richness across each location and survey year with <a href="#fig-spp-rich-annual">Figure&nbsp;6</a> showing the relationship between species richness and survey effort.</p>
 <div class="cell page-columns page-full" data-layout-align="center">
 <div class="cell-output-display page-columns page-full">
 <div id="fig-spp-rich-locs" class="quarto-figure quarto-figure-center anchored page-columns page-full">
@@ -1232,30 +1233,17 @@ MacKenzie, Darryl I., and Larissa L. Bailey. 2004. <span>“Assessing the Fit of
 </div>
 </div>
 </div>
-</section>
-<section id="species-diversity" class="level2">
-<h2 class="anchored" data-anchor-id="species-diversity">Species diversity</h2>
-<p>Shannon’s diversity was stable based on results. (see <a href="#fig-shannon">Figure&nbsp;8</a>.)</p>
-<div class="cell" data-fig-column="page-right">
-<div class="cell-output-display">
-<div id="fig-shannon" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="peinp_files/figure-html/fig-shannon-1.png" class="img-fluid figure-img" width="768"></p>
-<figcaption class="figure-caption">Figure&nbsp;8: Shannon’s diversity across years for all locations surveyed.</figcaption>
-</figure>
-</div>
-</div>
-</div>
+<p>Shannon’s diversity was stable based on results. (see <strong>?@fig-shannon</strong>.)</p>
 </section>
 <section id="species-occupancy" class="level2">
 <h2 class="anchored" data-anchor-id="species-occupancy">Species occupancy</h2>
-<p>We selected 15 species to represent the forest songbird community into 4 separate habitat nesting guilds (see <a href="#tbl-bird-guilds">Table&nbsp;6</a>): conifer (<a href="#fig-spp-occ-conifer">Figure&nbsp;9</a>), deciduous (<a href="#fig-spp-occ-decid">Figure&nbsp;10</a>), treed / shrubby (<a href="#fig-spp-occ-tss">Figure&nbsp;11</a>) and open (<a href="#fig-spp-occ-open">Figure&nbsp;12</a>). Analysis of species occupancy revealed diverse and varied changes across these species. Analytically, many models were singular, and a few exhibited overdispersion (indicated by <em>c-hat</em> in <strong>?@tbl-c-hat</strong>), likely due to low detections or a limited sample size of spatial locations. Ubiquitous species such as Yed-eyed Vireo, Yellow-rumped Warbler, Magnolia Warbler and Northern Parula, demonstrated stable site occupancy across the years. Generalist species or those capable of capitalizing on utilizing mixed habitats, exemplified by the Northern Parula, also maintained consistent occupancy levels. The occurrence of Hurricane Fiona in 2023 led to notable breakpoints in the occupancy of certain species: coniferous species, including the Black-throated Green Warbler, Black-throated Blue Warbler, Blackburnian Warbler, Golden-crowned Kinglet, and Mourning Warbler, experienced declines. Conversely, increases were observed in guilds of species that favor more open or shrubby habitats, such as the Alder Flycatcher and American Redstart. Thrushes (American Robin, Swainson’s Thrush, Hermit Thrush) had notably wavering occupancy throughout the years.</p>
+<p>We selected 15 species to represent the forest songbird community into 4 separate habitat nesting guilds (see <a href="#tbl-bird-guilds">Table&nbsp;6</a>): conifer (<a href="#fig-spp-occ-conifer">Figure&nbsp;8</a>), deciduous (<a href="#fig-spp-occ-decid">Figure&nbsp;9</a>), treed / shrubby (<a href="#fig-spp-occ-tss">Figure&nbsp;10</a>) and open (<a href="#fig-spp-occ-open">Figure&nbsp;11</a>). Analysis of species occupancy revealed diverse and varied changes across these species. Analytically, many models were singular, and a few exhibited overdispersion (indicated by <em>c-hat</em> in <strong>?@tbl-c-hat</strong>), likely due to low detections or a limited sample size of spatial locations. Ubiquitous species such as Yed-eyed Vireo, Yellow-rumped Warbler, Magnolia Warbler and Northern Parula, demonstrated stable site occupancy across the years. Generalist species or those capable of capitalizing on utilizing mixed habitats, exemplified by the Northern Parula, also maintained consistent occupancy levels. The occurrence of Hurricane Fiona in 2023 led to notable breakpoints in the occupancy of certain species: coniferous species, including the Black-throated Green Warbler, Black-throated Blue Warbler, Blackburnian Warbler, Golden-crowned Kinglet, and Mourning Warbler, experienced declines. Conversely, increases were observed in guilds of species that favor more open or shrubby habitats, such as the Alder Flycatcher and American Redstart. Thrushes (American Robin, Swainson’s Thrush, Hermit Thrush) had notably wavering occupancy throughout the years.</p>
 <div class="cell" data-fig-column="page-right">
 <div class="cell-output-display">
 <div id="fig-spp-occ-conifer" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="peinp_files/figure-html/fig-spp-occ-conifer-1.png" class="img-fluid figure-img" width="1152"></p>
-<figcaption class="figure-caption">Figure&nbsp;9: Predicted single-season occupancy of forest species (Habitat nesting = Conifer) within Prince Edward Island National Park. The data represents the average species occupancy across all surveyed locations for each respective year.</figcaption>
+<figcaption class="figure-caption">Figure&nbsp;8: Predicted single-season occupancy of forest species (Habitat nesting = Conifer) within Prince Edward Island National Park. The data represents the average species occupancy across all surveyed locations for each respective year.</figcaption>
 </figure>
 </div>
 </div>
@@ -1265,7 +1253,7 @@ MacKenzie, Darryl I., and Larissa L. Bailey. 2004. <span>“Assessing the Fit of
 <div id="fig-spp-occ-decid" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="peinp_files/figure-html/fig-spp-occ-decid-1.png" class="img-fluid figure-img" width="1152"></p>
-<figcaption class="figure-caption">Figure&nbsp;10: Predicted single-season occupancy of forest species (Habitat nesting = Deciduous) within Prince Edward Island National Park. The data represents the average species occupancy across all surveyed locations for each respective year.</figcaption>
+<figcaption class="figure-caption">Figure&nbsp;9: Predicted single-season occupancy of forest species (Habitat nesting = Deciduous) within Prince Edward Island National Park. The data represents the average species occupancy across all surveyed locations for each respective year.</figcaption>
 </figure>
 </div>
 </div>
@@ -1275,7 +1263,7 @@ MacKenzie, Darryl I., and Larissa L. Bailey. 2004. <span>“Assessing the Fit of
 <div id="fig-spp-occ-tss" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="peinp_files/figure-html/fig-spp-occ-tss-1.png" class="img-fluid figure-img" width="1152"></p>
-<figcaption class="figure-caption">Figure&nbsp;11: Predicted single-season occupancy of forest species (Habitat nesting = Treed / Shrubby) within Prince Edward Island National Park. The data represents the average species occupancy across all surveyed locations for each respective year.</figcaption>
+<figcaption class="figure-caption">Figure&nbsp;10: Predicted single-season occupancy of forest species (Habitat nesting = Treed / Shrubby) within Prince Edward Island National Park. The data represents the average species occupancy across all surveyed locations for each respective year.</figcaption>
 </figure>
 </div>
 </div>
@@ -1285,7 +1273,7 @@ MacKenzie, Darryl I., and Larissa L. Bailey. 2004. <span>“Assessing the Fit of
 <div id="fig-spp-occ-open" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="peinp_files/figure-html/fig-spp-occ-open-1.png" class="img-fluid figure-img" width="1152"></p>
-<figcaption class="figure-caption">Figure&nbsp;12: Predicted single-season occupancy of forest species (Habitat nesting = Open) within Prince Edward Island National Park. The data represents the average species occupancy across all surveyed locations for each respective year.</figcaption>
+<figcaption class="figure-caption">Figure&nbsp;11: Predicted single-season occupancy of forest species (Habitat nesting = Open) within Prince Edward Island National Park. The data represents the average species occupancy across all surveyed locations for each respective year.</figcaption>
 </figure>
 </div>
 </div>
@@ -1302,7 +1290,7 @@ MacKenzie, Darryl I., and Larissa L. Bailey. 2004. <span>“Assessing the Fit of
 </section>
 <section id="amphibians" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="amphibians">Amphibians</h2>
-<p>A total of 7 were detected: SPPE, AMTO, NLFR, GRFG, WOFR, MIFR, BULL. A preliminary pattern of amphibian activity can be seen in <a href="#fig-spp-amphs-day">Figure&nbsp;13</a> for Green Frog and Spring Peeper where there were enough detections to generate activity patterns. Spring peeper activity commenced much earlier than Green Frog although seasonal patterns are consistent with the species’ phenology (see <span class="citation" data-cites="lovett2013peepers">Lovett (<a href="#ref-lovett2013peepers" role="doc-biblioref">2013</a>)</span>, <span class="citation" data-cites="ackleh2010measuring">Ackleh et al. (<a href="#ref-ackleh2010measuring" role="doc-biblioref">2010</a>)</span>).</p>
+<p>A total of 7 were detected: SPPE, AMTO, NLFR, GRFG, WOFR, MIFR, BULL. A preliminary pattern of amphibian activity can be seen in <a href="#fig-spp-amphs-day">Figure&nbsp;12</a> for Green Frog and Spring Peeper where there were enough detections to generate activity patterns. Spring peeper activity commenced much earlier than Green Frog although seasonal patterns are consistent with the species’ phenology (see <span class="citation" data-cites="lovett2013peepers">Lovett (<a href="#ref-lovett2013peepers" role="doc-biblioref">2013</a>)</span>, <span class="citation" data-cites="ackleh2010measuring">Ackleh et al. (<a href="#ref-ackleh2010measuring" role="doc-biblioref">2010</a>)</span>).</p>
 <div class="no-row-height column-margin column-container"><div id="ref-lovett2013peepers" class="csl-entry" role="listitem">
 Lovett, Gary M. 2013. <span>“When Do Peepers Peep? Climate and the Date of First Calling in the Spring Peeper (Pseudacris Crucifer) in Southeastern New York State.”</span> <em>Northeastern Naturalist</em> 20 (2): 333–40.
 </div><div id="ref-ackleh2010measuring" class="csl-entry" role="listitem">
@@ -1312,7 +1300,7 @@ Ackleh, Azmy S, Jacoby Carter, Lauren Cole, Tom Nguyen, Jay Monte, and Claire Pe
 <div id="fig-spp-amphs-day" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="peinp_files/figure-html/fig-spp-amphs-day-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;13: Seasonal and yearly activity plots for Green Frog and Spring Peeper</figcaption>
+<figcaption class="figure-caption">Figure&nbsp;12: Seasonal and yearly activity plots for Green Frog and Spring Peeper</figcaption>
 </figure>
 </div>
 </div>

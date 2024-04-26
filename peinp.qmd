@@ -46,8 +46,9 @@ library(ggpubr)
 library(vegan)
 library(MuMIn)
 library(AICcmodavg)
+library(leaflet)
 
-wt_auth(force = T)
+wt_auth()
 
 load('pei.RData')
 #save.image('pei.RData')
@@ -58,18 +59,10 @@ load('pei.RData')
 
 Passive acoustic monitoring has proven to be a valuable tool for monitoring vocalizing species. Environmental sensors are becoming increasingly easy to program and can autonomously generating extensive data sets of the soundscape, an invaluable resource for ecological integrity monitoring. Prince Edward Island National deployed autonomous recording units (ARUs) across `r pei_locs |> st_drop_geometry() |> select(location) |> distinct() |> tally()` locations during a comprehensive five-year survey. ARUs detected a total of `r nrow(distinct_spp)` species including birds, amphibians and mammals. The analysis revealed that songbird species richness and diversity remained relatively stable, while single-species occupancy exhibited diverse patterns. Common and generalist species showed consistent occupancy, but there was a notable reduction in conifer-nesting species in 2023, likely attributed to forest structural loss. Ongoing monitoring and dynamic models can yield more detailed and predictive results to ensure the continued maintenance of ecological integrity in the Park.
 
-<div style="background-color: #f4f4f4; padding: 20px;">
-This is a dynamic report. Results may change as new or more data is added, or analyses conducted. 
+::: {style="background-color: #f4f4f4; padding: 20px;"}
+This report is dynamically generated, meaning its results may evolve with the addition of new data or further analyses. For the most recent updates, feel free to reach out to the authors or refer to the publication date.
 
-To run the report locally:
-
-- Open RStudio or your preferred IDE
-- Create a new project and set up for version control using the GitHub repository
-- Pull from remote main
-- Set your WildTrax username and password either through `Sys.setenv` or using the `keyring` package; authorize into WildTrax
-- Load the `.RData` file in the first chunk
-- Render the document and review the results
-</div>
+:::
 
 ------------------------------------------------------------------------
 
@@ -133,7 +126,7 @@ repeats <- pei_locs |>
 ######## Define geospatial assets
 
 
-natlpark_shp <- read_sf('assets/National_Parks_and_National_Park_Reserves_of_Canada_Legislative_Boundaries.shp')
+#natlpark_shp <- read_sf('assets/National_Parks_and_National_Park_Reserves_of_Canada_Legislative_Boundaries.shp')
 pei_shp <- read_sf('assets/PEI.shp')
 peinp_shp <- read_sf('assets/peinp.shp')
 peinp_shp <- st_transform(peinp_shp, st_crs(pei_locs)) |> st_make_valid()
@@ -220,28 +213,37 @@ locs_summary <- pei_locs |>
 #| eval: true
 #| message: false
 #| include: true
-#| results: hide
-#| fig-cap: ARU monitoring locations surveyed each year as part of the songbird monitoring program.
+#| fig-align: center
+#| fig-width: 10
+#| fig-height: 10
+#| fig-cap: ARU survey locations
 #| label: fig-locs
-#| cap-location: margin
 
-ggplot() +
-  geom_sf(data = pei_shp, fill = '#FFD580') +
-  geom_sf(data = peinp_shp, fill = '#D0FFBC') +
-  #geom_sf(data = coast, fill = "darkblue") +
-  geom_point(data = pei_locs %>% inner_join(., locs_summary %>% select(Location, Site), by = c("location" = "Location")), 
-             aes(x = st_coordinates(geometry)[,1], y = st_coordinates(geometry)[,2], colour = Site)) +
-  scale_colour_viridis_d() +
-  xlab("Longitude") +
-  ylab("Latitude") +
-  theme_void() +
-  facet_wrap(~year) +
-  theme(
-    legend.position = "bottom",
-    panel.background = element_rect(fill = "#A2C8EC")  # Change the background color here
-  ) +
-  xlim(-63.47902,-62.56987) +
-  ylim(46.18308,46.51148)
+lf <- leaflet() %>%
+  addTiles() %>%  # Add default OpenStreetMap map tiles
+  addMarkers(data = pei_locs, popup = paste("Location:", pei_locs$location, "<br>")) %>%
+  addMeasure() %>%
+  addMiniMap(position = "bottomleft")
+
+lf
+
+# ggplot() +
+#   geom_sf(data = pei_shp, fill = '#FFD580') +
+#   geom_sf(data = peinp_shp, fill = '#D0FFBC') +
+#   #geom_sf(data = coast, fill = "darkblue") +
+#   geom_point(data = pei_locs %>% inner_join(., locs_summary %>% select(Location, Site), by = c("location" = "Location")), 
+#              aes(x = st_coordinates(geometry)[,1], y = st_coordinates(geometry)[,2], colour = Site)) +
+#   scale_colour_viridis_d() +
+#   xlab("Longitude") +
+#   ylab("Latitude") +
+#   theme_void() +
+#   facet_wrap(~year) +
+#   theme(
+#     legend.position = "bottom",
+#     panel.background = element_rect(fill = "#A2C8EC")  # Change the background color here
+#   ) +
+#   xlim(-63.47902,-62.56987) +
+#   ylim(46.18308,46.51148)
 
 ```
 

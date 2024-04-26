@@ -50,7 +50,7 @@ library(MuMIn)
 library(ggmagnify)
 library(AICcmodavg)
 
-wt_auth()
+wt_auth(force = T)
 
 load('pei.RData')
 #save.image('pei.RData')

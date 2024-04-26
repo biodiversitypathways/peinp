@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Alex MacPhail">
-<meta name="dcterms.date" content="2024-04-19">
+<meta name="dcterms.date" content="2024-04-26">
 
 <title>Report on the use of passive acoustic monitoring in Prince Edward Island National Park</title>
 <style>
@@ -88,6 +88,21 @@ div.csl-indent {
 <script src="peinp_files/libs/bootstrap/bootstrap.min.js"></script>
 <link href="peinp_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="peinp_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="peinp_files/libs/htmltools-fill-0.5.8/fill.css" rel="stylesheet">
+<script src="peinp_files/libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+<script src="peinp_files/libs/jquery-1.12.4/jquery.min.js"></script>
+<link href="peinp_files/libs/leaflet-1.3.1/leaflet.css" rel="stylesheet">
+<script src="peinp_files/libs/leaflet-1.3.1/leaflet.js"></script>
+<link href="peinp_files/libs/leafletfix-1.0.0/leafletfix.css" rel="stylesheet">
+<script src="peinp_files/libs/proj4-2.6.2/proj4.min.js"></script>
+<script src="peinp_files/libs/Proj4Leaflet-1.0.1/proj4leaflet.js"></script>
+<link href="peinp_files/libs/rstudio_leaflet-1.3.1/rstudio_leaflet.css" rel="stylesheet">
+<script src="peinp_files/libs/leaflet-binding-2.1.2/leaflet.js"></script>
+<link href="peinp_files/libs/leaflet-measure-2.1.7/leaflet-measure.css" rel="stylesheet">
+<script src="peinp_files/libs/leaflet-measure-2.1.7/leaflet-measure.min.js"></script>
+<link href="peinp_files/libs/leaflet-minimap-3.3.1/Control.MiniMap.min.css" rel="stylesheet">
+<script src="peinp_files/libs/leaflet-minimap-3.3.1/Control.MiniMap.min.js"></script>
+<script src="peinp_files/libs/leaflet-minimap-3.3.1/Minimap-binding.js"></script>
 
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -149,7 +164,7 @@ div.csl-indent {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">April 19, 2024</p>
+      <p class="date">April 26, 2024</p>
     </div>
   </div>
   
@@ -168,16 +183,7 @@ div.csl-indent {
 <h1>Abstract</h1>
 <p>Passive acoustic monitoring has proven to be a valuable tool for monitoring vocalizing species. Environmental sensors are becoming increasingly easy to program and can autonomously generating extensive data sets of the soundscape, an invaluable resource for ecological integrity monitoring. Prince Edward Island National deployed autonomous recording units (ARUs) across 30 locations during a comprehensive five-year survey. ARUs detected a total of 101 species including birds, amphibians and mammals. The analysis revealed that songbird species richness and diversity remained relatively stable, while single-species occupancy exhibited diverse patterns. Common and generalist species showed consistent occupancy, but there was a notable reduction in conifer-nesting species in 2023, likely attributed to forest structural loss. Ongoing monitoring and dynamic models can yield more detailed and predictive results to ensure the continued maintenance of ecological integrity in the Park.</p>
 <div style="background-color: #f4f4f4; padding: 20px;">
-<p>This is a dynamic report. Results may change as new or more data is added, or analyses conducted.</p>
-<p>To run the report locally:</p>
-<ul>
-<li>Open RStudio or your preferred IDE</li>
-<li>Create a new project and set up for version control using the GitHub repository</li>
-<li>Pull from remote main</li>
-<li>Set your WildTrax username and password either through <code>Sys.setenv</code> or using the <code>keyring</code> package; authorize into WildTrax</li>
-<li>Load the <code>.RData</code> file in the first chunk</li>
-<li>Render the document and review the results</li>
-</ul>
+<p>This report is dynamically generated, meaning its results may evolve with the addition of new data or further analyses. For the most recent updates, feel free to reach out to the authors or refer to the publication date.</p>
 </div>
 <hr>
 </section>
@@ -219,7 +225,7 @@ Sugai, Larissa Sayuri Moreira, Thiago Sanna Freire Silva, Jr Ribeiro José Wagne
 </section>
 <section id="methods" class="level1 page-columns page-full">
 <h1>Methods</h1>
-<section id="data-collection" class="level2 page-columns page-full">
+<section id="data-collection" class="level2">
 <h2 class="anchored" data-anchor-id="data-collection">Data collection</h2>
 <p>Data were collected during the spring and summer seasons from 2019 to 2023. A total of 30 locations were surveyed over the five-year period:</p>
 <ul>
@@ -229,14 +235,13 @@ Sugai, Larissa Sayuri Moreira, Thiago Sanna Freire Silva, Jr Ribeiro José Wagne
 <li>And one location (<code>PENP-E1</code>), which was to examine the effects of a single public event</li>
 </ul>
 <p>Locations were surveyed on rotation with 9 locations (PENP-1-1, PENP-1-2, PENP-2-3, PENP-3-1, PENP-3-2, PENP-4-1, PENP-4-2, PENP-4-3, PENP-4-4) surveyed each year. A detailed list of all survey years can be found in Table 1 (<a href="#tbl-loc-summary">Table&nbsp;1</a>) and illustrated in Figure 1 (<a href="#fig-locs">Figure&nbsp;1</a>). ARUs were deployed at the beginning of the breeding season in April-May, and rotated locations until their final retrieval in July-August. At the forest songbird locations (<code>PENP-*</code>), the ARUs were set to record for 30 minutes continuously every hour for four hours, starting one hour before dawn and ending three hours after dawn. For Bank Swallow Monitoring locations (<code>PENP-BS</code>), recordings were made every 5 minutes for a duration of 3 minutes each from 1.5 hours before dusk to 1.5 hours after dusk. On average, each ARU recorded for 11.27 +/- 8.03 days.</p>
-<div class="cell page-columns page-full">
-<div class="cell-output-display page-columns page-full">
-<div id="fig-locs" class="quarto-figure quarto-figure-center anchored page-columns page-full">
-<figure class="figure page-columns page-full">
-<p><img src="peinp_files/figure-html/fig-locs-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption margin-caption">Figure&nbsp;1: ARU monitoring locations surveyed each year as part of the songbird monitoring program.</figcaption>
+<div class="cell" data-layout-align="center">
+<div id="fig-locs" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<div class="leaflet html-widget html-fill-item" id="htmlwidget-8ff4fbb6794552057f64" style="width:100%;height:650px;"></div>
+<script type="application/json" data-for="htmlwidget-8ff4fbb6794552057f64">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"https://openstreetmap.org\">OpenStreetMap<\/a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA<\/a>"}]},{"method":"addMarkers","args":[[46.49269,46.49815,46.48599,46.43868,46.40964,46.41328,46.41564,46.44528,46.44844,46.45103,46.44566,46.49269,46.49815,46.494835,46.43868,46.40964,46.41328,46.418476,46.406918,46.44528,46.44844,46.45103,46.44566,46.37947,46.6279,46.49269,46.49815,46.48599,46.494835,46.480437,46.484732,46.43868,46.40964,46.41328,46.41564,46.418476,46.406918,46.417045,46.42033,46.44528,46.44844,46.45103,46.44566,46.45084,46.19565,46.496944,46.42506,46.49545,46.464874,46.416854,46.49269,46.49815,46.48599,46.494835,46.480437,46.484732,46.43868,46.40964,46.41328,46.41564,46.418476,46.406918,46.417045,46.42033,46.44528,46.44844,46.45103,46.44566,46.452417,46.45084,46.19565,46.19434,46.49269,46.49815,46.494835,46.480437,46.484732,46.43868,46.40964,46.41328,46.41564,46.418476,46.406918,46.417045,46.42033,46.44528,46.44844,46.45103,46.44566,46.452417,46.45084,46.19565,46.44671],[-63.39246,-63.41232,-63.37838,-63.24929,-63.08163,-63.09174,-63.08571,-62.70647,-62.68512,-62.65111,-62.69656,-63.39246,-63.41232,-63.420452,-63.24929,-63.08163,-63.09174,-63.089346,-63.078124,-62.70647,-62.68512,-62.65111,-62.69656,-62.91344,-63.8658,-63.39246,-63.41232,-63.37838,-63.420452,-63.385173,-63.381201,-63.24929,-63.08163,-63.09174,-63.08571,-63.089346,-63.078124,-63.099161,-63.099885,-62.70647,-62.68512,-62.65111,-62.69656,-62.67106,-63.1341,-63.405215,-63.12705,-63.34026,-63.302424,-62.969802,-63.39246,-63.41232,-63.37838,-63.420452,-63.385173,-63.381201,-63.24929,-63.08163,-63.09174,-63.08571,-63.089346,-63.078124,-63.099161,-63.099885,-62.70647,-62.68512,-62.65111,-62.69656,-62.674625,-62.67106,-63.1341,-63.13055,-63.39246,-63.41232,-63.420452,-63.385173,-63.381201,-63.24929,-63.08163,-63.09174,-63.08571,-63.089346,-63.078124,-63.099161,-63.099885,-62.70647,-62.68512,-62.65111,-62.69656,-62.674625,-62.67106,-63.1341,-62.707731],null,null,null,{"interactive":true,"draggable":false,"keyboard":true,"title":"","alt":"","zIndexOffset":0,"opacity":1,"riseOnHover":false,"riseOffset":250},["Location: PENP-1-1 <br>","Location: PENP-1-2 <br>","Location: PENP-1-3 <br>","Location: PENP-2-3 <br>","Location: PENP-3-1 <br>","Location: PENP-3-2 <br>","Location: PENP-3-4 <br>","Location: PENP-4-1 <br>","Location: PENP-4-2 <br>","Location: PENP-4-3 <br>","Location: PENP-4-4 <br>","Location: PENP-1-1 <br>","Location: PENP-1-2 <br>","Location: PENP-1-4 <br>","Location: PENP-2-3 <br>","Location: PENP-3-1 <br>","Location: PENP-3-2 <br>","Location: PENP-3-5 <br>","Location: PENP-3-6 <br>","Location: PENP-4-1 <br>","Location: PENP-4-2 <br>","Location: PENP-4-3 <br>","Location: PENP-4-4 <br>","Location: ASC-1 <br>","Location: LXI-1 <br>","Location: PENP-1-1 <br>","Location: PENP-1-2 <br>","Location: PENP-1-3 <br>","Location: PENP-1-4 <br>","Location: PENP-1-5 <br>","Location: PENP-1-6 <br>","Location: PENP-2-3 <br>","Location: PENP-3-1 <br>","Location: PENP-3-2 <br>","Location: PENP-3-4 <br>","Location: PENP-3-5 <br>","Location: PENP-3-6 <br>","Location: PENP-3-7 <br>","Location: PENP-3-8 <br>","Location: PENP-4-1 <br>","Location: PENP-4-2 <br>","Location: PENP-4-3 <br>","Location: PENP-4-4 <br>","Location: PENP-4-6 <br>","Location: PENP-5-1 <br>","Location: PENP-BS-1 <br>","Location: PENP-BS-2 <br>","Location: PENP-BS-3 <br>","Location: PENP-BS-4 <br>","Location: PENP-BS-5 <br>","Location: PENP-1-1 <br>","Location: PENP-1-2 <br>","Location: PENP-1-3 <br>","Location: PENP-1-4 <br>","Location: PENP-1-5 <br>","Location: PENP-1-6 <br>","Location: PENP-2-3 <br>","Location: PENP-3-1 <br>","Location: PENP-3-2 <br>","Location: PENP-3-4 <br>","Location: PENP-3-5 <br>","Location: PENP-3-6 <br>","Location: PENP-3-7 <br>","Location: PENP-3-8 <br>","Location: PENP-4-1 <br>","Location: PENP-4-2 <br>","Location: PENP-4-3 <br>","Location: PENP-4-4 <br>","Location: PENP-4-5 <br>","Location: PENP-4-6 <br>","Location: PENP-5-1 <br>","Location: PENP-E1 <br>","Location: PENP-1-1 <br>","Location: PENP-1-2 <br>","Location: PENP-1-4 <br>","Location: PENP-1-5 <br>","Location: PENP-1-6 <br>","Location: PENP-2-3 <br>","Location: PENP-3-1 <br>","Location: PENP-3-2 <br>","Location: PENP-3-4 <br>","Location: PENP-3-5 <br>","Location: PENP-3-6 <br>","Location: PENP-3-7 <br>","Location: PENP-3-8 <br>","Location: PENP-4-1 <br>","Location: PENP-4-2 <br>","Location: PENP-4-3 <br>","Location: PENP-4-4 <br>","Location: PENP-4-5 <br>","Location: PENP-4-6 <br>","Location: PENP-5-1 <br>","Location: PENP-BS-6 <br>"],null,null,null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addMeasure","args":[{"position":"topright","primaryLengthUnit":"feet","primaryAreaUnit":"acres","activeColor":"#ABE67E","completedColor":"#C8F2BE","popupOptions":{"className":"leaflet-measure-resultpopup","autoPanPadding":[10,10]},"captureZIndex":10000,"localization":"en","decPoint":".","thousandsSep":","}]},{"method":"addMiniMap","args":[null,null,"bottomleft",150,150,19,19,-5,false,false,false,false,false,false,{"color":"#ff7800","weight":1,"clickable":false},{"color":"#000000","weight":1,"clickable":false,"opacity":0,"fillOpacity":0},{"hideText":"Hide MiniMap","showText":"Show MiniMap"},[]]}],"limits":{"lat":[46.19434,46.6279],"lng":[-63.8658,-62.65111]}},"evals":[],"jsHooks":[]}</script>
+<figcaption class="figure-caption">Figure&nbsp;1: ARU survey locations</figcaption>
 </figure>
-</div>
 </div>
 </div>
 <div class="cell">

@@ -48,7 +48,7 @@ library(MuMIn)
 library(AICcmodavg)
 library(leaflet)
 
-wt_auth()
+wt_auth(force = T)
 
 load('pei.RData')
 #save.image('pei.RData')
@@ -1224,7 +1224,7 @@ A total of `r amphs_only |> select(species_code) |> distinct() |> tally()` were 
 #| fig-column: page-right
 
 
-spp_table <- wt_get_species()
+#spp_table <- wt_get_species()
 
 amphs <- spp_table %>%
   filter(species_class == "AMPHIBIA")

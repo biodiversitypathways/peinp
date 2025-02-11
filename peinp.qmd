@@ -18,7 +18,7 @@ toc-location: left
 styles: styles.css
 reference-location: margin
 citation-location: margin
-github: https://github.com/ABbiodiversity/peinp
+github: https://github.com/biodiversitypathways/peinp
 ---
 
 ![](peinpheader.png){style="float:left`;" fig-alt="Photo of the ocean" fig-align="center"}
@@ -33,7 +33,7 @@ github: https://github.com/ABbiodiversity/peinp
 
 library(tidyverse)
 library(leaflet)
-library(wildRtrax)
+library(wildrtrax)
 library(unmarked)
 library(sf)
 library(terra)
@@ -63,14 +63,37 @@ Passive acoustic monitoring has proven to be a valuable tool for monitoring voca
 
 ::: {style="background-color: #f4f4f4; padding: 20px;"}
 This report is dynamically generated, meaning its results may evolve with the addition of new data or further analyses. For the most recent updates, feel free to reach out to the authors or refer to the publication date.
-
 :::
+
+```{r Data download}
+#| warning: false
+#| message: false
+#| echo: true
+#| eval: false
+#| include: true
+
+pei_projects <- wildrtrax::wt_get_download_summary(sensor = 'ARU') |>
+  filter(grepl('^Prince Edward Island National Park', project)) |>
+  select(project_id) |>
+  pull()
+
+pei_main <-
+  map_dfr(
+    .x = pei_projects,
+    .f = ~ wildrtrax::wt_download_report(
+      project_id = .x,
+      sensor_id = "ARU",
+      weather_cols = T,
+      reports = "main"
+    )
+  )
+```
 
 ------------------------------------------------------------------------
 
 # Land Acknowledgement
 
-In the spirit of Reconciliation, we acknowledge that the land upon which this data was gathered is unceeded Mi'kmaq territory. Epekwitk (Prince Edward Island), Mi'kma'ki, is covered by the historic Treaties of Peace and Friendship. We pay our respects to the Indigenous Mi'kmaq People who have occupied this Island for over 12,000 years; past, present and future.
+In the spirit of Reconciliation, wen acknowledge that the land upon which this data was gathered is unceeded Mi'kmaq territory. Epekwitk (Prince Edward Island), Mi'kma'ki, is covered by the historic Treaties of Peace and Friendship. We pay our respects to the Indigenous Mi'kmaq People who have occupied this Island for over 12,000 years; past, present and future.
 
 # Introduction
 
@@ -80,7 +103,7 @@ In 2019, Prince Edward Island National Park initiated a program incorporating au
 
 The objectives of this report are to:
 
--   Describe the data management and processing procedures for the acoustic data collected from 2019 to 2023;
+-   Describe the data management and processing procedures for the acoustic data collected from 2019 to 2024;
 -   Utilize traditional human tagging, visual scanning and automated recognition techniques to detect and count species and individuals heard on recordings;
 -   Define straightforward methods for evaluating species presence, species richness, and species occupancy over time at various locations;
 -   Offer recommendations for ongoing monitoring approaches to contribute to the assessment of ecological integrity in forest ecosystems;
@@ -113,6 +136,7 @@ pei_locs <- pei_main |>
   mutate(year = lubridate::year(recording_date_time)) |>
   select(location, latitude, longitude, year) |>
   distinct() |>
+  drop_na(latitude) |>
   sf::st_as_sf(coords = c("longitude","latitude"), crs = 4326)
 
 repeats <- pei_locs |>
@@ -355,30 +379,6 @@ recs_plot
 
 The principal goal for data processing was to describe the acoustic community of species heard at locations while choosing a large enough subset of recordings for analyses. To ensure balanced replication, for each location and year surveyed, four randomly selected recordings were processed for 3-minutes between the hours of 4:00 AM - 7:59 AM ideally on four separate dates (see @tbl-loc-repl). Four recordings will ensure that we have the minimum number of samples for a simple occupancy analysis (@mackenzie2002estimating and @imperfect-occu). Tags are made using count-removal (see @farnsworth2002removal, @time-removal) where tags are only made at the time of first detection of each individual heard on the recordings. In case a species was overly abundant a TMTT ('too many to tag') flag was used (see @tbl-tmtt). `r round(nrow(tmtt_tags)/nrow(pei_main),2)*100`% of the total tags were TMTT but were subsequently converted to numeric using `wildRtrax::wt_replace_tmtt`. We also verified that all tags that were created were checked by a second observer (n = `r verified_tags |> select(Proportion) |> slice(3) |> pull()`) to ensure accuracy of detections (see @tbl-verified). Amphibian abundance was estimated at the time of first detection using the [North American Amphibian Monitoring Program](https://www.usgs.gov/centers/eesc/science/north-american-amphibian-monitoring-program) with abundance of species being estimated on the scale of "calling intensity index" (CI) of 1 - 3. Mammals such as Red Squirrel, were also noted on the recordings. After the data are processed in WildTrax, the [wildRtrax](https://abbiodiversity.github.io/wildRtrax/) package is use to download the data into a standard format prepared for analysis. The `wt_download_report` function downloads the data directly to a R framework for easy manipulation (see [wildRtrax APIs](https://abbiodiversity.github.io/wildRtrax/articles/apis.html)).
 
-```{r Data download}
-#| warning: false
-#| message: false
-#| echo: true
-#| eval: false
-#| include: true
-
-pei_projects <- wildRtrax::wt_get_download_summary(sensor = 'ARU') |>
-  filter(grepl('^Prince Edward Island National Park Forest Songbird', project)) |>
-  select(project_id) |>
-  pull()
-
-pei_main <-
-  map_dfr(
-    .x = pei_projects,
-    .f = ~ wildRtrax::wt_download_report(
-      project_id = .x,
-      sensor_id = "ARU",
-      weather_cols = T,
-      reports = "main"
-    )
-  )
-```
-
 ```{r}
 #| warning: false
 #| message: false
@@ -488,7 +488,7 @@ Visual scanning is the concept of visually examining spectrograms in order to fi
 #| eval: false
 #| include: false
 
-just_bans <- wildRtrax::wt_get_download_summary(sensor = 'ARU') |>
+just_bans <- wildrtrax::wt_get_download_summary(sensor = 'ARU') |>
   filter(grepl('National Park Bank Swallow', project)) |>
   select(project_id) |>
   pull()
@@ -496,7 +496,7 @@ just_bans <- wildRtrax::wt_get_download_summary(sensor = 'ARU') |>
 just_bans_main <-
   map_dfr(
     .x = just_bans,
-    .f = ~ wildRtrax::wt_download_report(
+    .f = ~ wildrtrax::wt_download_report(
       project_id = .x,
       sensor_id = "ARU",
       weather_cols = T,
@@ -702,7 +702,8 @@ pei_main |>
   ylab("Species")
 
 ```
-Shannon's diversity was stable based on results. (see @fig-shannon.) 
+
+Shannon's diversity was stable based on results. (see @fig-shannon.)
 
 ```{r}
 #| warning: false
@@ -819,46 +820,134 @@ shannon
 
 ```
 
-## Species occupancy
 
-We selected 15 species to represent the forest songbird community into 4 separate habitat nesting guilds (see @tbl-bird-guilds): conifer (@fig-spp-occ-conifer), deciduous (@fig-spp-occ-decid), treed / shrubby (@fig-spp-occ-tss) and open (@fig-spp-occ-open). Analysis of species occupancy revealed diverse and varied changes across these species. Analytically, many models were singular, and a few exhibited overdispersion (indicated by *c-hat* in @tbl-c-hat), likely due to low detections or a limited sample size of spatial locations. Ubiquitous species such as Yed-eyed Vireo, Yellow-rumped Warbler, Magnolia Warbler and Northern Parula, demonstrated stable site occupancy across the years. Generalist species or those capable of capitalizing on utilizing mixed habitats, exemplified by the Northern Parula, also maintained consistent occupancy levels. The occurrence of Hurricane Fiona in 2023 led to notable breakpoints in the occupancy of certain species: coniferous species, including the Black-throated Green Warbler, Black-throated Blue Warbler, Blackburnian Warbler, Golden-crowned Kinglet, and Mourning Warbler, experienced declines. Conversely, increases were observed in guilds of species that favor more open or shrubby habitats, such as the Alder Flycatcher and American Redstart. Thrushes (American Robin, Swainson's Thrush, Hermit Thrush) had notably wavering occupancy throughout the years.
+## Trends in abundance over time
 
 ```{r}
 #| warning: false
 #| echo: false
-#| eval: false
+#| eval: true
+#| message: false
 #| include: true
+#| results: hide
+#| fig-align: center
+#| fig-width: 8
+#| fig-height: 8
+#| fig-cap: Count abundance of medium-distance migrants by year
+#| label: relative-abundance-auriol
+#| cap-location: margin
 
-#wtsp_occ <- ss_occ_plot_loop(pei_main, "WTSP")
-#amro_occ <- ss_occ_plot_loop(pei_main, "AMRO")
-revi_occ <- ss_occ_plot_loop(pei_main, "REVI")
-#coye_occ <- ss_occ_plot_loop(pei_main, "COYE")
-amre_occ <- ss_occ_plot_loop(pei_main, "AMRE")
-btnw_occ <- ss_occ_plot_loop(pei_main, "BTNW")
-nopa_occ <- ss_occ_plot_loop(pei_main, "NOPA")
-#yewa_occ <- ss_occ_plot_loop(pei_main, "YEWA")
-mawa_occ <- ss_occ_plot_loop(pei_main, "MAWA")
-#sosp_occ <- ss_occ_plot_loop(pei_main, "SOSP")
-swth_occ <- ss_occ_plot_loop(pei_main, "SWTH")
-alfl_occ <- ss_occ_plot_loop(pei_main, "ALFL")
-yrwa_occ <- ss_occ_plot_loop(pei_main, "YRWA")
-#baww_occ <- ss_occ_plot_loop(pei_main, "BAWW")
-bhvi_occ <- ss_occ_plot_loop(pei_main, "BHVI")
-blja_occ <- ss_occ_plot_loop(pei_main, "BLJA")
-#chsp_occ <- ss_occ_plot_loop(pei_main, "CHSP")
-btbw_occ <- ss_occ_plot_loop(pei_main, "BTBW")
-blbw_occ <- ss_occ_plot_loop(pei_main, "BLBW")
-gcki_occ <- ss_occ_plot_loop(pei_main, "GCKI")
-#wiwr_occ <- ss_occ_plot_loop(pei_main, "WIWR")
-#rbnu_occ <- ss_occ_plot_loop(pei_main, "RBNU")
-#brcr_occ <- ss_occ_plot_loop(pei_main, "BRCR")
-mowa_occ <- ss_occ_plot_loop(pei_main, "MOWA")
-heth_occ <- ss_occ_plot_loop(pei_main, "HETH")
-#oven_occ <- ss_occ_plot_loop(pei_main, "OVEN")
-eawp_occ <- ss_occ_plot_loop(pei_main, "EAWP")
-#cawa_occ <- ss_occ_plot_loop(pei_main, "CAWA")
+# Medium-distance migrants
+
+rp <- locs_summary %>%
+ mutate(rps = rowSums(across(`2019`:`2024`), na.rm = TRUE)) |>
+ filter(rps == 6) |>
+ select(Location) |>
+ pull()
+
+mdm_spp <- pei_main |>
+  filter(location %in% rp) |>
+  wt_tidy_species(remove = c("mammal","amphibian","abiotic","insect","unknown"), zerofill = T) |>
+  group_by(species_code) |>
+  add_tally() |>
+  ungroup() |>
+  filter(!n < 10)
+
+plot_mdm <- 
+  mdm_spp |>
+  mutate(year = year(recording_date_time)) |>
+  wt_replace_tmtt(calc = "round") |>
+  select(location, year, species_code, individual_order, individual_count) |>
+  group_by(location, year, species_code) |>
+  summarise(individual_order = mean(individual_order)) |>
+  ungroup() |>
+  mutate(year = round(year,0))
+
+plot_mdm |>
+  ggplot(aes(x = year, y = individual_order, colour = species_code)) +
+  geom_point() +
+  geom_smooth(aes(x = as.numeric(as.character(year))), method = "lm") +  # Use numeric conversion for geom_smooth
+  scale_colour_viridis_d() +
+  scale_x_discrete(labels = scales::label_number(accuracy = 0)) +  # Keep years as factors and format without spaces
+  theme_bw() +
+  facet_wrap(~species_code) +
+  labs(x = "Year", y = "Mean number of individuals") +
+  theme(legend.position = "none")
 
 ```
+
+```{r}
+#| warning: false
+#| echo: false
+#| eval: true
+#| message: false
+#| include: true
+#| results: hide
+#| fig-align: center
+#| fig-width: 10
+#| fig-height: 10
+#| fig-cap: Annual count on Auriol Trail
+#| label: annual-auriol-count
+#| cap-location: margin
+
+count_annual_mdm <- plot_mdm |>
+  group_by(year) |>
+  summarise(sum_year = sum(individual_order)) |>
+  ungroup()
+
+ggplot(count_annual_mdm, aes(x = as.factor(year), y = sum_year, fill = factor(year))) +
+  geom_bar(stat = "identity", position = "dodge") +
+  scale_fill_viridis_d() +
+  labs(
+    title = "Annual Count of Birds",
+    x = "Location",
+    y = "Sum of Individuals",
+    fill = "Year"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+```
+
+```{r}
+#| warning: false
+#| echo: false
+#| eval: true
+#| message: false
+#| include: true
+#| results: hide
+#| fig-align: center
+#| fig-width: 10
+#| fig-height: 10
+#| fig-cap: Mean abundance per location per year
+#| label: mean-auriol-abundance
+#| cap-location: margin
+
+mean_abundance <- plot_mdm |>
+  group_by(location, year) |>
+  summarise(mean_abundance = mean(individual_order, na.rm = TRUE), .groups = "drop")
+
+mean_abundance_year <- mean_abundance |>
+  group_by(year) |>
+  summarise(mean_abundance_year = mean(mean_abundance, na.rm = TRUE), .groups = "drop")
+
+ggplot(mean_abundance_year, aes(x = year, y = mean_abundance_year)) +
+  geom_smooth(method = "lm") +
+  geom_point(size = 3, color = "darkblue") +
+  labs(
+    title = "Trend in Mean Abundance of Medium-Distance Migrants",
+    x = "Year",
+    y = "Mean Abundance per Station"
+  ) +
+  theme_minimal() +
+  ylim(0, 4) +
+  scale_x_continuous(breaks = seq(min(mean_abundance_year$year), max(mean_abundance_year$year), 1))
+
+```
+
+## Species occupancy
+
+We selected 15 species to represent the forest songbird community into 4 separate habitat nesting guilds (see @tbl-bird-guilds): conifer (@fig-spp-occ-conifer), deciduous (@fig-spp-occ-decid), treed / shrubby (@fig-spp-occ-tss) and open (@fig-spp-occ-open). Analysis of species occupancy revealed diverse and varied changes across these species. Analytically, many models were singular, and a few exhibited overdispersion (indicated by *c-hat* in @tbl-c-hat), likely due to low detections or a limited sample size of spatial locations. Ubiquitous species such as Yed-eyed Vireo, Yellow-rumped Warbler, Magnolia Warbler and Northern Parula, demonstrated stable site occupancy across the years. Generalist species or those capable of capitalizing on utilizing mixed habitats, exemplified by the Northern Parula, also maintained consistent occupancy levels. The occurrence of Hurricane Fiona in 2023 led to notable breakpoints in the occupancy of certain species: coniferous species, including the Black-throated Green Warbler, Black-throated Blue Warbler, Blackburnian Warbler, Golden-crowned Kinglet, and Mourning Warbler, experienced declines. Conversely, increases were observed in guilds of species that favor more open or shrubby habitats, such as the Alder Flycatcher and American Redstart. Thrushes (American Robin, Swainson's Thrush, Hermit Thrush) had notably wavering occupancy throughout the years.
 
 ```{r}
 #| warning: false
@@ -894,7 +983,7 @@ ss_occ_plot_loop <- function(input, species_choice) {
   pei_occu_21 <- pei_occu_all[[3]]
   pei_occu_22 <- pei_occu_all[[4]]
   pei_occu_23 <- pei_occu_all[[5]]
-  
+  pei_occu_24 <- pei_occu_all[[6]]
 
 site_covariates_19 <- pei_occu_19 |>
   inner_join(covs) |>
@@ -963,6 +1052,19 @@ site_covariates_23 <- pei_occu_23 |>
   # filter(landcover_proportion == max(landcover_proportion)) |>
   # ungroup()
 
+site_covariates_24 <- pei_occu_24 |>
+  inner_join(covs) |>
+  select(location, year, coast_dist, landcover, landcover_proportion) |>
+  distinct() |>
+  pivot_wider(names_from = landcover, values_from = landcover_proportion, values_fill = 0) |>
+  group_by(location, year, coast_dist) |>
+  summarise(across(starts_with(c("Anthro","Deciduous","Open","Conifer")), max)) |>
+  ungroup()
+  # pivot_longer(-c(location:coast_dist), names_to = "landcover", values_to = "landcover_proportion") |>
+  # group_by(location, year, coast_dist) |>
+  # filter(landcover_proportion == max(landcover_proportion)) |>
+  # ungroup()
+
 print('Breaking here?')
 
 occu_one_19 <- wt_format_occupancy(pei_occu_19, siteCovs = site_covariates_19, species = species_choice)
@@ -970,6 +1072,7 @@ occu_one_20 <- wt_format_occupancy(pei_occu_20, siteCovs = site_covariates_20, s
 occu_one_21 <- wt_format_occupancy(pei_occu_21, siteCovs = site_covariates_21, species = species_choice)
 occu_one_22 <- wt_format_occupancy(pei_occu_22, siteCovs = site_covariates_22, species = species_choice)
 occu_one_23 <- wt_format_occupancy(pei_occu_23, siteCovs = site_covariates_23, species = species_choice)
+occu_one_24 <- wt_format_occupancy(pei_occu_24, siteCovs = site_covariates_23, species = species_choice)
 
 print('Breaking here2?')
 
@@ -981,6 +1084,7 @@ for (variable in sitecovs_to_scale) {
   occu_one_21@siteCovs[[variable]] <- scale(occu_one_21@siteCovs[[variable]])
   occu_one_22@siteCovs[[variable]] <- scale(occu_one_22@siteCovs[[variable]])
   occu_one_23@siteCovs[[variable]] <- scale(occu_one_23@siteCovs[[variable]])
+  occu_one_24@siteCovs[[variable]] <- scale(occu_one_24@siteCovs[[variable]])
 }
 
 obscovs_to_scale <- c("doy","hr","doy2","hr2")
@@ -991,6 +1095,7 @@ for (variable in obscovs_to_scale) {
   occu_one_21@obsCovs[[variable]] <- scale(occu_one_21@obsCovs[[variable]])
   occu_one_22@obsCovs[[variable]] <- scale(occu_one_22@obsCovs[[variable]])
   occu_one_23@obsCovs[[variable]] <- scale(occu_one_23@obsCovs[[variable]])
+  occu_one_24@obsCovs[[variable]] <- scale(occu_one_24@obsCovs[[variable]])
 }
 
 print('Breaking here4?')
@@ -1000,6 +1105,7 @@ occu_model_20 <- occu(~ doy2 + hr2 ~ Anthro + Open + Deciduous + Conifer, occu_o
 occu_model_21 <- occu(~ doy2 + hr2 ~ Anthro + Open + Deciduous + Conifer, occu_one_21)
 occu_model_22 <- occu(~ doy2 + hr2 ~ Anthro + Open + Deciduous + Conifer, occu_one_22)
 occu_model_23 <- occu(~ doy2 + hr2 ~ Anthro + Open + Deciduous + Conifer, occu_one_23)
+occu_model_24 <- occu(~ doy2 + hr2 ~ Anthro + Open + Deciduous + Conifer, occu_one_24)
 
 print('Breaking here5?')
 
@@ -1059,7 +1165,13 @@ if ("fit" %in% colnames(occ_fit_23 %>% as_tibble())) {occ_graph_23 <- occ_fit_23
 
 print('Breaking her58?')
 
-occ_graph_all <- bind_rows(occ_graph_19, occ_graph_20, occ_graph_21, occ_graph_22, occ_graph_23)
+occ_dredge_24 <- dredge(occu_model_24)
+occ_dredge_delta_24 <- get.models(occ_dredge_24, subset = delta <= 2.5)
+if(length(occ_dredge_delta_24) == 1){occ_avg_24 <- NULL} else {occ_avg_24 <- model.avg(occ_dredge_delta_24, fit = TRUE)}
+if (is.null(occ_avg_24)) {occ_fit_24 <- predict(occu_model_24, site_covariates_24, type="state",interval="confidence")} else {occ_fit_24 <- predict(occ_avg_24, site_covariates_24, type="state",interval="confidence")}
+if ("fit" %in% colnames(occ_fit_24 %>% as_tibble())) {occ_graph_24 <- occ_fit_24 %>% as_tibble() %>% bind_cols(., site_covariates_24)} else {occ_graph_24 <- occ_fit_24 %>% as_tibble() %>% bind_cols(., site_covariates_24) %>% rename("Fit" = Predicted)}
+
+occ_graph_all <- bind_rows(occ_graph_19, occ_graph_20, occ_graph_21, occ_graph_22, occ_graph_23, occ_graph_24)
 
 zz <- data |>
   select(species_code, species_common_name) |>
@@ -1084,7 +1196,42 @@ occ_plot <- ggplot(occ_graph_all %>%
 }
 
 # Where input in the cleaned data and species_choice is the list of forest obligate species.
+```
 
+```{r}
+#| warning: false
+#| echo: false
+#| eval: false
+#| include: true
+
+#wtsp_occ <- ss_occ_plot_loop(pei_main, "WTSP")
+#amro_occ <- ss_occ_plot_loop(pei_main, "AMRO")
+revi_occ <- ss_occ_plot_loop(pei_main, "REVI")
+#coye_occ <- ss_occ_plot_loop(pei_main, "COYE")
+amre_occ <- ss_occ_plot_loop(pei_main, "AMRE")
+btnw_occ <- ss_occ_plot_loop(pei_main, "BTNW")
+nopa_occ <- ss_occ_plot_loop(pei_main, "NOPA")
+#yewa_occ <- ss_occ_plot_loop(pei_main, "YEWA")
+mawa_occ <- ss_occ_plot_loop(pei_main, "MAWA")
+#sosp_occ <- ss_occ_plot_loop(pei_main, "SOSP")
+#swth_occ <- ss_occ_plot_loop(pei_main, "SWTH")
+alfl_occ <- ss_occ_plot_loop(pei_main, "ALFL")
+yrwa_occ <- ss_occ_plot_loop(pei_main, "YRWA")
+#baww_occ <- ss_occ_plot_loop(pei_main, "BAWW")
+bhvi_occ <- ss_occ_plot_loop(pei_main, "BHVI")
+blja_occ <- ss_occ_plot_loop(pei_main, "BLJA")
+#chsp_occ <- ss_occ_plot_loop(pei_main, "CHSP")
+#btbw_occ <- ss_occ_plot_loop(pei_main, "BTBW")
+blbw_occ <- ss_occ_plot_loop(pei_main, "BLBW")
+gcki_occ <- ss_occ_plot_loop(pei_main, "GCKI")
+#wiwr_occ <- ss_occ_plot_loop(pei_main, "WIWR")
+#rbnu_occ <- ss_occ_plot_loop(pei_main, "RBNU")
+#brcr_occ <- ss_occ_plot_loop(pei_main, "BRCR")
+mowa_occ <- ss_occ_plot_loop(pei_main, "MOWA")
+heth_occ <- ss_occ_plot_loop(pei_main, "HETH")
+#oven_occ <- ss_occ_plot_loop(pei_main, "OVEN")
+eawp_occ <- ss_occ_plot_loop(pei_main, "EAWP")
+#cawa_occ <- ss_occ_plot_loop(pei_main, "CAWA")
 
 ```
 
@@ -1256,7 +1403,7 @@ amphs_only %>%
 
 # Discussion
 
-Considering the recent (2022) natural disturbance effects seen in the Park, species richness and diversity stayed relatively stable. Individuals nesting in conifer dominant stands likely moved to more suitable habitat outside the park, suggesting the potential utility of metapopulation analysis through passive acoustic monitoring outside of the park via citizen science participation. 
+Considering the recent (2022) natural disturbance effects seen in the Park, species richness and diversity stayed relatively stable. Individuals nesting in conifer dominant stands likely moved to more suitable habitat outside the park, suggesting the potential utility of metapopulation analysis through passive acoustic monitoring outside of the park via citizen science participation.
 
 Further analysis may utilize dynamic occupancy models (@mackenzie2009modeling), multi-species multi-season occupancy models (@devarajan2020multi), or community shifts (@oksanen2010canonical) to describe richness and diversity while accounting for decreases in species that may rely on specific habitat structures within the park. Additional geospatial assets could improve the accuracy of modelling apporaches as well. Nevertheless, this study demostrates the efficacy of autonomous recording units (ARUs) as a powerful tool for monitoring climatic and habitat shifts with a relatively low sample size and area coverage. As Avian species within the Park forest demonstrate a non-uniform distribution relative to habitat, the following recommendations for optimizing the efficiency and reliability of the ARU program include:
 
@@ -1264,4 +1411,4 @@ Further analysis may utilize dynamic occupancy models (@mackenzie2009modeling), 
 -   Adjusting monitoring times to dawn and dusk and extending deployment periods to 4-7 days between May 15 and July 15 to maximize vocalizations during peak activity periods.
 -   Regular servicing of ARUs, focusing on testing microphone sensitivity degradation to ensure optimal functionality, data reliability, and longevity.
 -   Continuing high-quality verification of tags to create annotated datasets for building and automating classifiers within WildTrax.
-- Data publication WildTrax can further the dissemination of information and participation of others in the park network
+-   Data publication WildTrax can further the dissemination of information and participation of others in the park network

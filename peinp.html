@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.450">
+<meta name="generator" content="quarto-1.5.57">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Alex MacPhail">
-<meta name="dcterms.date" content="2024-04-26">
+<meta name="dcterms.date" content="2025-02-11">
 
 <title>Report on the use of passive acoustic monitoring in Prince Edward Island National Park</title>
 <style>
@@ -24,7 +24,7 @@ ul.task-list li input[type="checkbox"] {
 }
 /* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -35,7 +35,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -60,6 +60,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 div.csl-bib-body { }
 div.csl-entry {
   clear: both;
+  margin-bottom: 0em;
 }
 .hanging-indent div.csl-entry {
   margin-left:2em;
@@ -90,22 +91,49 @@ div.csl-indent {
 <link href="peinp_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <link href="peinp_files/libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
 <script src="peinp_files/libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
-<script src="peinp_files/libs/jquery-1.12.4/jquery.min.js"></script>
+<script src="peinp_files/libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <link href="peinp_files/libs/leaflet-1.3.1/leaflet.css" rel="stylesheet">
 <script src="peinp_files/libs/leaflet-1.3.1/leaflet.js"></script>
 <link href="peinp_files/libs/leafletfix-1.0.0/leafletfix.css" rel="stylesheet">
 <script src="peinp_files/libs/proj4-2.6.2/proj4.min.js"></script>
 <script src="peinp_files/libs/Proj4Leaflet-1.0.1/proj4leaflet.js"></script>
 <link href="peinp_files/libs/rstudio_leaflet-1.3.1/rstudio_leaflet.css" rel="stylesheet">
-<script src="peinp_files/libs/leaflet-binding-2.1.2/leaflet.js"></script>
+<script src="peinp_files/libs/leaflet-binding-2.2.2/leaflet.js"></script>
 <link href="peinp_files/libs/leaflet-measure-2.1.7/leaflet-measure.css" rel="stylesheet">
 <script src="peinp_files/libs/leaflet-measure-2.1.7/leaflet-measure.min.js"></script>
 <link href="peinp_files/libs/leaflet-minimap-3.3.1/Control.MiniMap.min.css" rel="stylesheet">
 <script src="peinp_files/libs/leaflet-minimap-3.3.1/Control.MiniMap.min.js"></script>
 <script src="peinp_files/libs/leaflet-minimap-3.3.1/Minimap-binding.js"></script>
 
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -132,6 +160,7 @@ div.csl-indent {
   <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results">Results</a>
   <ul class="collapse">
   <li><a href="#species-richness-and-diversity" id="toc-species-richness-and-diversity" class="nav-link" data-scroll-target="#species-richness-and-diversity">Species richness and diversity</a></li>
+  <li><a href="#trends-in-abundance-over-time" id="toc-trends-in-abundance-over-time" class="nav-link" data-scroll-target="#trends-in-abundance-over-time">Trends in abundance over time</a></li>
   <li><a href="#species-occupancy" id="toc-species-occupancy" class="nav-link" data-scroll-target="#species-occupancy">Species occupancy</a></li>
   <li><a href="#visual-scanning-1" id="toc-visual-scanning-1" class="nav-link" data-scroll-target="#visual-scanning-1">Visual scanning</a></li>
   <li><a href="#automated-recognition-1" id="toc-automated-recognition-1" class="nav-link" data-scroll-target="#automated-recognition-1">Automated recognition</a></li>
@@ -141,7 +170,7 @@ div.csl-indent {
   </ul>
 </nav>
 </div>
-<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
 </div>
 <main class="content page-columns page-full" id="quarto-document-content">
 
@@ -164,7 +193,7 @@ div.csl-indent {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">April 26, 2024</p>
+      <p class="date">February 11, 2025</p>
     </div>
   </div>
   
@@ -172,24 +201,56 @@ div.csl-indent {
   </div>
   
 
+
 </header>
 
-<div class="quarto-figure quarto-figure-center" style="float:left`;">
+
+<div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="peinpheader.png" class="img-fluid figure-img" alt="Photo of the ocean"></p>
+<p><img src="peinpheader.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="float:left`;" alt="Photo of the ocean"></p>
 </figure>
 </div>
 <section id="abstract" class="level1">
 <h1>Abstract</h1>
-<p>Passive acoustic monitoring has proven to be a valuable tool for monitoring vocalizing species. Environmental sensors are becoming increasingly easy to program and can autonomously generating extensive data sets of the soundscape, an invaluable resource for ecological integrity monitoring. Prince Edward Island National deployed autonomous recording units (ARUs) across 30 locations during a comprehensive five-year survey. ARUs detected a total of 101 species including birds, amphibians and mammals. The analysis revealed that songbird species richness and diversity remained relatively stable, while single-species occupancy exhibited diverse patterns. Common and generalist species showed consistent occupancy, but there was a notable reduction in conifer-nesting species in 2023, likely attributed to forest structural loss. Ongoing monitoring and dynamic models can yield more detailed and predictive results to ensure the continued maintenance of ecological integrity in the Park.</p>
-<div style="background-color: #f4f4f4; padding: 20px;">
-<p>This report is dynamically generated, meaning its results may evolve with the addition of new data or further analyses. For the most recent updates, feel free to reach out to the authors or refer to the publication date.</p>
+<p>Passive acoustic monitoring has proven to be a valuable tool for monitoring vocalizing species. Environmental sensors are becoming increasingly easy to program and can autonomously generating extensive data sets of the soundscape, an invaluable resource for ecological integrity monitoring. Prince Edward Island National deployed autonomous recording units (ARUs) across 38 locations during a comprehensive five-year survey. ARUs detected a total of 103 species including birds, amphibians and mammals. The analysis revealed that songbird species richness and diversity remained relatively stable, while single-species occupancy exhibited diverse patterns. Common and generalist species showed consistent occupancy, but there was a notable reduction in conifer-nesting species in 2023, likely attributed to forest structural loss. Ongoing monitoring and dynamic models can yield more detailed and predictive results to ensure the continued maintenance of ecological integrity in the Park.</p>
+<div class="callout callout-style-default callout-note callout-titled" style="background-color: #f4f4f4; padding: 20px;">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>This report is dynamically generated, meaning its results may evolve with the addition of new data or further analyses. For the most recent updates, refer to the publication date and feel free to reach out to the authors.</p>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pei_projects <span class="ot">&lt;-</span> wildrtrax<span class="sc">::</span><span class="fu">wt_get_download_summary</span>(<span class="at">sensor =</span> <span class="st">'ARU'</span>) <span class="sc">|&gt;</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">grepl</span>(<span class="st">'^Prince Edward Island National Park'</span>, project)) <span class="sc">|&gt;</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(project_id) <span class="sc">|&gt;</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>()</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>pei_main <span class="ot">&lt;-</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map_dfr</span>(</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">.x =</span> pei_projects,</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">.f =</span> <span class="sc">~</span> wildrtrax<span class="sc">::</span><span class="fu">wt_download_report</span>(</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>      <span class="at">project_id =</span> .x,</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>      <span class="at">sensor_id =</span> <span class="st">"ARU"</span>,</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>      <span class="at">weather_cols =</span> T,</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>      <span class="at">reports =</span> <span class="st">"main"</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <hr>
 </section>
 <section id="land-acknowledgement" class="level1">
 <h1>Land Acknowledgement</h1>
-<p>In the spirit of Reconciliation, we acknowledge that the land upon which this data was gathered is unceeded Mi’kmaq territory. Epekwitk (Prince Edward Island), Mi’kma’ki, is covered by the historic Treaties of Peace and Friendship. We pay our respects to the Indigenous Mi’kmaq People who have occupied this Island for over 12,000 years; past, present and future.</p>
+<p>In the spirit of Reconciliation, wen acknowledge that the land upon which this data was gathered is unceeded Mi’kmaq territory. Epekwitk (Prince Edward Island), Mi’kma’ki, is covered by the historic Treaties of Peace and Friendship. We pay our respects to the Indigenous Mi’kmaq People who have occupied this Island for over 12,000 years; past, present and future.</p>
 </section>
 <section id="introduction" class="level1 page-columns page-full">
 <h1>Introduction</h1>
@@ -215,7 +276,7 @@ Sugai, Larissa Sayuri Moreira, Thiago Sanna Freire Silva, Jr Ribeiro José Wagne
 </div></div><p>In 2019, Prince Edward Island National Park initiated a program incorporating autonomous recording units (ARUs) for passive acoustic monitoring (PAM) of the Park’s wildlife. ARUs are compact environmental sensors that are designed to passively record the environment (<span class="citation" data-cites="aru-overview">Shonfield and Bayne (<a href="#ref-aru-overview" role="doc-biblioref">2017</a>)</span>), capturing vocalizing species like birds and amphibians, which is growing in use across the globe (<span class="citation" data-cites="lots-of-pam">Sugai et al. (<a href="#ref-lots-of-pam" role="doc-biblioref">2018</a>)</span>). This technology enables resource managers to conduct prolonged surveys with minimal human interference. The subsequent data collected by these units contribute valuable information to ecological integrity metrics such as species richness, diversity, occupancy, and trends over time. This data aids decision-making and management within the Park. Given the rapid and ease of accumulating data from these units, maintaining a high standard of data integrity is paramount to ensure future data interoperability and sharing. <a href="https://www.wildtrax.ca">WildTrax</a> is an online platform developed by the <a href="https://abmi.ca">Alberta Biodiversity Monitoring Institute (<strong>ABMI</strong>)</a> for users of environmental sensors to help addresses these big data challenges by providing solutions to standardize, harmonize, and share data.</p>
 <p>The objectives of this report are to:</p>
 <ul>
-<li>Describe the data management and processing procedures for the acoustic data collected from 2019 to 2023;</li>
+<li>Describe the data management and processing procedures for the acoustic data collected from 2019 to 2024;</li>
 <li>Utilize traditional human tagging, visual scanning and automated recognition techniques to detect and count species and individuals heard on recordings;</li>
 <li>Define straightforward methods for evaluating species presence, species richness, and species occupancy over time at various locations;</li>
 <li>Offer recommendations for ongoing monitoring approaches to contribute to the assessment of ecological integrity in forest ecosystems;</li>
@@ -227,42 +288,63 @@ Sugai, Larissa Sayuri Moreira, Thiago Sanna Freire Silva, Jr Ribeiro José Wagne
 <h1>Methods</h1>
 <section id="data-collection" class="level2">
 <h2 class="anchored" data-anchor-id="data-collection">Data collection</h2>
-<p>Data were collected during the spring and summer seasons from 2019 to 2023. A total of 30 locations were surveyed over the five-year period:</p>
+<p>Data were collected during the spring and summer seasons from 2019 to 2024. A total of 38 locations were surveyed over the five-year period:</p>
 <ul>
 <li>21 locations as part of the forest songbird monitoring program (code: <code>PENP-*</code>) with ARUs recording during the morning hours,</li>
 <li>6 for Bank Swallow Monitoring (code: <code>PENP-BS-*</code>) with ARUs placed strategically beside ponds recording in the evening,</li>
 <li>2 locations deployed in First Nations communities (<code>ASC-1, LXI-1</code>) to complement the forest songbird and evening schedules,</li>
 <li>And one location (<code>PENP-E1</code>), which was to examine the effects of a single public event</li>
 </ul>
-<p>Locations were surveyed on rotation with 9 locations (PENP-1-1, PENP-1-2, PENP-2-3, PENP-3-1, PENP-3-2, PENP-4-1, PENP-4-2, PENP-4-3, PENP-4-4) surveyed each year. A detailed list of all survey years can be found in Table 1 (<a href="#tbl-loc-summary">Table&nbsp;1</a>) and illustrated in Figure 1 (<a href="#fig-locs">Figure&nbsp;1</a>). ARUs were deployed at the beginning of the breeding season in April-May, and rotated locations until their final retrieval in July-August. At the forest songbird locations (<code>PENP-*</code>), the ARUs were set to record for 30 minutes continuously every hour for four hours, starting one hour before dawn and ending three hours after dawn. For Bank Swallow Monitoring locations (<code>PENP-BS</code>), recordings were made every 5 minutes for a duration of 3 minutes each from 1.5 hours before dusk to 1.5 hours after dusk. On average, each ARU recorded for 11.27 +/- 8.03 days.</p>
+<p>Locations were surveyed on rotation with 4 locations (PENP-2-3, PENP-3-4, PENP-3-6, PENP-4-2) surveyed each year. A detailed list of all survey years can be found in Table 1 (<a href="#tbl-loc-summary" class="quarto-xref">Table&nbsp;1</a>) and illustrated in Figure 1 (<a href="#fig-locs" class="quarto-xref">Figure&nbsp;1</a>). ARUs were deployed at the beginning of the breeding season in April-May, and rotated locations until their final retrieval in July-August. At the forest songbird locations (<code>PENP-*</code>), the ARUs were set to record for 30 minutes continuously every hour for four hours, starting one hour before dawn and ending three hours after dawn. For Bank Swallow Monitoring locations (<code>PENP-BS</code>), recordings were made every 5 minutes for a duration of 3 minutes each from 1.5 hours before dusk to 1.5 hours after dusk. On average, each ARU recorded for 11.27 +/- 8.03 days.</p>
 <div class="cell" data-layout-align="center">
-<div id="fig-locs" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
+<div id="fig-locs" class="cell-output-display quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-locs-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="leaflet html-widget html-fill-item" id="htmlwidget-8ff4fbb6794552057f64" style="width:100%;height:650px;"></div>
-<script type="application/json" data-for="htmlwidget-8ff4fbb6794552057f64">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"https://openstreetmap.org\">OpenStreetMap<\/a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA<\/a>"}]},{"method":"addMarkers","args":[[46.49269,46.49815,46.48599,46.43868,46.40964,46.41328,46.41564,46.44528,46.44844,46.45103,46.44566,46.49269,46.49815,46.494835,46.43868,46.40964,46.41328,46.418476,46.406918,46.44528,46.44844,46.45103,46.44566,46.37947,46.6279,46.49269,46.49815,46.48599,46.494835,46.480437,46.484732,46.43868,46.40964,46.41328,46.41564,46.418476,46.406918,46.417045,46.42033,46.44528,46.44844,46.45103,46.44566,46.45084,46.19565,46.496944,46.42506,46.49545,46.464874,46.416854,46.49269,46.49815,46.48599,46.494835,46.480437,46.484732,46.43868,46.40964,46.41328,46.41564,46.418476,46.406918,46.417045,46.42033,46.44528,46.44844,46.45103,46.44566,46.452417,46.45084,46.19565,46.19434,46.49269,46.49815,46.494835,46.480437,46.484732,46.43868,46.40964,46.41328,46.41564,46.418476,46.406918,46.417045,46.42033,46.44528,46.44844,46.45103,46.44566,46.452417,46.45084,46.19565,46.44671],[-63.39246,-63.41232,-63.37838,-63.24929,-63.08163,-63.09174,-63.08571,-62.70647,-62.68512,-62.65111,-62.69656,-63.39246,-63.41232,-63.420452,-63.24929,-63.08163,-63.09174,-63.089346,-63.078124,-62.70647,-62.68512,-62.65111,-62.69656,-62.91344,-63.8658,-63.39246,-63.41232,-63.37838,-63.420452,-63.385173,-63.381201,-63.24929,-63.08163,-63.09174,-63.08571,-63.089346,-63.078124,-63.099161,-63.099885,-62.70647,-62.68512,-62.65111,-62.69656,-62.67106,-63.1341,-63.405215,-63.12705,-63.34026,-63.302424,-62.969802,-63.39246,-63.41232,-63.37838,-63.420452,-63.385173,-63.381201,-63.24929,-63.08163,-63.09174,-63.08571,-63.089346,-63.078124,-63.099161,-63.099885,-62.70647,-62.68512,-62.65111,-62.69656,-62.674625,-62.67106,-63.1341,-63.13055,-63.39246,-63.41232,-63.420452,-63.385173,-63.381201,-63.24929,-63.08163,-63.09174,-63.08571,-63.089346,-63.078124,-63.099161,-63.099885,-62.70647,-62.68512,-62.65111,-62.69656,-62.674625,-62.67106,-63.1341,-62.707731],null,null,null,{"interactive":true,"draggable":false,"keyboard":true,"title":"","alt":"","zIndexOffset":0,"opacity":1,"riseOnHover":false,"riseOffset":250},["Location: PENP-1-1 <br>","Location: PENP-1-2 <br>","Location: PENP-1-3 <br>","Location: PENP-2-3 <br>","Location: PENP-3-1 <br>","Location: PENP-3-2 <br>","Location: PENP-3-4 <br>","Location: PENP-4-1 <br>","Location: PENP-4-2 <br>","Location: PENP-4-3 <br>","Location: PENP-4-4 <br>","Location: PENP-1-1 <br>","Location: PENP-1-2 <br>","Location: PENP-1-4 <br>","Location: PENP-2-3 <br>","Location: PENP-3-1 <br>","Location: PENP-3-2 <br>","Location: PENP-3-5 <br>","Location: PENP-3-6 <br>","Location: PENP-4-1 <br>","Location: PENP-4-2 <br>","Location: PENP-4-3 <br>","Location: PENP-4-4 <br>","Location: ASC-1 <br>","Location: LXI-1 <br>","Location: PENP-1-1 <br>","Location: PENP-1-2 <br>","Location: PENP-1-3 <br>","Location: PENP-1-4 <br>","Location: PENP-1-5 <br>","Location: PENP-1-6 <br>","Location: PENP-2-3 <br>","Location: PENP-3-1 <br>","Location: PENP-3-2 <br>","Location: PENP-3-4 <br>","Location: PENP-3-5 <br>","Location: PENP-3-6 <br>","Location: PENP-3-7 <br>","Location: PENP-3-8 <br>","Location: PENP-4-1 <br>","Location: PENP-4-2 <br>","Location: PENP-4-3 <br>","Location: PENP-4-4 <br>","Location: PENP-4-6 <br>","Location: PENP-5-1 <br>","Location: PENP-BS-1 <br>","Location: PENP-BS-2 <br>","Location: PENP-BS-3 <br>","Location: PENP-BS-4 <br>","Location: PENP-BS-5 <br>","Location: PENP-1-1 <br>","Location: PENP-1-2 <br>","Location: PENP-1-3 <br>","Location: PENP-1-4 <br>","Location: PENP-1-5 <br>","Location: PENP-1-6 <br>","Location: PENP-2-3 <br>","Location: PENP-3-1 <br>","Location: PENP-3-2 <br>","Location: PENP-3-4 <br>","Location: PENP-3-5 <br>","Location: PENP-3-6 <br>","Location: PENP-3-7 <br>","Location: PENP-3-8 <br>","Location: PENP-4-1 <br>","Location: PENP-4-2 <br>","Location: PENP-4-3 <br>","Location: PENP-4-4 <br>","Location: PENP-4-5 <br>","Location: PENP-4-6 <br>","Location: PENP-5-1 <br>","Location: PENP-E1 <br>","Location: PENP-1-1 <br>","Location: PENP-1-2 <br>","Location: PENP-1-4 <br>","Location: PENP-1-5 <br>","Location: PENP-1-6 <br>","Location: PENP-2-3 <br>","Location: PENP-3-1 <br>","Location: PENP-3-2 <br>","Location: PENP-3-4 <br>","Location: PENP-3-5 <br>","Location: PENP-3-6 <br>","Location: PENP-3-7 <br>","Location: PENP-3-8 <br>","Location: PENP-4-1 <br>","Location: PENP-4-2 <br>","Location: PENP-4-3 <br>","Location: PENP-4-4 <br>","Location: PENP-4-5 <br>","Location: PENP-4-6 <br>","Location: PENP-5-1 <br>","Location: PENP-BS-6 <br>"],null,null,null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addMeasure","args":[{"position":"topright","primaryLengthUnit":"feet","primaryAreaUnit":"acres","activeColor":"#ABE67E","completedColor":"#C8F2BE","popupOptions":{"className":"leaflet-measure-resultpopup","autoPanPadding":[10,10]},"captureZIndex":10000,"localization":"en","decPoint":".","thousandsSep":","}]},{"method":"addMiniMap","args":[null,null,"bottomleft",150,150,19,19,-5,false,false,false,false,false,false,{"color":"#ff7800","weight":1,"clickable":false},{"color":"#000000","weight":1,"clickable":false,"opacity":0,"fillOpacity":0},{"hideText":"Hide MiniMap","showText":"Show MiniMap"},[]]}],"limits":{"lat":[46.19434,46.6279],"lng":[-63.8658,-62.65111]}},"evals":[],"jsHooks":[]}</script>
-<figcaption class="figure-caption">Figure&nbsp;1: ARU survey locations</figcaption>
+<script type="application/json" data-for="htmlwidget-8ff4fbb6794552057f64">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"https://openstreetmap.org/copyright/\">OpenStreetMap<\/a>,  <a href=\"https://opendatacommons.org/licenses/odbl/\">ODbL<\/a>"}]},{"method":"addMarkers","args":[[46.49269,46.49815,46.43868,46.41328,46.496944,46.48599,46.40964,46.41564,46.44528,46.44844,46.45103,46.44566,46.49269,46.49815,46.494835,46.43868,46.40964,46.41328,46.418476,46.406918,46.44528,46.44844,46.45103,46.44566,46.37947,46.6279,46.49269,46.49815,46.48599,46.494835,46.480437,46.484732,46.43868,46.40964,46.41328,46.41564,46.418476,46.406918,46.417045,46.42033,46.44528,46.44844,46.45103,46.44566,46.45084,46.19565,46.496944,46.42506,46.49545,46.464874,46.416854,46.49269,46.49815,46.48599,46.494835,46.480437,46.484732,46.43868,46.40964,46.41328,46.41564,46.418476,46.406918,46.417045,46.42033,46.44528,46.44844,46.45103,46.44566,46.452417,46.45084,46.19565,46.19434,46.49269,46.49815,46.494835,46.480437,46.484732,46.43868,46.40964,46.41328,46.41564,46.418476,46.406918,46.417045,46.42033,46.44528,46.44844,46.45103,46.44566,46.452417,46.45084,46.19565,46.44671,46.49269,46.49815,46.480437,46.484732,46.48374,46.493966,46.436699,46.40964,46.41328,46.41564,46.406918,46.407527,46.44528,46.45103,46.44566,46.453923,46.446571,46.195918,46.466217],[-63.39246,-63.41232,-63.24929,-63.09174,-63.405215,-63.37838,-63.08163,-63.08571,-62.70647,-62.68512,-62.65111,-62.69656,-63.39246,-63.41232,-63.420452,-63.24929,-63.08163,-63.09174,-63.089346,-63.078124,-62.70647,-62.68512,-62.65111,-62.69656,-62.91344,-63.8658,-63.39246,-63.41232,-63.37838,-63.420452,-63.385173,-63.381201,-63.24929,-63.08163,-63.09174,-63.08571,-63.089346,-63.078124,-63.099161,-63.099885,-62.70647,-62.68512,-62.65111,-62.69656,-62.67106,-63.1341,-63.405215,-63.12705,-63.34026,-63.302424,-62.969802,-63.39246,-63.41232,-63.37838,-63.420452,-63.385173,-63.381201,-63.24929,-63.08163,-63.09174,-63.08571,-63.089346,-63.078124,-63.099161,-63.099885,-62.70647,-62.68512,-62.65111,-62.69656,-62.674625,-62.67106,-63.1341,-63.13055,-63.39246,-63.41232,-63.420452,-63.385173,-63.381201,-63.24929,-63.08163,-63.09174,-63.08571,-63.089346,-63.078124,-63.099161,-63.099885,-62.70647,-62.68512,-62.65111,-62.69656,-62.674625,-62.67106,-63.1341,-62.707731,-63.39246,-63.41232,-63.385173,-63.381201,-63.41186,-63.409619,-63.250025,-63.08163,-63.09174,-63.08571,-63.078124,-63.050072,-62.70647,-62.65111,-62.69656,-62.68818,-62.654443,-63.140764,-63.307319],null,null,null,{"interactive":true,"draggable":false,"keyboard":true,"title":"","alt":"","zIndexOffset":0,"opacity":1,"riseOnHover":false,"riseOffset":250},["Location: PENP-1-1 <br>","Location: PENP-1-2 <br>","Location: PENP-2-3 <br>","Location: PENP-3-2 <br>","Location: PENP-BS-1 <br>","Location: PENP-1-3 <br>","Location: PENP-3-1 <br>","Location: PENP-3-4 <br>","Location: PENP-4-1 <br>","Location: PENP-4-2 <br>","Location: PENP-4-3 <br>","Location: PENP-4-4 <br>","Location: PENP-1-1 <br>","Location: PENP-1-2 <br>","Location: PENP-1-4 <br>","Location: PENP-2-3 <br>","Location: PENP-3-1 <br>","Location: PENP-3-2 <br>","Location: PENP-3-5 <br>","Location: PENP-3-6 <br>","Location: PENP-4-1 <br>","Location: PENP-4-2 <br>","Location: PENP-4-3 <br>","Location: PENP-4-4 <br>","Location: ASC-1 <br>","Location: LXI-1 <br>","Location: PENP-1-1 <br>","Location: PENP-1-2 <br>","Location: PENP-1-3 <br>","Location: PENP-1-4 <br>","Location: PENP-1-5 <br>","Location: PENP-1-6 <br>","Location: PENP-2-3 <br>","Location: PENP-3-1 <br>","Location: PENP-3-2 <br>","Location: PENP-3-4 <br>","Location: PENP-3-5 <br>","Location: PENP-3-6 <br>","Location: PENP-3-7 <br>","Location: PENP-3-8 <br>","Location: PENP-4-1 <br>","Location: PENP-4-2 <br>","Location: PENP-4-3 <br>","Location: PENP-4-4 <br>","Location: PENP-4-6 <br>","Location: PENP-5-1 <br>","Location: PENP-BS-1 <br>","Location: PENP-BS-2 <br>","Location: PENP-BS-3 <br>","Location: PENP-BS-4 <br>","Location: PENP-BS-5 <br>","Location: PENP-1-1 <br>","Location: PENP-1-2 <br>","Location: PENP-1-3 <br>","Location: PENP-1-4 <br>","Location: PENP-1-5 <br>","Location: PENP-1-6 <br>","Location: PENP-2-3 <br>","Location: PENP-3-1 <br>","Location: PENP-3-2 <br>","Location: PENP-3-4 <br>","Location: PENP-3-5 <br>","Location: PENP-3-6 <br>","Location: PENP-3-7 <br>","Location: PENP-3-8 <br>","Location: PENP-4-1 <br>","Location: PENP-4-2 <br>","Location: PENP-4-3 <br>","Location: PENP-4-4 <br>","Location: PENP-4-5 <br>","Location: PENP-4-6 <br>","Location: PENP-5-1 <br>","Location: PENP-E1 <br>","Location: PENP-1-1 <br>","Location: PENP-1-2 <br>","Location: PENP-1-4 <br>","Location: PENP-1-5 <br>","Location: PENP-1-6 <br>","Location: PENP-2-3 <br>","Location: PENP-3-1 <br>","Location: PENP-3-2 <br>","Location: PENP-3-4 <br>","Location: PENP-3-5 <br>","Location: PENP-3-6 <br>","Location: PENP-3-7 <br>","Location: PENP-3-8 <br>","Location: PENP-4-1 <br>","Location: PENP-4-2 <br>","Location: PENP-4-3 <br>","Location: PENP-4-4 <br>","Location: PENP-4-5 <br>","Location: PENP-4-6 <br>","Location: PENP-5-1 <br>","Location: PENP-BS-6 <br>","Location: PENP-1-1 <br>","Location: PENP-1-2 <br>","Location: PENP-1-5 <br>","Location: PENP-1-6 <br>","Location: PENP-1-7 <br>","Location: PENP-1-8 <br>","Location: PENP-2-4 <br>","Location: PENP-3-1 <br>","Location: PENP-3-2 <br>","Location: PENP-3-4 <br>","Location: PENP-3-6 <br>","Location: PENP-3-9 <br>","Location: PENP-4-1 <br>","Location: PENP-4-3 <br>","Location: PENP-4-4 <br>","Location: PENP-4-7 <br>","Location: PENP-4-8 <br>","Location: PENP-5-2 <br>","Location: PENP-6-1 <br>"],null,null,null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addMeasure","args":[{"position":"topright","primaryLengthUnit":"feet","primaryAreaUnit":"acres","activeColor":"#ABE67E","completedColor":"#C8F2BE","popupOptions":{"className":"leaflet-measure-resultpopup","autoPanPadding":[10,10]},"captureZIndex":10000,"localization":"en","decPoint":".","thousandsSep":","}]},{"method":"addMiniMap","args":[null,null,"bottomleft",150,150,19,19,-5,false,false,false,false,false,false,{"color":"#ff7800","weight":1,"clickable":false},{"color":"#000000","weight":1,"clickable":false,"opacity":0,"fillOpacity":0},{"hideText":"Hide MiniMap","showText":"Show MiniMap"},[]]}],"limits":{"lat":[46.19434,46.6279],"lng":[-63.8658,-62.65111]}},"evals":[],"jsHooks":[]}</script>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-locs-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: ARU survey locations
+</figcaption>
 </figure>
 </div>
 </div>
 <div class="cell">
+<div id="tbl-loc-summary" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-loc-summary-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;1: Locations surveyed across years. Ones indicated a deployment in that year for that location
+</figcaption>
+<div aria-describedby="tbl-loc-summary-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<div id="tbl-loc-summary" class="anchored">
-<table data-quarto-postprocess="true" class="table table-sm table-striped small">
-<caption>Table&nbsp;1: Locations surveyed across years. Ones indicated a deployment in that year for that location</caption>
+<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
+<caption>Location summary for ARUs deployed</caption>
+<colgroup>
+<col style="width: 15%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 37%">
+</colgroup>
 <thead>
 <tr class="header">
-<th style="text-align: left;" data-quarto-table-cell-role="th">Location</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">2019</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">2020</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">2021</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">2022</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">2023</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">Site</th>
+<th style="text-align: left;">Location</th>
+<th style="text-align: right;">2019</th>
+<th style="text-align: right;">2020</th>
+<th style="text-align: right;">2021</th>
+<th style="text-align: right;">2022</th>
+<th style="text-align: right;">2023</th>
+<th style="text-align: right;">2024</th>
+<th style="text-align: left;">Site</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">PENP-1-1</td>
+<td style="text-align: right;">1</td>
 <td style="text-align: right;">1</td>
 <td style="text-align: right;">1</td>
 <td style="text-align: right;">1</td>
@@ -277,7 +359,28 @@ Sugai, Larissa Sayuri Moreira, Thiago Sanna Freire Silva, Jr Ribeiro José Wagne
 <td style="text-align: right;">1</td>
 <td style="text-align: right;">1</td>
 <td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
 <td style="text-align: left;">Cavendish</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">PENP-2-3</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">Brackley</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">PENP-3-2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">Dalvay</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">PENP-1-3</td>
@@ -286,28 +389,12 @@ Sugai, Larissa Sayuri Moreira, Thiago Sanna Freire Silva, Jr Ribeiro José Wagne
 <td style="text-align: right;">1</td>
 <td style="text-align: right;">1</td>
 <td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
 <td style="text-align: left;">Cavendish</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">PENP-2-3</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: left;">Brackley</td>
-</tr>
-<tr class="odd">
 <td style="text-align: left;">PENP-3-1</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: left;">Dalvay</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">PENP-3-2</td>
 <td style="text-align: right;">1</td>
 <td style="text-align: right;">1</td>
 <td style="text-align: right;">1</td>
@@ -322,10 +409,12 @@ Sugai, Larissa Sayuri Moreira, Thiago Sanna Freire Silva, Jr Ribeiro José Wagne
 <td style="text-align: right;">1</td>
 <td style="text-align: right;">1</td>
 <td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
 <td style="text-align: left;">Dalvay</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">PENP-4-1</td>
+<td style="text-align: right;">1</td>
 <td style="text-align: right;">1</td>
 <td style="text-align: right;">1</td>
 <td style="text-align: right;">1</td>
@@ -340,10 +429,12 @@ Sugai, Larissa Sayuri Moreira, Thiago Sanna Freire Silva, Jr Ribeiro José Wagne
 <td style="text-align: right;">1</td>
 <td style="text-align: right;">1</td>
 <td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
 <td style="text-align: left;">Greenwich</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">PENP-4-3</td>
+<td style="text-align: right;">1</td>
 <td style="text-align: right;">1</td>
 <td style="text-align: right;">1</td>
 <td style="text-align: right;">1</td>
@@ -358,6 +449,7 @@ Sugai, Larissa Sayuri Moreira, Thiago Sanna Freire Silva, Jr Ribeiro José Wagne
 <td style="text-align: right;">1</td>
 <td style="text-align: right;">1</td>
 <td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
 <td style="text-align: left;">Greenwich</td>
 </tr>
 <tr class="even">
@@ -367,6 +459,7 @@ Sugai, Larissa Sayuri Moreira, Thiago Sanna Freire Silva, Jr Ribeiro José Wagne
 <td style="text-align: right;">1</td>
 <td style="text-align: right;">1</td>
 <td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
 <td style="text-align: left;">Cavendish</td>
 </tr>
 <tr class="odd">
@@ -376,11 +469,13 @@ Sugai, Larissa Sayuri Moreira, Thiago Sanna Freire Silva, Jr Ribeiro José Wagne
 <td style="text-align: right;">1</td>
 <td style="text-align: right;">1</td>
 <td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
 <td style="text-align: left;">Dalvay</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">PENP-3-6</td>
 <td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
 <td style="text-align: right;">1</td>
 <td style="text-align: right;">1</td>
 <td style="text-align: right;">1</td>
@@ -394,6 +489,7 @@ Sugai, Larissa Sayuri Moreira, Thiago Sanna Freire Silva, Jr Ribeiro José Wagne
 <td style="text-align: right;">1</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
 <td style="text-align: left;">Communities</td>
 </tr>
 <tr class="even">
@@ -403,12 +499,14 @@ Sugai, Larissa Sayuri Moreira, Thiago Sanna Freire Silva, Jr Ribeiro José Wagne
 <td style="text-align: right;">1</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
 <td style="text-align: left;">Communities</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">PENP-1-5</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
 <td style="text-align: right;">1</td>
 <td style="text-align: right;">1</td>
 <td style="text-align: right;">1</td>
@@ -421,6 +519,7 @@ Sugai, Larissa Sayuri Moreira, Thiago Sanna Freire Silva, Jr Ribeiro José Wagne
 <td style="text-align: right;">1</td>
 <td style="text-align: right;">1</td>
 <td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
 <td style="text-align: left;">Cavendish</td>
 </tr>
 <tr class="odd">
@@ -430,6 +529,7 @@ Sugai, Larissa Sayuri Moreira, Thiago Sanna Freire Silva, Jr Ribeiro José Wagne
 <td style="text-align: right;">1</td>
 <td style="text-align: right;">1</td>
 <td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
 <td style="text-align: left;">Dalvay</td>
 </tr>
 <tr class="even">
@@ -439,6 +539,7 @@ Sugai, Larissa Sayuri Moreira, Thiago Sanna Freire Silva, Jr Ribeiro José Wagne
 <td style="text-align: right;">1</td>
 <td style="text-align: right;">1</td>
 <td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
 <td style="text-align: left;">Dalvay</td>
 </tr>
 <tr class="odd">
@@ -448,6 +549,7 @@ Sugai, Larissa Sayuri Moreira, Thiago Sanna Freire Silva, Jr Ribeiro José Wagne
 <td style="text-align: right;">1</td>
 <td style="text-align: right;">1</td>
 <td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
 <td style="text-align: left;">Greenwich</td>
 </tr>
 <tr class="even">
@@ -457,12 +559,14 @@ Sugai, Larissa Sayuri Moreira, Thiago Sanna Freire Silva, Jr Ribeiro José Wagne
 <td style="text-align: right;">1</td>
 <td style="text-align: right;">1</td>
 <td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
 <td style="text-align: left;">Skmaqn</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">PENP-BS-1</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
 <td style="text-align: right;">1</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">0</td>
@@ -475,6 +579,7 @@ Sugai, Larissa Sayuri Moreira, Thiago Sanna Freire Silva, Jr Ribeiro José Wagne
 <td style="text-align: right;">1</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
 <td style="text-align: left;">Bank Swallow Monitoring</td>
 </tr>
 <tr class="odd">
@@ -482,6 +587,7 @@ Sugai, Larissa Sayuri Moreira, Thiago Sanna Freire Silva, Jr Ribeiro José Wagne
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: left;">Bank Swallow Monitoring</td>
@@ -493,6 +599,7 @@ Sugai, Larissa Sayuri Moreira, Thiago Sanna Freire Silva, Jr Ribeiro José Wagne
 <td style="text-align: right;">1</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
 <td style="text-align: left;">Bank Swallow Monitoring</td>
 </tr>
 <tr class="odd">
@@ -500,6 +607,7 @@ Sugai, Larissa Sayuri Moreira, Thiago Sanna Freire Silva, Jr Ribeiro José Wagne
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: left;">Bank Swallow Monitoring</td>
@@ -511,6 +619,7 @@ Sugai, Larissa Sayuri Moreira, Thiago Sanna Freire Silva, Jr Ribeiro José Wagne
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">1</td>
 <td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
 <td style="text-align: left;">Greenwich</td>
 </tr>
 <tr class="odd">
@@ -519,6 +628,7 @@ Sugai, Larissa Sayuri Moreira, Thiago Sanna Freire Silva, Jr Ribeiro José Wagne
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: left;">Skmaqn</td>
 </tr>
@@ -529,28 +639,114 @@ Sugai, Larissa Sayuri Moreira, Thiago Sanna Freire Silva, Jr Ribeiro José Wagne
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
 <td style="text-align: left;">Bank Swallow Monitoring</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">PENP-1-7</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">Cavendish</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">PENP-1-8</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">Cavendish</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">PENP-2-4</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">Brackley</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">PENP-3-9</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">Dalvay</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">PENP-4-7</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">Greenwich</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">PENP-4-8</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">Greenwich</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">PENP-5-2</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">Skmaqn</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">PENP-6-1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">Communities</td>
 </tr>
 </tbody>
 </table>
 </div>
-
-
+</div>
+</figure>
 </div>
 </div>
 <div class="cell">
+<div id="tbl-obvs-and-covs" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-obvs-and-covs-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;2: Site covariates for each forest songbird monitoring (PENP-*) location. Landcover is measured as proportion cover at 150 meter radius surrounding the ARU categorized into anthropogenic (pavement, soy), open (grass, sand dune, bare soil), deciduous (red maple, white birch, alder, poplar) and conifer (white spruce, black spruce, balsam fir).
+</figcaption>
+<div aria-describedby="tbl-obvs-and-covs-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<div id="tbl-obvs-and-covs" class="anchored">
-<table data-quarto-postprocess="true" class="table table-sm table-striped small">
-<caption>Table&nbsp;2: Site covariates for each forest songbird monitoring (PENP-*) location. Landcover is measured as proportion cover at 150 meter radius surrounding the ARU categorized into anthropogenic (pavement, soy), open (grass, sand dune, bare soil), deciduous (red maple, white birch, alder, poplar) and conifer (white spruce, black spruce, balsam fir).</caption>
+<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
+<caption>Location summary for ARUs deployed</caption>
 <thead>
 <tr class="header">
-<th style="text-align: left;" data-quarto-table-cell-role="th">location</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">Distance from coast (m)</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">Anthro</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">Deciduous</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">Open</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">Conifer</th>
+<th style="text-align: left;">location</th>
+<th style="text-align: right;">Distance from coast (m)</th>
+<th style="text-align: right;">Anthro</th>
+<th style="text-align: right;">Deciduous</th>
+<th style="text-align: right;">Open</th>
+<th style="text-align: right;">Conifer</th>
 </tr>
 </thead>
 <tbody>
@@ -725,34 +921,28 @@ Sugai, Larissa Sayuri Moreira, Thiago Sanna Freire Silva, Jr Ribeiro José Wagne
 </tbody>
 </table>
 </div>
-
-
+</div>
+</figure>
 </div>
 </div>
 </section>
-<section id="data-management" class="level2 page-columns page-full">
+<section id="data-management" class="level2">
 <h2 class="anchored" data-anchor-id="data-management">Data management</h2>
-<p>A total of 10092 recordings were collected (see <a href="#fig-recs-collect">Figure&nbsp;3</a>). From 2019 - 2021, data were transferred via hard drive to the University of Alberta in Edmonton, where they are redundantly stored on a server known as Cirrus. The recordings were standardized to ensure adherence to the naming convention of <code>LOCATION_DATETIME</code>, such as <code>PENP-1-1_20230625_053500.wav</code>. The remaining recordings (2022 - 2023) were directly uploaded to WildTrax by Parks Canada staff and can be downloaded from the platform’s Recording tab, accessible under Manage &gt; Download list of recordings (see <a href="#fig-download-recs">Figure&nbsp;2</a>).</p>
-<div id="fig-download-recs" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="download-recs.png" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">Figure&nbsp;2: Downloading a list of recordings from WildTrax</figcaption>
+<p>A total of 12456 recordings were collected (see <strong>?@fig-recs-collect</strong>). From 2019 - 2021, data were transferred via hard drive to the University of Alberta in Edmonton, where they are redundantly stored on a server known as Cirrus. The recordings were standardized to ensure adherence to the naming convention of <code>LOCATION_DATETIME</code>, such as <code>PENP-1-1_20230625_053500.wav</code>. The remaining recordings (2022 - 2023) were directly uploaded to WildTrax by Parks Canada staff and can be downloaded from the platform’s Recording tab, accessible under Manage &gt; Download list of recordings (see <a href="#fig-download-recs" class="quarto-xref">Figure&nbsp;2</a>).</p>
+<div id="fig-download-recs" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-download-recs-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="download-recs.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-download-recs-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: Downloading a list of recordings from WildTrax
+</figcaption>
 </figure>
-</div>
-<div class="cell page-columns page-full" data-layout-align="center">
-<div class="cell-output-display page-columns page-full">
-<div id="fig-recs-collect" class="quarto-figure quarto-figure-center anchored page-columns page-full">
-<figure class="figure page-columns page-full">
-<p><img src="peinp_files/figure-html/fig-recs-collect-1.png" class="img-fluid figure-img" width="960"></p>
-<figcaption class="figure-caption margin-caption">Figure&nbsp;3: Ridgeplot of recordings collected for each location over each survey year</figcaption>
-</figure>
-</div>
-</div>
 </div>
 </section>
 <section id="community-data-processing" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="community-data-processing">Community data processing</h2>
-<p>The principal goal for data processing was to describe the acoustic community of species heard at locations while choosing a large enough subset of recordings for analyses. To ensure balanced replication, for each location and year surveyed, four randomly selected recordings were processed for 3-minutes between the hours of 4:00 AM - 7:59 AM ideally on four separate dates (see <a href="#tbl-loc-repl">Table&nbsp;3</a>). Four recordings will ensure that we have the minimum number of samples for a simple occupancy analysis (<span class="citation" data-cites="mackenzie2002estimating">Darryl I. MacKenzie et al. (<a href="#ref-mackenzie2002estimating" role="doc-biblioref">2002</a>)</span> and <span class="citation" data-cites="imperfect-occu">Darryl I. MacKenzie et al. (<a href="#ref-imperfect-occu" role="doc-biblioref">2003</a>)</span>). Tags are made using count-removal (see <span class="citation" data-cites="farnsworth2002removal">Farnsworth et al. (<a href="#ref-farnsworth2002removal" role="doc-biblioref">2002</a>)</span>, <span class="citation" data-cites="time-removal">Sólymos et al. (<a href="#ref-time-removal" role="doc-biblioref">2018</a>)</span>) where tags are only made at the time of first detection of each individual heard on the recordings. In case a species was overly abundant a TMTT (‘too many to tag’) flag was used (see <a href="#tbl-tmtt">Table&nbsp;5</a>). 1% of the total tags were TMTT but were subsequently converted to numeric using <code>wildRtrax::wt_replace_tmtt</code>. We also verified that all tags that were created were checked by a second observer (n = 0.79) to ensure accuracy of detections (see <a href="#tbl-verified">Table&nbsp;4</a>). Amphibian abundance was estimated at the time of first detection using the <a href="https://www.usgs.gov/centers/eesc/science/north-american-amphibian-monitoring-program">North American Amphibian Monitoring Program</a> with abundance of species being estimated on the scale of “calling intensity index” (CI) of 1 - 3. Mammals such as Red Squirrel, were also noted on the recordings. After the data are processed in WildTrax, the <a href="https://abbiodiversity.github.io/wildRtrax/">wildRtrax</a> package is use to download the data into a standard format prepared for analysis. The <code>wt_download_report</code> function downloads the data directly to a R framework for easy manipulation (see <a href="https://abbiodiversity.github.io/wildRtrax/articles/apis.html">wildRtrax APIs</a>).</p>
+<p>The principal goal for data processing was to describe the acoustic community of species heard at locations while choosing a large enough subset of recordings for analyses. To ensure balanced replication, for each location and year surveyed, four randomly selected recordings were processed for 3-minutes between the hours of 4:00 AM - 7:59 AM ideally on four separate dates (see <a href="#tbl-loc-repl" class="quarto-xref">Table&nbsp;3</a>). Four recordings will ensure that we have the minimum number of samples for a simple occupancy analysis (<span class="citation" data-cites="mackenzie2002estimating">Darryl I. MacKenzie et al. (<a href="#ref-mackenzie2002estimating" role="doc-biblioref">2002</a>)</span> and <span class="citation" data-cites="imperfect-occu">Darryl I. MacKenzie et al. (<a href="#ref-imperfect-occu" role="doc-biblioref">2003</a>)</span>). Tags are made using count-removal (see <span class="citation" data-cites="farnsworth2002removal">Farnsworth et al. (<a href="#ref-farnsworth2002removal" role="doc-biblioref">2002</a>)</span>, <span class="citation" data-cites="time-removal">Sólymos et al. (<a href="#ref-time-removal" role="doc-biblioref">2018</a>)</span>) where tags are only made at the time of first detection of each individual heard on the recordings. In case a species was overly abundant a TMTT (‘too many to tag’) flag was used (see <a href="#tbl-tmtt" class="quarto-xref">Table&nbsp;5</a>). 1% of the total tags were TMTT but were subsequently converted to numeric using <code>wildRtrax::wt_replace_tmtt</code>. We also verified that all tags that were created were checked by a second observer (n = 5.92) to ensure accuracy of detections (see <a href="#tbl-verified" class="quarto-xref">Table&nbsp;4</a>). Amphibian abundance was estimated at the time of first detection using the <a href="https://www.usgs.gov/centers/eesc/science/north-american-amphibian-monitoring-program">North American Amphibian Monitoring Program</a> with abundance of species being estimated on the scale of “calling intensity index” (CI) of 1 - 3. Mammals such as Red Squirrel, were also noted on the recordings. After the data are processed in WildTrax, the <a href="https://abbiodiversity.github.io/wildRtrax/">wildRtrax</a> package is use to download the data into a standard format prepared for analysis. The <code>wt_download_report</code> function downloads the data directly to a R framework for easy manipulation (see <a href="https://abbiodiversity.github.io/wildRtrax/articles/apis.html">wildRtrax APIs</a>).</p>
 <div class="no-row-height column-margin column-container"><div id="ref-imperfect-occu" class="csl-entry" role="listitem">
 MacKenzie, Darryl I., James D. Nichols, James E. Hines, Melinda G. Knutson, and Alan B. Franklin. 2003. <span>“ESTIMATING SITE OCCUPANCY, COLONIZATION, AND LOCAL EXTINCTION WHEN a SPECIES IS DETECTED IMPERFECTLY.”</span> <em>Ecology</em> 84 (8): 2200–2207. https://doi.org/<a href="https://doi.org/10.1890/02-3090">https://doi.org/10.1890/02-3090</a>.
 </div><div id="ref-farnsworth2002removal" class="csl-entry" role="listitem">
@@ -760,34 +950,21 @@ Farnsworth, George L, Kenneth H Pollock, James D Nichols, Theodore R Simons, Jam
 </div><div id="ref-time-removal" class="csl-entry" role="listitem">
 Sólymos, Péter, Steven M. Matsuoka, Steven G. Cumming, Diana Stralberg, Patricia Fontaine, Fiona K. A. Schmiegelow, Samantha J. Song, and Erin M. Bayne. 2018. <span>“<span class="nocase">Evaluating time-removal models for estimating availability of boreal birds during point count surveys: Sample size requirements and model complexity</span>.”</span> <em>The Condor</em> 120 (4): 765–86. <a href="https://doi.org/10.1650/CONDOR-18-32.1">https://doi.org/10.1650/CONDOR-18-32.1</a>.
 </div></div><div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pei_projects <span class="ot">&lt;-</span> wildRtrax<span class="sc">::</span><span class="fu">wt_get_download_summary</span>(<span class="at">sensor =</span> <span class="st">'ARU'</span>) <span class="sc">|&gt;</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">grepl</span>(<span class="st">'^Prince Edward Island National Park Forest Songbird'</span>, project)) <span class="sc">|&gt;</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(project_id) <span class="sc">|&gt;</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>()</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>pei_main <span class="ot">&lt;-</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map_dfr</span>(</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">.x =</span> pei_projects,</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">.f =</span> <span class="sc">~</span> wildRtrax<span class="sc">::</span><span class="fu">wt_download_report</span>(</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>      <span class="at">project_id =</span> .x,</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>      <span class="at">sensor_id =</span> <span class="st">"ARU"</span>,</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>      <span class="at">weather_cols =</span> T,</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>      <span class="at">reports =</span> <span class="st">"main"</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell">
+<div id="tbl-loc-repl" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-loc-repl-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;3: Example of tasks and unit replication for listening at PENP-4-1
+</figcaption>
+<div aria-describedby="tbl-loc-repl-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<div id="tbl-loc-repl" class="anchored">
-<table data-quarto-postprocess="true" class="table table-sm table-striped small">
-<caption>Table&nbsp;3: Example of tasks and unit replication for listening at PENP-4-1</caption>
+<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
-<th style="text-align: left;" data-quarto-table-cell-role="th">location</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">year</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">task_duration</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">typ</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">n</th>
+<th style="text-align: left;">location</th>
+<th style="text-align: right;">year</th>
+<th style="text-align: right;">task_duration</th>
+<th style="text-align: left;">typ</th>
+<th style="text-align: right;">n</th>
 </tr>
 </thead>
 <tbody>
@@ -854,59 +1031,81 @@ Sólymos, Péter, Steven M. Matsuoka, Steven G. Cumming, Diana Stralberg, Patric
 <td style="text-align: left;">Day</td>
 <td style="text-align: right;">2</td>
 </tr>
+<tr class="even">
+<td style="text-align: left;">PENP-4-1</td>
+<td style="text-align: right;">2024</td>
+<td style="text-align: right;">180</td>
+<td style="text-align: left;">Dawn</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">PENP-4-1</td>
+<td style="text-align: right;">2024</td>
+<td style="text-align: right;">180</td>
+<td style="text-align: left;">Day</td>
+<td style="text-align: right;">2</td>
+</tr>
 </tbody>
 </table>
 </div>
-
-
+</div>
+</figure>
 </div>
 </div>
 <div class="cell">
+<div id="tbl-verified" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-verified-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;4: Proportion of tags verified
+</figcaption>
+<div aria-describedby="tbl-verified-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<div id="tbl-verified" class="anchored">
-<table data-quarto-postprocess="true" class="table table-sm table-striped small">
-<caption>Table&nbsp;4: Proportion of tags verified</caption>
+<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
-<th style="text-align: left;" data-quarto-table-cell-role="th">Tag is verified</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">Count</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">Proportion</th>
+<th style="text-align: left;">Tag is verified</th>
+<th style="text-align: right;">Count</th>
+<th style="text-align: right;">Proportion</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">FALSE</td>
-<td style="text-align: right;">3990</td>
-<td style="text-align: right;">36.43</td>
+<td style="text-align: right;">3991</td>
+<td style="text-align: right;">31.45</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">TRUE</td>
-<td style="text-align: right;">6875</td>
-<td style="text-align: right;">62.77</td>
+<td style="text-align: right;">7949</td>
+<td style="text-align: right;">62.63</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">NA</td>
-<td style="text-align: right;">87</td>
-<td style="text-align: right;">0.79</td>
+<td style="text-align: right;">752</td>
+<td style="text-align: right;">5.92</td>
 </tr>
 </tbody>
 </table>
 </div>
-
-
+</div>
+</figure>
 </div>
 </div>
 <div class="cell">
+<div id="tbl-tmtt" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-tmtt-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;5: TMTT tags
+</figcaption>
+<div aria-describedby="tbl-tmtt-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<div id="tbl-tmtt" class="anchored">
-<table data-quarto-postprocess="true" class="table table-sm table-striped small">
-<caption>Table&nbsp;5: TMTT tags</caption>
+<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
-<th style="text-align: left;" data-quarto-table-cell-role="th">location</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">recording_date_time</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">species_code</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">individual_count</th>
+<th style="text-align: left;">location</th>
+<th style="text-align: left;">recording_date_time</th>
+<th style="text-align: left;">species_code</th>
+<th style="text-align: left;">individual_count</th>
 </tr>
 </thead>
 <tbody>
@@ -949,27 +1148,31 @@ Sólymos, Péter, Steven M. Matsuoka, Steven G. Cumming, Diana Stralberg, Patric
 </tbody>
 </table>
 </div>
-
-
+</div>
+</figure>
 </div>
 </div>
 </section>
 <section id="visual-scanning" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="visual-scanning">Visual scanning</h2>
-<p>Visual scanning is the concept of visually examining spectrograms in order to find a signal within an audio recording. Visual scanning can be a useful processing method allowing trained users to process recordings much faster than traditional listening. It has been used for detecting different taxa (amphibians: <span class="citation" data-cites="vis-scan-amphs">Cameron et al. (<a href="#ref-vis-scan-amphs" role="doc-biblioref">2020</a>)</span>, mammals: <span class="citation" data-cites="aru-vs-cams-wolves">Garland et al. (<a href="#ref-aru-vs-cams-wolves" role="doc-biblioref">2020</a>)</span>) with comparable biological metrics, as well as helping to maximize species detection in large acoustic monitoring data sets (<span class="citation" data-cites="all-the-scans">Ware et al. (<a href="#ref-all-the-scans" role="doc-biblioref">2023</a>)</span>). WildTrax’s project settings and dynamic spectrogram settings in the processing interface allow users to upload many recordings, while also allowing frequency-limited or time-limited spectrograms. These changes are easily made by adjusting project settings in WildTrax (see <a href="#fig-project-dynamic">Figure&nbsp;4</a>).</p>
+<p>Visual scanning is the concept of visually examining spectrograms in order to find a signal within an audio recording. Visual scanning can be a useful processing method allowing trained users to process recordings much faster than traditional listening. It has been used for detecting different taxa (amphibians: <span class="citation" data-cites="vis-scan-amphs">Cameron et al. (<a href="#ref-vis-scan-amphs" role="doc-biblioref">2020</a>)</span>, mammals: <span class="citation" data-cites="aru-vs-cams-wolves">Garland et al. (<a href="#ref-aru-vs-cams-wolves" role="doc-biblioref">2020</a>)</span>) with comparable biological metrics, as well as helping to maximize species detection in large acoustic monitoring data sets (<span class="citation" data-cites="all-the-scans">Ware et al. (<a href="#ref-all-the-scans" role="doc-biblioref">2023</a>)</span>). WildTrax’s project settings and dynamic spectrogram settings in the processing interface allow users to upload many recordings, while also allowing frequency-limited or time-limited spectrograms. These changes are easily made by adjusting project settings in WildTrax (see <a href="#fig-project-dynamic" class="quarto-xref">Figure&nbsp;3</a>).</p>
 <div class="no-row-height column-margin column-container"><div id="ref-vis-scan-amphs" class="csl-entry" role="listitem">
 Cameron, J., A. Crosby, C. Paszkowski, and E. Bayne. 2020. <span>“Visual Spectrogram Scanning Paired with an Observation–Confirmation Occupancy Model Improves the Efficiency and Accuracy of Bioacoustic Anuran Data.”</span> <em>Canadian Journal of Zoology</em> 98 (11): 733–42. <a href="https://doi.org/10.1139/cjz-2020-0103">https://doi.org/10.1139/cjz-2020-0103</a>.
 </div><div id="ref-aru-vs-cams-wolves" class="csl-entry" role="listitem">
 Garland, Laura, Andrew Crosby, Richard Hedley, Stan Boutin, and Erin Bayne. 2020. <span>“Acoustic Vs. Photographic Monitoring of Gray Wolves (<span class="nocase">Canis lupus</span>): A Methodological Comparison of Two Passive Monitoring Techniques.”</span> <em>Canadian Journal of Zoology</em> 98 (3): 219–28. <a href="https://doi.org/10.1139/cjz-2019-0081">https://doi.org/10.1139/cjz-2019-0081</a>.
 </div><div id="ref-all-the-scans" class="csl-entry" role="listitem">
 Ware, Lena, C. Lisa Mahon, Logan McLeod, and Jean-François Jetté. 2023. <span>“Artificial Intelligence (BirdNET) Supplements Manual Methods to Maximize Bird Species Richness from Acoustic Data Sets Generated from Regional Monitoring.”</span> <em>Canadian Journal of Zoology</em> 101 (12): 1031–51. <a href="https://doi.org/10.1139/cjz-2023-0044">https://doi.org/10.1139/cjz-2023-0044</a>.
-</div></div><div id="fig-project-dynamic" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="project-dynamic.png" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">Figure&nbsp;4: Dynamic spectrogram and project settings in WildTrax</figcaption>
+</div></div><div id="fig-project-dynamic" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-project-dynamic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="project-dynamic.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-project-dynamic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: Dynamic spectrogram and project settings in WildTrax
+</figcaption>
 </figure>
 </div>
-<p>In order to determine presence of Bank Swallow (BANS) at <code>PENP-BS-*</code> site, visual scanning was employed to identify the time of first detection of the species on recordings at these locations. A total of 630 recordings were visually scanned for BANS. Tags were made at the time of first detection in each minute interval.</p>
+<p>In order to determine presence of Bank Swallow (BANS) at <code>PENP-BS-*</code> site, visual scanning was employed to identify the time of first detection of the species on recordings at these locations. A total of 1387 recordings were visually scanned for BANS. Tags were made at the time of first detection in each minute interval.</p>
 </section>
 <section id="automated-recognition" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="automated-recognition">Automated recognition</h2>
@@ -981,14 +1184,14 @@ Shonfield, Julia, Sarah Heemskerk, and Erin M Bayne. 2018. <span>“Utility of A
 </div></div></section>
 <section id="analyses" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="analyses">Analyses</h2>
-<p>Species richness, diversity and occupancy were calculated using the 21 forest songbird monitoring locations (<code>PENP-</code>). We calculated species richness as distinct species found at each location and year surveyed (see <a href="#fig-spp-rich-locs">Figure&nbsp;5</a>), omitting species using <code>wildRtrax::wt_tidy_species()</code> for abiotic, amphibians, unknowns and insects. To determine if there were any changes to species diversity, we used Shannon’s diversity index (<span class="citation" data-cites="shannon1948mathematical">Shannon (<a href="#ref-shannon1948mathematical" role="doc-biblioref">1948</a>)</span>) over years using <code>vegan::diversity(index="shannon")</code> (see <strong>?@fig-shannon</strong>).</p>
+<p>Species richness, diversity and occupancy were calculated using the 29 forest songbird monitoring locations (<code>PENP-</code>). We calculated species richness as distinct species found at each location and year surveyed (see <a href="#fig-spp-rich-locs" class="quarto-xref">Figure&nbsp;4</a>), omitting species using <code>wildRtrax::wt_tidy_species()</code> for abiotic, amphibians, unknowns and insects. To determine if there were any changes to species diversity, we used Shannon’s diversity index (<span class="citation" data-cites="shannon1948mathematical">Shannon (<a href="#ref-shannon1948mathematical" role="doc-biblioref">1948</a>)</span>) over years using <code>vegan::diversity(index="shannon")</code> (see <strong>?@fig-shannon</strong>).</p>
 <div class="no-row-height column-margin column-container"><div id="ref-shannon1948mathematical" class="csl-entry" role="listitem">
 Shannon, Claude Elwood. 1948. <span>“A Mathematical Theory of Communication.”</span> <em>The Bell System Technical Journal</em> 27 (3): 379–423.
 </div><div id="ref-mackenzie2002estimating" class="csl-entry" role="listitem">
 MacKenzie, Darryl I, James D Nichols, Gideon B Lachman, Sam Droege, J Andrew Royle, and Catherine A Langtimm. 2002. <span>“Estimating Site Occupancy Rates When Detection Probabilities Are Less Than One.”</span> <em>Ecology</em> 83 (8): 2248–55.
 </div><div id="ref-occu-fit" class="csl-entry" role="listitem">
 MacKenzie, Darryl I., and Larissa L. Bailey. 2004. <span>“Assessing the Fit of Site-Occupancy Models.”</span> <em>Journal of Agricultural, Biological, and Environmental Statistics</em> 9 (3): 300–318. <a href="http://www.jstor.org/stable/1400484">http://www.jstor.org/stable/1400484</a>.
-</div></div><p>For testing species occupancy, we selected locations with a minimum of four dawn visits for each year across all five years, focusing on forest obligate species for ecological relevance (see <a href="#tbl-bird-guilds">Table&nbsp;6</a>). Utilizing a single-season single-species occupancy model from <span class="citation" data-cites="mackenzie2002estimating">Darryl I. MacKenzie et al. (<a href="#ref-mackenzie2002estimating" role="doc-biblioref">2002</a>)</span>, we calculated the predicted occupancy of species at all locations surveyed in each year across years. Site-specific covariates included the distance to ocean edge (in meters) and the proportional area of each cover type from the <a href="https://data.princeedwardisland.ca/Environment-and-Food/OD0144-Corporate-Landuse-Inventory-2010/tc7z-7rpy">Prince Edward Island 2010 Corporate Land Use Inventory</a> at 150 meter radius surrounding the ARU categorized into anthropogenic (pavement, soy), open (grass, sand dune, bare soil), deciduous (red maple, white birch, alder, poplar) and conifer (white spruce, black spruce, balsam fir). Observation covariates incorporated day of the year, hour, observer, and a quadratic term for both day of year (<span class="math inline">\(doy^{2}\)</span>) and hour (<span class="math inline">\(hr^{2}\)</span>). See <a href="#tbl-obvs-and-covs">Table&nbsp;2</a> for more information. Despite variations in processing methodology between 2019 - 2021 (1SPM - species-individual detected per minute, i.e.&nbsp;repeat sampling each minute for 3 minute) and subsequent years (2022 - 2023; 1SPT), we maintained consistency by exclusively utilizing the time to the first detection of individuals from the 1SPM recordings. Model predictions were generated, with goodness-of-fit testing using methods from <span class="citation" data-cites="occu-fit">Darryl I. MacKenzie and Bailey (<a href="#ref-occu-fit" role="doc-biblioref">2004</a>)</span> and the best model selected based on AIC and through <code>MuMIn::dregde</code>, <code>MuMIn::get.models</code> and <code>MuMIn::model.sel</code>. If more than one model existed, the average model was used using <code>MuMIn::model.avg</code>. The final predictions were then made and plotted over years and sorted by nesting guilds of species into conifer, deciduous, treed / shrubby and open.</p>
+</div></div><p>For testing species occupancy, we selected locations with a minimum of four dawn visits for each year across all five years, focusing on forest obligate species for ecological relevance (see <a href="#tbl-bird-guilds" class="quarto-xref">Table&nbsp;6</a>). Utilizing a single-season single-species occupancy model from <span class="citation" data-cites="mackenzie2002estimating">Darryl I. MacKenzie et al. (<a href="#ref-mackenzie2002estimating" role="doc-biblioref">2002</a>)</span>, we calculated the predicted occupancy of species at all locations surveyed in each year across years. Site-specific covariates included the distance to ocean edge (in meters) and the proportional area of each cover type from the <a href="https://data.princeedwardisland.ca/Environment-and-Food/OD0144-Corporate-Landuse-Inventory-2010/tc7z-7rpy">Prince Edward Island 2010 Corporate Land Use Inventory</a> at 150 meter radius surrounding the ARU categorized into anthropogenic (pavement, soy), open (grass, sand dune, bare soil), deciduous (red maple, white birch, alder, poplar) and conifer (white spruce, black spruce, balsam fir). Observation covariates incorporated day of the year, hour, observer, and a quadratic term for both day of year (<span class="math inline">\(doy^{2}\)</span>) and hour (<span class="math inline">\(hr^{2}\)</span>). See <a href="#tbl-obvs-and-covs" class="quarto-xref">Table&nbsp;2</a> for more information. Despite variations in processing methodology between 2019 - 2021 (1SPM - species-individual detected per minute, i.e.&nbsp;repeat sampling each minute for 3 minute) and subsequent years (2022 - 2023; 1SPT), we maintained consistency by exclusively utilizing the time to the first detection of individuals from the 1SPM recordings. Model predictions were generated, with goodness-of-fit testing using methods from <span class="citation" data-cites="occu-fit">Darryl I. MacKenzie and Bailey (<a href="#ref-occu-fit" role="doc-biblioref">2004</a>)</span> and the best model selected based on AIC and through <code>MuMIn::dregde</code>, <code>MuMIn::get.models</code> and <code>MuMIn::model.sel</code>. If more than one model existed, the average model was used using <code>MuMIn::model.avg</code>. The final predictions were then made and plotted over years and sorted by nesting guilds of species into conifer, deciduous, treed / shrubby and open.</p>
 <hr>
 </section>
 </section>
@@ -996,36 +1199,48 @@ MacKenzie, Darryl I., and Larissa L. Bailey. 2004. <span>“Assessing the Fit of
 <h1>Results</h1>
 <section id="species-richness-and-diversity" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="species-richness-and-diversity">Species richness and diversity</h2>
-<p>A total of 101 species were found across the five years. <a href="#fig-spp-rich-locs">Figure&nbsp;5</a> describes the relationship of species richness across each location and survey year with <a href="#fig-spp-rich-annual">Figure&nbsp;6</a> showing the relationship between species richness and survey effort.</p>
-<div class="cell page-columns page-full" data-layout-align="center">
+<p>A total of 103 species were found across the five years. <a href="#fig-spp-rich-locs" class="quarto-xref">Figure&nbsp;4</a> describes the relationship of species richness across each location and survey year with <a href="#fig-spp-rich-annual" class="quarto-xref">Figure&nbsp;5</a> showing the relationship between species richness and survey effort.</p>
+<div class="cell page-columns page-full" data-layout-align="center" data-cap-location="margin">
 <div class="cell-output-display page-columns page-full">
-<div id="fig-spp-rich-locs" class="quarto-figure quarto-figure-center anchored page-columns page-full">
-<figure class="figure page-columns page-full">
-<p><img src="peinp_files/figure-html/fig-spp-rich-locs-1.png" class="img-fluid figure-img" width="960"></p>
-<figcaption class="figure-caption margin-caption">Figure&nbsp;5: Species richness at forest monitoring locations across years</figcaption>
+<div id="fig-spp-rich-locs" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" data-fig-align="center" data-cap-location="margin">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-spp-rich-locs-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="peinp_files/figure-html/fig-spp-rich-locs-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-spp-rich-locs-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4: Species richness at forest monitoring locations across years
+</figcaption>
 </figure>
 </div>
 </div>
 </div>
-<div class="cell page-columns page-full" data-layout-align="center">
+<div class="cell page-columns page-full" data-layout-align="center" data-cap-location="margin">
 <div class="cell-output-display page-columns page-full">
-<div id="fig-spp-rich-annual" class="quarto-figure quarto-figure-center anchored page-columns page-full">
-<figure class="figure page-columns page-full">
-<p><img src="peinp_files/figure-html/fig-spp-rich-annual-1.png" class="img-fluid figure-img" width="960"></p>
-<figcaption class="figure-caption margin-caption">Figure&nbsp;6: Species richness at forest monitoring locations across years considering sampling effort</figcaption>
+<div id="fig-spp-rich-annual" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" data-fig-align="center" data-cap-location="margin">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-spp-rich-annual-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="peinp_files/figure-html/fig-spp-rich-annual-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-spp-rich-annual-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5: Species richness at forest monitoring locations across years considering sampling effort
+</figcaption>
 </figure>
 </div>
 </div>
 </div>
 <div class="cell">
+<div id="tbl-bird-guilds" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-bird-guilds-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;6: Common bird forest species guilds. For nesting habitat; Ag = Agricultural, Be = Beach, Bo = Bog, CW = Coniferous Woodlands, ES = Early Successional, MW = Mixed Woodlands, OW = Open Woodlands, TSS = Treed/Shrubby Swamp, Ur = Urban. Species from CW, MW, OW, TSS were used for analysis.
+</figcaption>
+<div aria-describedby="tbl-bird-guilds-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<div id="tbl-bird-guilds" class="anchored">
-<table data-quarto-postprocess="true" class="table table-sm table-striped small">
-<caption>Table&nbsp;6: Common bird forest species guilds. For nesting habitat; Ag = Agricultural, Be = Beach, Bo = Bog, CW = Coniferous Woodlands, ES = Early Successional, MW = Mixed Woodlands, OW = Open Woodlands, TSS = Treed/Shrubby Swamp, Ur = Urban. Species from CW, MW, OW, TSS were used for analysis.</caption>
+<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
-<th style="text-align: left;" data-quarto-table-cell-role="th">species_common_name</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">habitat_nesting</th>
+<th style="text-align: left;">species_common_name</th>
+<th style="text-align: left;">habitat_nesting</th>
 </tr>
 </thead>
 <tbody>
@@ -1142,7 +1357,7 @@ MacKenzie, Darryl I., and Larissa L. Bailey. 2004. <span>“Assessing the Fit of
 <td style="text-align: left;">CW</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">Lincoln's Sparrow</td>
+<td style="text-align: left;">Lincoln’s Sparrow</td>
 <td style="text-align: left;">TSS</td>
 </tr>
 <tr class="even">
@@ -1198,7 +1413,7 @@ MacKenzie, Darryl I., and Larissa L. Bailey. 2004. <span>“Assessing the Fit of
 <td style="text-align: left;">TSS</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">Swainson's Thrush</td>
+<td style="text-align: left;">Swainson’s Thrush</td>
 <td style="text-align: left;">MW</td>
 </tr>
 <tr class="even">
@@ -1224,61 +1439,117 @@ MacKenzie, Darryl I., and Larissa L. Bailey. 2004. <span>“Assessing the Fit of
 </tbody>
 </table>
 </div>
-
-
+</div>
+</figure>
 </div>
 </div>
-<div class="cell page-columns page-full" data-layout-align="center">
+<div class="cell page-columns page-full" data-layout-align="center" data-cap-location="margin">
 <div class="cell-output-display page-columns page-full">
-<div id="fig-spp-activity" class="quarto-figure quarto-figure-center anchored page-columns page-full">
-<figure class="figure page-columns page-full">
-<p><img src="peinp_files/figure-html/fig-spp-activity-1.png" class="img-fluid figure-img" width="960"></p>
-<figcaption class="figure-caption margin-caption">Figure&nbsp;7: Seasonal detection activity of most commonly detected forest species</figcaption>
+<div id="fig-spp-activity" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" data-fig-align="center" data-cap-location="margin">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-spp-activity-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="peinp_files/figure-html/fig-spp-activity-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-spp-activity-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6: Seasonal detection activity of most commonly detected forest species
+</figcaption>
 </figure>
 </div>
 </div>
 </div>
 <p>Shannon’s diversity was stable based on results. (see <strong>?@fig-shannon</strong>.)</p>
+<div class="cell fig-column-page-right">
+
+</div>
 </section>
-<section id="species-occupancy" class="level2">
+<section id="trends-in-abundance-over-time" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="trends-in-abundance-over-time">Trends in abundance over time</h2>
+<div class="cell page-columns page-full" data-layout-align="center" data-cap-location="margin">
+<div class="cell-output-display page-columns page-full">
+<div class="quarto-figure quarto-figure-center page-columns page-full">
+<figure class="figure page-columns page-full">
+<p><img src="peinp_files/figure-html/relative-abundance-auriol-1.png" class="img-fluid figure-img" width="768"></p>
+<figcaption class="margin-caption">Count abundance of medium-distance migrants by year</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell page-columns page-full" data-layout-align="center" data-cap-location="margin">
+<div class="cell-output-display page-columns page-full">
+<div class="quarto-figure quarto-figure-center page-columns page-full">
+<figure class="figure page-columns page-full">
+<p><img src="peinp_files/figure-html/annual-auriol-count-1.png" class="img-fluid figure-img" width="960"></p>
+<figcaption class="margin-caption">Annual count on Auriol Trail</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell page-columns page-full" data-layout-align="center" data-cap-location="margin">
+<div class="cell-output-display page-columns page-full">
+<div class="quarto-figure quarto-figure-center page-columns page-full">
+<figure class="figure page-columns page-full">
+<p><img src="peinp_files/figure-html/mean-auriol-abundance-1.png" class="img-fluid figure-img" width="960"></p>
+<figcaption class="margin-caption">Mean abundance per location per year</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="species-occupancy" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="species-occupancy">Species occupancy</h2>
-<p>We selected 15 species to represent the forest songbird community into 4 separate habitat nesting guilds (see <a href="#tbl-bird-guilds">Table&nbsp;6</a>): conifer (<a href="#fig-spp-occ-conifer">Figure&nbsp;8</a>), deciduous (<a href="#fig-spp-occ-decid">Figure&nbsp;9</a>), treed / shrubby (<a href="#fig-spp-occ-tss">Figure&nbsp;10</a>) and open (<a href="#fig-spp-occ-open">Figure&nbsp;11</a>). Analysis of species occupancy revealed diverse and varied changes across these species. Analytically, many models were singular, and a few exhibited overdispersion (indicated by <em>c-hat</em> in <strong>?@tbl-c-hat</strong>), likely due to low detections or a limited sample size of spatial locations. Ubiquitous species such as Yed-eyed Vireo, Yellow-rumped Warbler, Magnolia Warbler and Northern Parula, demonstrated stable site occupancy across the years. Generalist species or those capable of capitalizing on utilizing mixed habitats, exemplified by the Northern Parula, also maintained consistent occupancy levels. The occurrence of Hurricane Fiona in 2023 led to notable breakpoints in the occupancy of certain species: coniferous species, including the Black-throated Green Warbler, Black-throated Blue Warbler, Blackburnian Warbler, Golden-crowned Kinglet, and Mourning Warbler, experienced declines. Conversely, increases were observed in guilds of species that favor more open or shrubby habitats, such as the Alder Flycatcher and American Redstart. Thrushes (American Robin, Swainson’s Thrush, Hermit Thrush) had notably wavering occupancy throughout the years.</p>
-<div class="cell" data-fig-column="page-right">
-<div class="cell-output-display">
-<div id="fig-spp-occ-conifer" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="peinp_files/figure-html/fig-spp-occ-conifer-1.png" class="img-fluid figure-img" width="1152"></p>
-<figcaption class="figure-caption">Figure&nbsp;8: Predicted single-season occupancy of forest species (Habitat nesting = Conifer) within Prince Edward Island National Park. The data represents the average species occupancy across all surveyed locations for each respective year.</figcaption>
+<p>We selected 15 species to represent the forest songbird community into 4 separate habitat nesting guilds (see <a href="#tbl-bird-guilds" class="quarto-xref">Table&nbsp;6</a>): conifer (<a href="#fig-spp-occ-conifer" class="quarto-xref">Figure&nbsp;7</a>), deciduous (<a href="#fig-spp-occ-decid" class="quarto-xref">Figure&nbsp;8</a>), treed / shrubby (<a href="#fig-spp-occ-tss" class="quarto-xref">Figure&nbsp;9</a>) and open (<a href="#fig-spp-occ-open" class="quarto-xref">Figure&nbsp;10</a>). Analysis of species occupancy revealed diverse and varied changes across these species. Analytically, many models were singular, and a few exhibited overdispersion (indicated by <em>c-hat</em> in <strong>?@tbl-c-hat</strong>), likely due to low detections or a limited sample size of spatial locations. Ubiquitous species such as Yed-eyed Vireo, Yellow-rumped Warbler, Magnolia Warbler and Northern Parula, demonstrated stable site occupancy across the years. Generalist species or those capable of capitalizing on utilizing mixed habitats, exemplified by the Northern Parula, also maintained consistent occupancy levels. The occurrence of Hurricane Fiona in 2023 led to notable breakpoints in the occupancy of certain species: coniferous species, including the Black-throated Green Warbler, Black-throated Blue Warbler, Blackburnian Warbler, Golden-crowned Kinglet, and Mourning Warbler, experienced declines. Conversely, increases were observed in guilds of species that favor more open or shrubby habitats, such as the Alder Flycatcher and American Redstart. Thrushes (American Robin, Swainson’s Thrush, Hermit Thrush) had notably wavering occupancy throughout the years.</p>
+<div class="cell page-columns page-full">
+<div class="cell-output-display page-columns page-full">
+<div id="fig-spp-occ-conifer" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-spp-occ-conifer-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
+<img src="peinp_files/figure-html/fig-spp-occ-conifer-1.png" class="img-fluid figure-img column-page-right" width="1152">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-spp-occ-conifer-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;7: Predicted single-season occupancy of forest species (Habitat nesting = Conifer) within Prince Edward Island National Park. The data represents the average species occupancy across all surveyed locations for each respective year.
+</figcaption>
 </figure>
 </div>
 </div>
 </div>
-<div class="cell" data-fig-column="page-right">
-<div class="cell-output-display">
-<div id="fig-spp-occ-decid" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="peinp_files/figure-html/fig-spp-occ-decid-1.png" class="img-fluid figure-img" width="1152"></p>
-<figcaption class="figure-caption">Figure&nbsp;9: Predicted single-season occupancy of forest species (Habitat nesting = Deciduous) within Prince Edward Island National Park. The data represents the average species occupancy across all surveyed locations for each respective year.</figcaption>
+<div class="cell page-columns page-full">
+<div class="cell-output-display page-columns page-full">
+<div id="fig-spp-occ-decid" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-spp-occ-decid-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
+<img src="peinp_files/figure-html/fig-spp-occ-decid-1.png" class="img-fluid figure-img column-page-right" width="1152">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-spp-occ-decid-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;8: Predicted single-season occupancy of forest species (Habitat nesting = Deciduous) within Prince Edward Island National Park. The data represents the average species occupancy across all surveyed locations for each respective year.
+</figcaption>
 </figure>
 </div>
 </div>
 </div>
-<div class="cell" data-fig-column="page-right">
-<div class="cell-output-display">
-<div id="fig-spp-occ-tss" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="peinp_files/figure-html/fig-spp-occ-tss-1.png" class="img-fluid figure-img" width="1152"></p>
-<figcaption class="figure-caption">Figure&nbsp;10: Predicted single-season occupancy of forest species (Habitat nesting = Treed / Shrubby) within Prince Edward Island National Park. The data represents the average species occupancy across all surveyed locations for each respective year.</figcaption>
+<div class="cell page-columns page-full">
+<div class="cell-output-display page-columns page-full">
+<div id="fig-spp-occ-tss" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-spp-occ-tss-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
+<img src="peinp_files/figure-html/fig-spp-occ-tss-1.png" class="img-fluid figure-img column-page-right" width="1152">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-spp-occ-tss-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;9: Predicted single-season occupancy of forest species (Habitat nesting = Treed / Shrubby) within Prince Edward Island National Park. The data represents the average species occupancy across all surveyed locations for each respective year.
+</figcaption>
 </figure>
 </div>
 </div>
 </div>
-<div class="cell" data-fig-column="page-right">
-<div class="cell-output-display">
-<div id="fig-spp-occ-open" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="peinp_files/figure-html/fig-spp-occ-open-1.png" class="img-fluid figure-img" width="1152"></p>
-<figcaption class="figure-caption">Figure&nbsp;11: Predicted single-season occupancy of forest species (Habitat nesting = Open) within Prince Edward Island National Park. The data represents the average species occupancy across all surveyed locations for each respective year.</figcaption>
+<div class="cell page-columns page-full">
+<div class="cell-output-display page-columns page-full">
+<div id="fig-spp-occ-open" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-spp-occ-open-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
+<img src="peinp_files/figure-html/fig-spp-occ-open-1.png" class="img-fluid figure-img column-page-right" width="1152">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-spp-occ-open-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;10: Predicted single-season occupancy of forest species (Habitat nesting = Open) within Prince Edward Island National Park. The data represents the average species occupancy across all surveyed locations for each respective year.
+</figcaption>
 </figure>
 </div>
 </div>
@@ -1295,17 +1566,21 @@ MacKenzie, Darryl I., and Larissa L. Bailey. 2004. <span>“Assessing the Fit of
 </section>
 <section id="amphibians" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="amphibians">Amphibians</h2>
-<p>A total of 7 were detected: SPPE, AMTO, NLFR, GRFG, WOFR, MIFR, BULL. A preliminary pattern of amphibian activity can be seen in <a href="#fig-spp-amphs-day">Figure&nbsp;12</a> for Green Frog and Spring Peeper where there were enough detections to generate activity patterns. Spring peeper activity commenced much earlier than Green Frog although seasonal patterns are consistent with the species’ phenology (see <span class="citation" data-cites="lovett2013peepers">Lovett (<a href="#ref-lovett2013peepers" role="doc-biblioref">2013</a>)</span>, <span class="citation" data-cites="ackleh2010measuring">Ackleh et al. (<a href="#ref-ackleh2010measuring" role="doc-biblioref">2010</a>)</span>).</p>
+<p>A total of 7 were detected: SPPE, AMTO, NLFR, GRFG, WOFR, MIFR, BULL. A preliminary pattern of amphibian activity can be seen in <a href="#fig-spp-amphs-day" class="quarto-xref">Figure&nbsp;11</a> for Green Frog and Spring Peeper where there were enough detections to generate activity patterns. Spring peeper activity commenced much earlier than Green Frog although seasonal patterns are consistent with the species’ phenology (see <span class="citation" data-cites="lovett2013peepers">Lovett (<a href="#ref-lovett2013peepers" role="doc-biblioref">2013</a>)</span>, <span class="citation" data-cites="ackleh2010measuring">Ackleh et al. (<a href="#ref-ackleh2010measuring" role="doc-biblioref">2010</a>)</span>).</p>
 <div class="no-row-height column-margin column-container"><div id="ref-lovett2013peepers" class="csl-entry" role="listitem">
 Lovett, Gary M. 2013. <span>“When Do Peepers Peep? Climate and the Date of First Calling in the Spring Peeper (Pseudacris Crucifer) in Southeastern New York State.”</span> <em>Northeastern Naturalist</em> 20 (2): 333–40.
 </div><div id="ref-ackleh2010measuring" class="csl-entry" role="listitem">
 Ackleh, Azmy S, Jacoby Carter, Lauren Cole, Tom Nguyen, Jay Monte, and Claire Pettit. 2010. <span>“Measuring and Modeling the Seasonal Changes of an Urban Green Treefrog (Hyla Cinerea) Population.”</span> <em>Ecological Modelling</em> 221 (2): 281–89.
-</div></div><div class="cell" data-fig-column="page-right">
-<div class="cell-output-display">
-<div id="fig-spp-amphs-day" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="peinp_files/figure-html/fig-spp-amphs-day-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;12: Seasonal and yearly activity plots for Green Frog and Spring Peeper</figcaption>
+</div></div><div class="cell page-columns page-full">
+<div class="cell-output-display page-columns page-full">
+<div id="fig-spp-amphs-day" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-spp-amphs-day-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
+<img src="peinp_files/figure-html/fig-spp-amphs-day-1.png" class="img-fluid figure-img column-page-right" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-spp-amphs-day-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;11: Seasonal and yearly activity plots for Green Frog and Spring Peeper
+</figcaption>
 </figure>
 </div>
 </div>
@@ -1324,7 +1599,7 @@ Devarajan, Kadambari, Toni Lyn Morelli, and Simone Tenan. 2020. <span>“Multi-S
 </div><div id="ref-oksanen2010canonical" class="csl-entry" role="listitem">
 Oksanen, Jari, Frank G Blanchet, Roeland Kindt, Pierre Legendre, Peter R Minchin, Robert B O’Hara, Gavin L Simpson, et al. 2010. <span>“Canonical Analysis of Principal Coordinates: A Useful Method of Constrained Ordination for Ecology.”</span> <em>Ecology</em> 92 (3): 597–611. <a href="https://doi.org/10.1890/10-0340.1">https://doi.org/10.1890/10-0340.1</a>.
 </div></div><ul>
-<li>Prioritizing monitoring of historical locations, particularly emphasizing repeats at PENP-1-1, PENP-1-2, PENP-2-3, PENP-3-1, PENP-3-2, PENP-4-1, PENP-4-2, PENP-4-3, PENP-4-4 as baselines for evaluating ecological changes over time.</li>
+<li>Prioritizing monitoring of historical locations, particularly emphasizing repeats at PENP-2-3, PENP-3-4, PENP-3-6, PENP-4-2 as baselines for evaluating ecological changes over time.</li>
 <li>Adjusting monitoring times to dawn and dusk and extending deployment periods to 4-7 days between May 15 and July 15 to maximize vocalizations during peak activity periods.</li>
 <li>Regular servicing of ARUs, focusing on testing microphone sensitivity degradation to ensure optimal functionality, data reliability, and longevity.</li>
 <li>Continuing high-quality verification of tags to create annotated datasets for building and automating classifiers within WildTrax.</li>
@@ -1370,18 +1645,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-    }
-  });
-  clipboard.on('success', function(e) {
+  const onCopySuccess = function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -1413,11 +1677,50 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
   });
-  function tippyHover(el, contentFn) {
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
-      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -1427,8 +1730,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start'
+      placement: 'bottom-start',
     };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -1440,7 +1752,130 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      return note.innerHTML;
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
     });
   }
       let selectedAnnoteEl;
@@ -1484,6 +1919,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             }
             div.style.top = top - 2 + "px";
             div.style.height = height + 4 + "px";
+            div.style.left = 0;
             let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
             if (gutterDiv === null) {
               gutterDiv = window.document.createElement("div");
@@ -1509,6 +1945,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
@@ -1569,6 +2031,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 });
 </script>
 </div> <!-- /content -->
+
 
 
 

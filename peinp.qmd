@@ -61,8 +61,8 @@ load('pei.RData')
 
 Passive acoustic monitoring has proven to be a valuable tool for monitoring vocalizing species. Environmental sensors are becoming increasingly easy to program and can autonomously generating extensive data sets of the soundscape, an invaluable resource for ecological integrity monitoring. Prince Edward Island National deployed autonomous recording units (ARUs) across `r pei_locs |> st_drop_geometry() |> select(location) |> distinct() |> tally()` locations during a comprehensive five-year survey. ARUs detected a total of `r nrow(distinct_spp)` species including birds, amphibians and mammals. The analysis revealed that songbird species richness and diversity remained relatively stable, while single-species occupancy exhibited diverse patterns. Common and generalist species showed consistent occupancy, but there was a notable reduction in conifer-nesting species in 2023, likely attributed to forest structural loss. Ongoing monitoring and dynamic models can yield more detailed and predictive results to ensure the continued maintenance of ecological integrity in the Park.
 
-::: {style="background-color: #f4f4f4; padding: 20px;"}
-This report is dynamically generated, meaning its results may evolve with the addition of new data or further analyses. For the most recent updates, feel free to reach out to the authors or refer to the publication date.
+::: {.callout-note collapse="true" style="background-color: #f4f4f4; padding: 20px;"}
+This report is dynamically generated, meaning its results may evolve with the addition of new data or further analyses. For the most recent updates, refer to the publication date and feel free to reach out to the authors.
 :::
 
 ```{r Data download}
@@ -307,60 +307,60 @@ kable(covs_all, caption = "Location summary for ARUs deployed")
 
 ## Data management
 
-A total of `r count_recs` recordings were collected (see @fig-recs-collect). From 2019 - 2021, data were transferred via hard drive to the University of Alberta in Edmonton, where they are redundantly stored on a server known as Cirrus. The recordings were standardized to ensure adherence to the naming convention of `LOCATION_DATETIME`, such as `PENP-1-1_20230625_053500.wav`. The remaining recordings (2022 - 2023) were directly uploaded to WildTrax by Parks Canada staff and can be downloaded from the platform's Recording tab, accessible under Manage \> Download list of recordings (see @fig-download-recs).
+A total of 12456 recordings were collected (see @fig-recs-collect). From 2019 - 2021, data were transferred via hard drive to the University of Alberta in Edmonton, where they are redundantly stored on a server known as Cirrus. The recordings were standardized to ensure adherence to the naming convention of `LOCATION_DATETIME`, such as `PENP-1-1_20230625_053500.wav`. The remaining recordings (2022 - 2023) were directly uploaded to WildTrax by Parks Canada staff and can be downloaded from the platform's Recording tab, accessible under Manage \> Download list of recordings (see @fig-download-recs).
 
 ![Downloading a list of recordings from WildTrax](download-recs.png){#fig-download-recs}
 
 ```{r}
 #| warning: false
 #| echo: false
-#| eval: true
+#| eval: false
 #| message: false
 #| include: true
 #| results: hide
 
-wildtrax_penp_recs <- read_csv("penp_recordings.csv") %>%
-  select(location, recordingDate, `length(s)`) %>%
-  rename("recording_date_time" = recordingDate) %>%
-  rename("length_seconds" = `length(s)`) %>%
-  mutate(recording_date_time = as.POSIXct(recording_date_time, format="%Y-%m-%d %H:%M"))
+# wildtrax_penp_recs <- read_csv("penp_recordings.csv") %>%
+#   select(location, recordingDate, `length(s)`) %>%
+#   rename("recording_date_time" = recordingDate) %>%
+#   rename("length_seconds" = `length(s)`) %>%
+#   mutate(recording_date_time = as.POSIXct(recording_date_time, format="%Y-%m-%d %H:%M"))
 
-all_recs <- cirrus_penp_recs %>%
-  select(location, recording_date_time, length_seconds) %>%
-  bind_rows(., wildtrax_penp_recs) %>%
-  select(location, recording_date_time, length_seconds) %>%
-  distinct() %>%
-  drop_na() %>%
-  mutate(julian = yday(recording_date_time),
-         hour = hour(recording_date_time),
-         year = year(recording_date_time),
-         month= month(recording_date_time, label = T))
-
-count_recs <- nrow(all_recs)
-
-average_deployment <- all_recs |>
-  group_by(location, year) |>
-  summarise(count = n_distinct(julian)) |>
-  ungroup() |>
-  summarise(mean = round(mean(count),2),
-            sd = round(sd(count),2))
-
-recs_plot <- all_recs |>
-  rename("Location" = location) |>
-  rename("Day of Year" = julian) |>
-  ggplot(aes(x = `Day of Year`, y = Location, fill = Location)) +
-  geom_density_ridges() +
-  facet_wrap(~ year) +
-  theme_minimal() +
-  scale_fill_viridis_d()
-  #scale_x_discrete(guide = guide_axis(check.overlap = TRUE))
+# all_recs <- cirrus_penp_recs %>%
+#   select(location, recording_date_time, length_seconds) %>%
+#   bind_rows(., wildtrax_penp_recs) %>%
+#   select(location, recording_date_time, length_seconds) %>%
+#   distinct() %>%
+#   drop_na() %>%
+#   mutate(julian = yday(recording_date_time),
+#          hour = hour(recording_date_time),
+#          year = year(recording_date_time),
+#          month= month(recording_date_time, label = T))
+# 
+# count_recs <- nrow(all_recs)
+# 
+# average_deployment <- all_recs |>
+#   group_by(location, year) |>
+#   summarise(count = n_distinct(julian)) |>
+#   ungroup() |>
+#   summarise(mean = round(mean(count),2),
+#             sd = round(sd(count),2))
+# 
+# recs_plot <- all_recs |>
+#   rename("Location" = location) |>
+#   rename("Day of Year" = julian) |>
+#   ggplot(aes(x = `Day of Year`, y = Location, fill = Location)) +
+#   geom_density_ridges() +
+#   facet_wrap(~ year) +
+#   theme_minimal() +
+#   scale_fill_viridis_d()
+#   #scale_x_discrete(guide = guide_axis(check.overlap = TRUE))
   
 ```
 
 ```{r}
 #| warning: false
 #| echo: false
-#| eval: true
+#| eval: false
 #| message: false
 #| include: true
 #| results: hide

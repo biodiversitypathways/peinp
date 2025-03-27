@@ -267,8 +267,14 @@ leaflet() %>%
 #| label: tbl-loc-summary
 #| tbl-cap: Locations surveyed across years. Ones indicated a deployment in that year for that location
 
-kable(locs_summary, caption = "Location summary for ARUs deployed")
-
+datatable(locs_summary, 
+          options = list(
+            searching = TRUE,  
+            paging = TRUE,    
+            pageLength = 10   
+          )) |>
+  formatStyle(columns = colnames(locs_summary), 
+              backgroundColor = styleEqual(c("NA"), "lightgray"))  
 ```
 
 ```{r}
@@ -285,7 +291,14 @@ covs_all <- covs %>%
   pivot_wider(names_from = landcover, values_from = landcover_proportion, values_fill = 0) |>
   rename("Distance from coast (m)" = coast_dist)
 
-kable(covs_all, caption = "Covariate summary for ARUs deployed")
+datatable(covs_all, 
+          options = list(
+            searching = TRUE,  
+            paging = TRUE,    
+            pageLength = 10   
+          )) |>
+  formatStyle(columns = colnames(covs_all), 
+              backgroundColor = styleEqual(c("NA"), "lightgray"))  
 
 ```
 
@@ -495,7 +508,7 @@ jbm <- just_bans_main |>
 
 ```
 
-In order to determine presence of Bank Swallow (BANS) at `PENP-BS-*` site, visual scanning was employed to identify the time of first detection of the species on recordings at these locations. A total of `r pei_main |> filter(grepl('BS',location)) |> select(location, recording_date_time, task_method) |> distinct() |> tally() |> pull() + nrow(just_bans_main)` recordings were visually scanned for BANS. Tags were made at the time of first detection in each minute interval.
+In order to use of ponds by Bank Swallow (BANS) as roosting locations at `PENP-BS-*` site, visual scanning was employed to identify the number of times vocalizations of BANS were heard at these locations. A total of `r pei_main |> filter(grepl('BS',location)) |> select(location, recording_date_time, task_method) |> distinct() |> tally() |> pull() + nrow(just_bans_main)` recordings were visually scanned for BANS.
 
 ## Automated recognition
 
@@ -571,55 +584,6 @@ spp_rich_location |>
 #| warning: false
 #| echo: false
 #| eval: true
-#| include: true
-#| results: hide
-
-spp_rich_annual <- pei_main |>
-  as_tibble() |>
-  filter(!grepl('BS|ASC|LXI',location)) |>
-  wt_tidy_species(remove = c("mammal","amphibian","abiotic","insect","unknown"), zerofill = T) |>
-  mutate(year = lubridate::year(recording_date_time)) |>
-  filter(!(location == 'PENP-BS-6' & task_method != "1SPT")) |>
-  select(location, year, species_code) |>
-  distinct() |>
-  group_by(year) |>
-  summarise(effort = n_distinct(species_code) / n_distinct(location),
-            species_count = n_distinct(species_code)) |>
-  ungroup()
-
-year_effort <- pei_main |>
-  mutate(year = lubridate::year(recording_date_time)) |>
-  group_by(year) |>
-  summarise(count_of_locs = n_distinct(location))
-```
-
-```{r}
-#| warning: false
-#| echo: false
-#| eval: true
-#| include: true
-#| fig-align: center
-#| fig-cap: Species richness at forest monitoring locations across years considering sampling effort
-#| label: fig-spp-rich-annual
-#| cap-location: margin
-
-spp_rich_annual_plot <- spp_rich_annual %>%
-  inner_join(., year_effort) %>%
-  ggplot(., aes(x = year)) +
-  geom_line(aes(y = species_count), size = 1) +
-  geom_bar(aes(y = count_of_locs * 5), alpha = 0.7, stat = "identity") +  # Adjust the multiplier for better visualization
-  scale_y_continuous(name = "Species Count", sec.axis = sec_axis(~./5, name = "Count of Locations")) +
-  labs(x = "Year") +
-  theme_bw()
-
-spp_rich_annual_plot
-
-```
-
-```{r}
-#| warning: false
-#| echo: false
-#| eval: true
 #| message: false
 #| include: true
 #| label: tbl-bird-guilds
@@ -629,7 +593,14 @@ guilds <- read_csv("bird_guilds.csv") |>
   select(species_common_name, habitat_nesting) |>
   filter(habitat_nesting %in% c("CW","MW","OW","TSS")) 
 
-kable(guilds)
+datatable(guilds, 
+          options = list(
+            searching = TRUE,  
+            paging = TRUE,    
+            pageLength = 10   
+          )) |>
+  formatStyle(columns = colnames(guilds), 
+              backgroundColor = styleEqual(c("NA"), "lightgray"))  
 
 ```
 
@@ -774,7 +745,7 @@ shannon_d <- pei_main |>
        y = "Shannon diversity index per location") +
   theme_bw() +
   guides(fill = guide_legend(title = "Year")) +
-  scale_fill_viridis_d(alpha = 0.8)
+  scale_fill_viridis_d(alpha = 0.7)
 
 shannon_d
 ```
@@ -1313,11 +1284,72 @@ ggplot(pei_wide_plus, aes(x = recording_date_time, y = COYE)) +
 
 ## Visual scanning
 
-BANS were detected at `r jbm |> select(location) |> tally()` distinct locations (`r jbm |> select(location) |> distinct() |> pull()`).
+BANS were detected at r jbm |> select(location) |> tally() distinct locations (`r jbm |> select(location) |> distinct() |> pull()`). Given the low number of detections across the scanned data, it is unlikely that Bank Swallows are occupying areas near these ponds.
 
-## Automated recognition
+```{r}
+library(dplyr)
+library(ggplot2)
+library(lubridate)
 
-We found that there was no advantage to utilizing the recognizer to find Eastern Wood-Pewee over human transcribing as the species was very detectable (see @tbl-recog-results).
+# Filter and preprocess data
+bans_data <- pei_main %>%
+  filter(grepl('BS', location)) %>%
+  select(location, recording_date_time, task_id, species_code, individual_order, individual_count) %>%
+  distinct() %>%
+  mutate(presence = if_else(species_code == "BANS", 1, 0),
+         julian = yday(recording_date_time))
+
+# Calculate detection rate
+detection_rate <- bans_data %>%
+  summarise(total_recordings = n(),
+            detections = sum(presence),
+            detection_rate = detections / total_recordings)
+
+# Cumulative detection curve
+cumulative_detection <- bans_data %>%
+  arrange(recording_date_time) %>%
+  mutate(cumulative_detections = cumsum(presence),
+         cumulative_rate = cumulative_detections / row_number(),
+         row_n = row_number())
+
+ggplot(cumulative_detection, aes(x = row_n, y = cumulative_rate)) +
+  geom_smooth(color = "darkgreen") +
+  labs(title = "Cumulative Detection Curve for BANS",
+       x = "Number of Recordings",
+       y = "Cumulative Detection Rate") +
+  theme_minimal()
+
+# Aggregate data by Julian day
+daily_presence <- bans_data %>%
+  mutate(julian = yday(recording_date_time)) %>%
+  group_by(julian) %>%
+  summarise(presence = sum(presence), .groups = 'drop')
+
+# Create daily presence plot
+ggplot(daily_presence, aes(x = julian, y = presence)) +
+  geom_col(fill = "steelblue", alpha = 0.8) +
+  labs(title = "Daily Presence of BANS Vocalizations",
+       x = "Julian Day",
+       y = "Total Presence Count") +
+  theme_minimal()
+
+# Model detection probability using logistic regression
+detection_model <- glm(presence ~ julian, data = bans_data, family = binomial)
+summary(detection_model)
+
+# Plot predicted detection probability
+bans_data <- bans_data %>%
+  mutate(predicted_presence = predict(detection_model, type = "response"))
+
+ggplot(bans_data, aes(x = julian, y = predicted_presence)) +
+  geom_line(color = "blue") +
+  geom_point(aes(y = presence), color = "red", alpha = 0.5) +
+  labs(title = "Predicted Detection Probability for BANS",
+       x = "Julian Day",
+       y = "Probability of Detection") +
+  theme_minimal()
+
+```
 
 ------------------------------------------------------------------------
 

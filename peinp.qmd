@@ -149,6 +149,7 @@ repeats <- pei_locs |>
   pull()
 
 locs_summary <- pei_locs |>
+  mutate(coast_distance = round(coast_distance,0)) |>
   st_drop_geometry() |>
   group_by(location, year) |>
   mutate(value = row_number()) |>
@@ -160,6 +161,7 @@ locs_summary <- pei_locs |>
                           grepl('PENP-3-*',location) ~ "Dalvay",
                           grepl('PENP-4-*',location) ~ "Greenwich",
                           grepl('PENP-5-*',location) ~ "Skmaqn",
+                          grepl('PENP-6-*',location) ~ "North Rustico",
                           grepl('PENP-BS-*',location) ~ "Bank Swallow Monitoring",
                           grepl('PENP-E1-*',location) ~ "Skmaqn",
                           TRUE ~ "First Nations Communities")) %>%
@@ -175,13 +177,18 @@ coast <- read_sf('assets/coastal_waters/lhy_000h16a_e.shp')
 coast <- st_transform(coast, st_crs(pei_locs)) |> st_make_valid()
 clu <- read_sf('assets/CLUI_2020/Corporate_Land_Use_Inventory_(CLUI)_2020.shp')
 clu <- st_transform(clu, st_crs(pei_locs)) |> st_make_valid()
-clu_crop <- st_crop(clu, xmin=-63.8658,ymin=46.19434,xmax=-62.65111,ymax=46.6279)
+clu_crop <- st_crop(clu, xmin=-63.8658, ymin=46.19434, xmax=-62.65111, ymax=46.6279)
 cover_cols = c("COVER1","COVER2","COVER3","COVER4","COVER5")
 wetland_cols = c("CLASS1","CLASS2","CLASS3","CLASS4","CLASS5","CLASS6","CLASS7")
 
-# Offline work to intersect covariates
+nearest_idx <- st_nearest_feature(pei_locs, coast)
+coast_nearest <- coast |> slice(nearest_idx)
+pei_locs <- pei_locs |>
+  mutate(
+    coast_distance = as.numeric(st_distance(geometry, coast_nearest$geometry, by_element = TRUE)), 
+    .after = year
+  )
 
-nearest_feature <- st_nearest_feature(pei_locs, coast)
 locs_buff <- st_buffer(pei_locs, 150) |> select(location) |> distinct()
 ints <- st_intersection(clu_crop, locs_buff)
 ints2 <- ints %>%
@@ -205,28 +212,23 @@ df_long <- ints2 %>%
   select(-total)
 
 lk_lc <- tibble(
-  land_cover = c("GRS","HAY", "RM", "SM", "SOY", "TRE", "WS", "NA", "PAV", "OTH", "WB", "AL", "DT", "SDW", "PO", "CC", "BAR", "BS", "BF", "NA", "PAS"),
-  description = c("Grass", "Hay Field", "Red Maple", "SM", "SOY", "Trees", "White Spruce", "NA", "Paved", "Other", "White Birch",
-                  "Alder", "DT", "Sand Dune", "Poplar", "CC", "Bare Soil", "Black Spruce", "Balsam Fir", "Not Available", "PAS"))
+  land_cover = c("GRS","HAY", "RM", "SM", "SOY", "TRE", "WS", "NA", "PAV", "OTH", "WB", "AL", "DT", "SDW", "PO", "CC", "BAR", "BS", "BF", "NA", "PAS","SHR"),
+  description = c("Grass", "Hay Field", "Red Maple", "SM", "SOY", "Trees", "White Spruce", "NA", "Paved", "Other", "White Birch", "Alder", "DT", "Sand Dune", "Poplar", "CC", "Bare Soil", "Black Spruce", "Balsam Fir", "Not Available", "PAS","SHR"))
 
 df_lk <- df_long %>%
   pivot_longer(-location, names_to = "landcover", values_to = "landcover_proportion") %>%
   filter(!landcover_proportion == 0) %>%
   inner_join(., lk_lc, by = c("landcover" = "land_cover")) 
 
-# Make up siteCovs for now
-distance_to_coast <- read_csv("penp_coastline_distance.csv")
-year_covs <- read_csv("year_covariates.csv")
-
-covs <- distance_to_coast |>
-  inner_join(df_lk) |>
+covs <- df_lk |>
+  inner_join(pei_locs |> st_drop_geometry() |> select(location, coast_distance), by = "location") |>
   mutate(landcover = case_when(landcover %in% c("WS","BS","BF") ~ "Conifer",
                                landcover %in% c("RM","WB","AL","PO") ~ "Deciduous",
-                               landcover %in% c("SOY","NA","PAV","TRE","HAY","CC","SM","PAS") ~ "Anthro",
+                               landcover %in% c("SOY","NA","PAV","TRE","HAY","CC","SM","PAS","SHR") ~ "Anthro",
                                landcover %in% c("SDW","BAR","GRS") ~ "Open",
                                landcover %in% c("NA") ~ NA_character_,
                                TRUE ~ NA_character_)) |>
-  group_by(location, coast_dist, landcover) |>
+  group_by(location, coast_distance, landcover) |>
   summarise(landcover_proportion = sum((landcover_proportion))) |>
   ungroup()
 
@@ -287,9 +289,9 @@ datatable(locs_summary,
 #| tbl-cap: Site covariates for each forest songbird monitoring (PENP-*) location. Landcover is measured as proportion cover at 150 meter radius surrounding the ARU categorized into anthropogenic (pavement, soy), open (grass, sand dune, bare soil), deciduous (red maple, white birch, alder, poplar) and conifer (white spruce, black spruce, balsam fir).
 
 covs_all <- covs %>%
-  mutate_at(vars(landcover_proportion), ~round(., 2)) |>
+  mutate_at(vars(landcover_proportion, coast_distance), ~round(., 2)) |>
   pivot_wider(names_from = landcover, values_from = landcover_proportion, values_fill = 0) |>
-  rename("Distance from coast (m)" = coast_dist)
+  rename("Distance from coast (m)" = coast_distance)
 
 datatable(covs_all, 
           options = list(
@@ -520,13 +522,15 @@ Species richness, diversity and occupancy were calculated using the `r nrow(locs
 
 For testing species occupancy, we selected locations with a minimum of four dawn visits for each year across all five years, focusing on forest obligate species for ecological relevance (see @tbl-bird-guilds). Utilizing a single-season single-species occupancy model from @mackenzie2002estimating, we calculated the predicted occupancy of species at all locations surveyed in each year across years. Site-specific covariates included the distance to ocean edge (in meters) and the proportional area of each cover type from the [Prince Edward Island 2010 Corporate Land Use Inventory](https://data.princeedwardisland.ca/Environment-and-Food/OD0144-Corporate-Landuse-Inventory-2010/tc7z-7rpy) at 150 meter radius surrounding the ARU categorized into anthropogenic (pavement, soy), open (grass, sand dune, bare soil), deciduous (red maple, white birch, alder, poplar) and conifer (white spruce, black spruce, balsam fir). Observation covariates incorporated day of the year, hour, observer, and a quadratic term for both day of year ($doy^{2}$) and hour ($hr^{2}$). See @tbl-obvs-and-covs for more information. Despite variations in processing methodology between 2019 - 2021 (1SPM - species-individual detected per minute, i.e. repeat sampling each minute for 3 minute) and subsequent years (2022 - 2023; 1SPT), we maintained consistency by exclusively utilizing the time to the first detection of individuals from the 1SPM recordings. Model predictions were generated, with goodness-of-fit testing using methods from @occu-fit and the best model selected based on AIC and through `MuMIn::dregde`, `MuMIn::get.models` and `MuMIn::model.sel`. If more than one model existed, the average model was used using `MuMIn::model.avg`. The final predictions were then made and plotted over years and sorted by nesting guilds of species into conifer, deciduous, treed / shrubby and open.
 
+Trends in species abundance were assessed using a normalized count, calculated as the total species count divided by the number of surveyed locations per year. We focused on a subset of species representative of the forest songbird community: `r c("BTNW","BLBW","GCKI","YRWA","MAWA","BTBW","BHVI","AMRE","REVI","MOWA","BLJA","ALFL","EAWP","WTSP","AMRO","COYE","NOPA","YEWA")`. To evaluate temporal trends in abundance over the past six years, we applied generalized linear mixed models (GLMMs) each species as well as the total count of the species over the period. 
+
 ------------------------------------------------------------------------
 
 # Results
 
 ## Species richness and diversity
 
-A total of `r nrow(distinct_spp)` species were found across the five years. @fig-spp-rich-locs describes the relationship of species richness across each location and survey year with @fig-spp-rich-annual showing the relationship between species richness and survey effort.
+A total of `r nrow(distinct_spp)` species were found across the six years. @fig-spp-rich-locs describes the relationship of species richness for each location across survey year.
 
 ```{r}
 #| warning: false
@@ -552,7 +556,7 @@ distinct_spp <- pei_main |>
   filter(!grepl('BS|ASC|LXI',location)) |>
   wt_tidy_species(remove = c("mammal","amphibian","abiotic","insect","unknown"), zerofill = F) |>
   mutate(year = lubridate::year(recording_date_time)) |>
-  filter(!(location == 'PENP-BS-6' & task_method != "1SPT")) |>
+  filter(!grepl('PENP-BS-',location) | task_method != "1SPT") |>
   select(species_code) |>
   distinct() |>
   arrange(species_code)
@@ -576,7 +580,8 @@ spp_rich_location |>
   theme_bw() +
   scale_fill_viridis_d() +
   xlab('Year') + ylab('Species richness') +
-  ggtitle('Species richness at each location surveyed for each year')
+  ggtitle('Species richness at each location surveyed for each year') +
+  theme(legend.position = "none")
 
 ```
 
@@ -653,59 +658,63 @@ Shannon's diversity was stable based on results. (see @fig-shannon.)
 ```{r}
 #| warning: false
 #| echo: false
-#| eval: false
+#| eval: true
 #| include: true
+#| fig-align: center
+#| fig-cap: Ocean distance and species richness
+#| label: fig-ocean-richness
+#| cap-location: margin
 
 library(lmtest)
 
 ocean_richness <- spp_rich_location |>
-  inner_join(distance_to_coast) |>
+  inner_join(pei_locs |> select(location, coast_distance) |> distinct(), by = "location") |>
   filter(!location %in% c('ASC-1'))
 
-ggplot(ocean_richness, aes(x = coast_dist, y = species_count)) +
+ggplot(ocean_richness, aes(x = coast_distance, y = species_count)) +
   geom_point() +
   labs(title = "Scatter plot of species_count vs coast_dist",
        x = "coast_dist",
-       y = "species_count")
+       y = "species_count") +
+  theme_bw()
 
-# Fit a linear regression model
-model <- glm(species_count ~ coast_dist, data = ocean_richness)
-test_independence <- dwtest(model)$p.value # Independence
-test_resid_normality <- shapiro.test(resid(model))$p.value # Normality of residuals
-test_homoscedasticity <- car::ncvTest(model)$p # Homoscedasticity
-
-
-
-# Check the summary of the model
-summary(model)
-
-# Interpret the results
-# Look at the p-value for the 'coast_dist' coefficient
-# If the p-value is less than your chosen significance level (e.g., 0.05), you can reject the null hypothesis that the coefficient is zero.
-
-# Additional diagnostics and visualization
-# Check residuals vs. fitted values, normal Q-Q plot, etc.
-plot(model)
-
-# You can also check for multicollinearity if there are other predictors
-
-# Consider transforming variables or using different models if assumptions are violated
-
-# Make predictions
-predictions <- predict(model, newdata = ocean_richness)
-
-# Visualize the predicted values against the actual values
-ggplot(ocean_richness, aes(x = coast_dist, y = species_count)) +
-  geom_point() +
-  geom_line(aes(y = predictions), color = "red") +
-  labs(title = "Predicted vs. Actual values",
-       x = "coast_dist",
-       y = "species_count")
-
-BC_model <- caret::BoxCoxTrans(ocean_richness$species_count)
-ocean_richness <- cbind(ocean_richness, dist_new=predict(BC_model, ocean_richness$species_count)) # append the transformed variable to cars
-
-lm(dist_new ~ coast_dist, data = ocean_richness)
+# # Fit a linear regression model
+# model <- glm(species_count ~ coast_distance, data = ocean_richness)
+# test_independence <- dwtest(model)$p.value # Independence
+# test_resid_normality <- shapiro.test(resid(model))$p.value # Normality of residuals
+# test_homoscedasticity <- car::ncvTest(model)$p # Homoscedasticity
+# 
+# # Check the summary of the model
+# summary(model)
+# 
+# # Interpret the results
+# # Look at the p-value for the 'coast_dist' coefficient
+# # If the p-value is less than your chosen significance level (e.g., 0.05), you can reject the null hypothesis that the coefficient is zero.
+# 
+# # Additional diagnostics and visualization
+# # Check residuals vs. fitted values, normal Q-Q plot, etc.
+# plot(model)
+# 
+# # You can also check for multicollinearity if there are other predictors
+# 
+# # Consider transforming variables or using different models if assumptions are violated
+# 
+# # Make predictions
+# predictions <- predict(model, newdata = ocean_richness)
+# 
+# # Visualize the predicted values against the actual values
+# ggplot(ocean_richness, aes(x = coast_distance, y = species_count)) +
+#   geom_point() +
+#   geom_line(aes(y = predictions), color = "red") +
+#   labs(title = "Predicted vs. Actual values",
+#        x = "coast_dist",
+#        y = "species_count") +
+#   theme_bw()
+# 
+# BC_model <- caret::BoxCoxTrans(ocean_richness$species_count)
+# ocean_richness <- cbind(ocean_richness, dist_new=predict(BC_model, ocean_richness$species_count)) # append the transformed variable to cars
+# 
+# lm(dist_new ~ coast_distance, data = ocean_richness)
 ```
 
 ```{r}
@@ -744,13 +753,15 @@ shannon_d <- pei_main |>
   labs(x = "Year",
        y = "Shannon diversity index per location") +
   theme_bw() +
-  guides(fill = guide_legend(title = "Year")) +
+  theme(legend.position = "none") +
   scale_fill_viridis_d(alpha = 0.7)
 
 shannon_d
 ```
 
 ## Trends in abundance over time
+
+Most forest species showed slight increasing and decreasing trends, with only functional gain with White-throated sparrows over the years as seen in @tbl-normalized-count-mdm-year. There were no significant difference in the total abundance of species included in the analyses as demonstrated in @fig-annual-count.
 
 ```{r}
 #| warning: false
@@ -883,7 +894,7 @@ ggplot(count_annual_mdm, aes(x = year, y = normalized_count)) +
   scale_x_continuous(breaks = unique(count_annual_mdm$year)) +
   theme_bw() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-  annotate("text", x = 2020, y = max(count_annual_mdm$normalized_count), 
+  annotate("text", x = 2020, y = 1.9, 
            label = paste("Slope: ", round(slope_count_annual_mdm, 2), "\nP-value: ", round(p_value_count_annual_mdm, 4)), 
            size = 3, hjust = 0, vjust = 1)
 
@@ -891,7 +902,7 @@ ggplot(count_annual_mdm, aes(x = year, y = normalized_count)) +
 
 ## Species occupancy
 
-We selected 15 species to represent the forest songbird community into 4 separate habitat nesting guilds (see @tbl-bird-guilds): conifer (@fig-spp-occ-conifer), deciduous (@fig-spp-occ-decid), treed / shrubby (@fig-spp-occ-tss) and open (@fig-spp-occ-open). Analysis of species occupancy revealed diverse and varied changes across these species. Analytically, many models were singular, and a few exhibited overdispersion (indicated by *c-hat* in @tbl-c-hat), likely due to low detections or a limited sample size of spatial locations. Ubiquitous species such as Red-eyed Vireo, Yellow-rumped Warbler, Magnolia Warbler and Northern Parula, demonstrated stable site occupancy across the years. Generalist species or those capable of capitalizing on utilizing mixed habitats, exemplified by the Northern Parula, also maintained consistent occupancy levels. The occurrence of Hurricane Fiona in 2023 led to notable breakpoints in the occupancy of certain species: coniferous species, including the Black-throated Green Warbler, Black-throated Blue Warbler, Blackburnian Warbler, Golden-crowned Kinglet, and Mourning Warbler, experiencing declines. Conversely, increases were observed in guilds of species that favor more open or shrubby habitats, such as the Alder Flycatcher and American Redstart. Thrushes (American Robin, Swainson's Thrush, Hermit Thrush) had notably wavering occupancy throughout the years.
+We selected from those same 15 forested species to represent the forest songbird community into 4 separate habitat nesting guilds (see @tbl-bird-guilds and @fig-spp-occ). Analysis of species occupancy revealed diverse and varied changes across these species. Analytically, many models were singular, and a few exhibited overdispersion (indicated by *c-hat* in @tbl-c-hat), likely due to low detections or a limited sample size of spatial locations. Ubiquitous species such as Red-eyed Vireo, Yellow-rumped Warbler, Magnolia Warbler and Northern Parula, demonstrated stable site occupancy across the years. Generalist species or those capable of capitalizing on utilizing mixed habitats, exemplified by the Northern Parula, also maintained consistent occupancy levels. There were notable breakpoints in the occupancy of certain species: coniferous species, including the Black-throated Green Warbler, Black-throated Blue Warbler, Blackburnian Warbler, Golden-crowned Kinglet, and Mourning Warbler, experiencing declines in 2023. Conversely, increases were observed in guilds of species that favor more open or shrubby habitats, such as the Alder Flycatcher and American Redstart. Thrushes (American Robin, Swainson's Thrush, Hermit Thrush) had notably wavering occupancy throughout the years.
 
 ```{r}
 #| warning: false
@@ -931,10 +942,10 @@ ss_occ_plot_loop <- function(input, species_choice) {
 
 site_covariates_19 <- pei_occu_19 |>
   inner_join(covs) |>
-  select(location, year, coast_dist, landcover, landcover_proportion) |>
+  select(location, year, coast_distance, landcover, landcover_proportion) |>
   distinct() |>
   pivot_wider(names_from = landcover, values_from = landcover_proportion, values_fill = 0) |>
-  group_by(location, year, coast_dist) |>
+  group_by(location, year, coast_distance) |>
   summarise(across(starts_with(c("Anthro","Deciduous","Open","Conifer")), max)) |>
   ungroup()
   # pivot_longer(-c(location:coast_dist), names_to = "landcover", values_to = "landcover_proportion") |>
@@ -946,10 +957,10 @@ site_covariates_19 <- pei_occu_19 |>
 
 site_covariates_20 <- pei_occu_20 |>
   inner_join(covs) |>
-  select(location, year, coast_dist, landcover, landcover_proportion) |>
+  select(location, year, coast_distance, landcover, landcover_proportion) |>
   distinct() |>
   pivot_wider(names_from = landcover, values_from = landcover_proportion, values_fill = 0) |>
-  group_by(location, year, coast_dist) |>
+  group_by(location, year, coast_distance) |>
   summarise(across(starts_with(c("Anthro","Deciduous","Open","Conifer")), max)) |>
   ungroup()
   # pivot_longer(-c(location:coast_dist), names_to = "landcover", values_to = "landcover_proportion") |>
@@ -959,10 +970,10 @@ site_covariates_20 <- pei_occu_20 |>
 
 site_covariates_21 <- pei_occu_21 |>
   inner_join(covs) |>
-  select(location, year, coast_dist, landcover, landcover_proportion) |>
+  select(location, year, coast_distance, landcover, landcover_proportion) |>
   distinct() |>
   pivot_wider(names_from = landcover, values_from = landcover_proportion, values_fill = 0) |>
-  group_by(location, year, coast_dist) |>
+  group_by(location, year, coast_distance) |>
   summarise(across(starts_with(c("Anthro","Deciduous","Open","Conifer")), max)) |>
   ungroup()
   # pivot_longer(-c(location:coast_dist), names_to = "landcover", values_to = "landcover_proportion") |>
@@ -972,10 +983,10 @@ site_covariates_21 <- pei_occu_21 |>
 
 site_covariates_22 <- pei_occu_22 |>
   inner_join(covs) |>
-  select(location, year, coast_dist, landcover, landcover_proportion) |>
+  select(location, year, coast_distance, landcover, landcover_proportion) |>
   distinct() |>
   pivot_wider(names_from = landcover, values_from = landcover_proportion, values_fill = 0) |>
-  group_by(location, year, coast_dist) |>
+  group_by(location, year, coast_distance) |>
 summarise(across(starts_with(c("Anthro","Deciduous","Open","Conifer")), max)) |>
   ungroup()
   # pivot_longer(-c(location:coast_dist), names_to = "landcover", values_to = "landcover_proportion") |>
@@ -985,10 +996,10 @@ summarise(across(starts_with(c("Anthro","Deciduous","Open","Conifer")), max)) |>
 
 site_covariates_23 <- pei_occu_23 |>
   inner_join(covs) |>
-  select(location, year, coast_dist, landcover, landcover_proportion) |>
+  select(location, year, coast_distance, landcover, landcover_proportion) |>
   distinct() |>
   pivot_wider(names_from = landcover, values_from = landcover_proportion, values_fill = 0) |>
-  group_by(location, year, coast_dist) |>
+  group_by(location, year, coast_distance) |>
   summarise(across(starts_with(c("Anthro","Deciduous","Open","Conifer")), max)) |>
   ungroup()
   # pivot_longer(-c(location:coast_dist), names_to = "landcover", values_to = "landcover_proportion") |>
@@ -998,10 +1009,10 @@ site_covariates_23 <- pei_occu_23 |>
 
 site_covariates_24 <- pei_occu_24 |>
   inner_join(covs) |>
-  select(location, year, coast_dist, landcover, landcover_proportion) |>
+  select(location, year, coast_distance, landcover, landcover_proportion) |>
   distinct() |>
   pivot_wider(names_from = landcover, values_from = landcover_proportion, values_fill = 0) |>
-  group_by(location, year, coast_dist) |>
+  group_by(location, year, coast_distance) |>
   summarise(across(starts_with(c("Anthro","Deciduous","Open","Conifer")), max)) |>
   ungroup()
   # pivot_longer(-c(location:coast_dist), names_to = "landcover", values_to = "landcover_proportion") |>
@@ -1020,7 +1031,7 @@ occu_one_24 <- wt_format_occupancy(pei_occu_24, siteCovs = site_covariates_24, s
 
 print('Breaking here2?')
 
-sitecovs_to_scale <- c("coast_dist","Anthro","Open","Conifer","Deciduous")
+sitecovs_to_scale <- c("coast_distance","Anthro","Open","Conifer","Deciduous")
 
 for (variable in sitecovs_to_scale) {
   occu_one_19@siteCovs[[variable]] <- scale(occu_one_19@siteCovs[[variable]])
@@ -1049,23 +1060,25 @@ occu_model_20 <- occu(~ doy2 + hr2 ~ Anthro + Open + Deciduous + Conifer, occu_o
 occu_model_21 <- occu(~ doy2 + hr2 ~ Anthro + Open + Deciduous + Conifer, occu_one_21)
 occu_model_22 <- occu(~ doy2 + hr2 ~ Anthro + Open + Deciduous + Conifer, occu_one_22)
 occu_model_23 <- occu(~ doy2 + hr2 ~ Anthro + Open + Deciduous + Conifer, occu_one_23)
-occu_model_24 <- occu(~ doy2 + hr2 ~ 1, occu_one_24)
+occu_model_24 <- occu(~ doy2 + hr2 ~ Anthro + Open + Deciduous + Conifer, occu_one_24)
 
 print('Breaking here5?')
 
-# gof19 <- mb.gof.test(occu_model_19, nsim=1000, plot.hist=F)
-# gof20 <- mb.gof.test(occu_model_20, nsim=1000, plot.hist=F)
-# gof21 <- mb.gof.test(occu_model_21, nsim=1000, plot.hist=F)
-# gof22 <- mb.gof.test(occu_model_22, nsim=1000, plot.hist=F)
-# gof23 <- mb.gof.test(occu_model_23, nsim=1000, plot.hist=F)
+gof19 <- mb.gof.test(occu_model_19, nsim=1000, plot.hist=F)
+gof20 <- mb.gof.test(occu_model_20, nsim=1000, plot.hist=F)
+gof21 <- mb.gof.test(occu_model_21, nsim=1000, plot.hist=F)
+gof22 <- mb.gof.test(occu_model_22, nsim=1000, plot.hist=F)
+gof23 <- mb.gof.test(occu_model_23, nsim=1000, plot.hist=F)
+gof24 <- mb.gof.test(occu_model_24, nsim=1000, plot.hist=F)
 
 print('Breaking her65?')
 
-# print(gof19$c.hat.est)
-# print(gof20$c.hat.est)
-# print(gof21$c.hat.est)
-# print(gof22$c.hat.est)
-# print(gof23$c.hat.est)
+print(gof19$c.hat.est)
+print(gof20$c.hat.est)
+print(gof21$c.hat.est)
+print(gof22$c.hat.est)
+print(gof23$c.hat.est)
+print(gof24$c.hat.est)
 
 print('Breaking heasadsasdr65?')
 
@@ -1116,28 +1129,23 @@ if (is.null(occ_avg_24)) {occ_fit_24 <- predict(occu_model_24, site_covariates_2
 if ("fit" %in% colnames(occ_fit_24 %>% as_tibble())) {occ_graph_24 <- occ_fit_24 %>% as_tibble() %>% bind_cols(., site_covariates_24)} else {occ_graph_24 <- occ_fit_24 %>% as_tibble() %>% bind_cols(., site_covariates_24) %>% rename("Fit" = Predicted)}
 
 occ_graph_all <- bind_rows(occ_graph_19, occ_graph_20, occ_graph_21, occ_graph_22, occ_graph_23, occ_graph_24)
-
-zz <- data |>
-  select(species_code, species_common_name) |>
-  distinct() |>
-  filter(species_code == species_choice) |>
-  select(species_common_name) |>
-  pull()
   
-occ_plot <- ggplot(occ_graph_all %>%
-         mutate(year = factor(year)) %>%
-  select(fit:year), aes(x = year, y = fit, fill=year)) +
-  geom_boxplot() +
-  ylim(0.00,1.00) +
-  labs(title = paste0(zz),
-       x = "Year") +
-  theme_bw() +
-  theme(legend.position="none") +
-  scale_fill_viridis_d()
-  
-  return(occ_plot)
+return(occ_graph_all)
   
 }
+
+safe_ss_occ_plot_loop <- possibly(ss_occ_plot_loop, otherwise = tibble())
+
+species_list <- c("WTSP", "AMRO", "REVI", "COYE", "AMRE", "BTNW", "NOPA", "YEWA",
+                  "MAWA", "SOSP", "SWTH", "ALFL", "YRWA", "BAWW", "BHVI", "BLJA",
+                  "CHSP", "BTBW", "BLBW", "GCKI", "WIWR", "RBNU", "BRCR", "MOWA",
+                  "HETH", "OVEN", "EAWP", "CAWA")
+
+nested_occ <- tibble(
+  species = species_list,
+  occupancy_results = map(species_list, ~ safe_ss_occ_plot_loop(pei_main, .x))
+)
+
 
 # Where input in the cleaned data and species_choice is the list of forest obligate species.
 ```
@@ -1145,98 +1153,31 @@ occ_plot <- ggplot(occ_graph_all %>%
 ```{r}
 #| warning: false
 #| echo: false
-#| eval: false
+#| eval: true
 #| include: true
+#| fig-align: center
+#| fig-cap: Single-season occupancy models of common forest songbird species
+#| label: fig-spp-occ
+#| cap-location: bottom
+#| code-fold: true
 
-wtsp_occ <- ss_occ_plot_loop(pei_main, "WTSP")
-amro_occ <- ss_occ_plot_loop(pei_main, "AMRO")
-revi_occ <- ss_occ_plot_loop(pei_main, "REVI")
-coye_occ <- ss_occ_plot_loop(pei_main, "COYE")
-amre_occ <- ss_occ_plot_loop(pei_main, "AMRE")
-btnw_occ <- ss_occ_plot_loop(pei_main, "BTNW")
-nopa_occ <- ss_occ_plot_loop(pei_main, "NOPA")
-yewa_occ <- ss_occ_plot_loop(pei_main, "YEWA")
-mawa_occ <- ss_occ_plot_loop(pei_main, "MAWA")
-sosp_occ <- ss_occ_plot_loop(pei_main, "SOSP")
-swth_occ <- ss_occ_plot_loop(pei_main, "SWTH")
-alfl_occ <- ss_occ_plot_loop(pei_main, "ALFL")
-yrwa_occ <- ss_occ_plot_loop(pei_main, "YRWA")
-baww_occ <- ss_occ_plot_loop(pei_main, "BAWW")
-bhvi_occ <- ss_occ_plot_loop(pei_main, "BHVI")
-blja_occ <- ss_occ_plot_loop(pei_main, "BLJA")
-chsp_occ <- ss_occ_plot_loop(pei_main, "CHSP")
-btbw_occ <- ss_occ_plot_loop(pei_main, "BTBW")
-blbw_occ <- ss_occ_plot_loop(pei_main, "BLBW")
-gcki_occ <- ss_occ_plot_loop(pei_main, "GCKI")
-wiwr_occ <- ss_occ_plot_loop(pei_main, "WIWR")
-rbnu_occ <- ss_occ_plot_loop(pei_main, "RBNU")
-brcr_occ <- ss_occ_plot_loop(pei_main, "BRCR")
-mowa_occ <- ss_occ_plot_loop(pei_main, "MOWA")
-heth_occ <- ss_occ_plot_loop(pei_main, "HETH")
-oven_occ <- ss_occ_plot_loop(pei_main, "OVEN")
-eawp_occ <- ss_occ_plot_loop(pei_main, "EAWP")
-cawa_occ <- ss_occ_plot_loop(pei_main, "CAWA")
+# Unnest while handling empty elements
+nocc <- nested_occ |>
+  mutate(occupancy_results = map_if(occupancy_results, is.logical, ~ tibble())) |>
+  unnest_wider(occupancy_results) |>
+  unnest()
 
-```
-
-```{r}
-#| warning: false
-#| echo: false
-#| eval: false
-#| include: true
-#| fig-cap: Predicted single-season occupancy of forest species (Habitat nesting = Conifer) within Prince Edward Island National Park. The data represents the average species occupancy across all surveyed locations for each respective year.
-#| label: fig-spp-occ-conifer
-#| fig-column: page-right
-
-#occ_spp |> select(species_code) |> slice(1:20) |> pull()
-
-ggarrange(btnw_occ, blbw_occ, gcki_occ, yrwa_occ, mawa_occ, btbw_occ, bhvi_occ)
-
-```
-
-```{r}
-#| warning: false
-#| echo: false
-#| eval: false
-#| include: true
-#| fig-cap: Predicted single-season occupancy of forest species (Habitat nesting = Deciduous) within Prince Edward Island National Park. The data represents the average species occupancy across all surveyed locations for each respective year.
-#| label: fig-spp-occ-decid
-#| fig-column: page-right
-
-#occ_spp |> select(species_code) |> slice(1:20) |> pull()
-
-ggarrange(amre_occ, revi_occ, mowa_occ, blja_occ)
-
-```
-
-```{r}
-#| warning: false
-#| echo: false
-#| eval: false
-#| include: true
-#| fig-cap: Predicted single-season occupancy of forest species (Habitat nesting = Treed / Shrubby) within Prince Edward Island National Park. The data represents the average species occupancy across all surveyed locations for each respective year.
-#| label: fig-spp-occ-tss
-#| fig-column: page-right
-
-#occ_spp |> select(species_code) |> slice(1:20) |> pull()
-
-ggarrange(alfl_occ)
-
-```
-
-```{r}
-#| warning: false
-#| echo: false
-#| eval: false
-#| include: true
-#| fig-cap: Predicted single-season occupancy of forest species (Habitat nesting = Open) within Prince Edward Island National Park. The data represents the average species occupancy across all surveyed locations for each respective year.
-#| label: fig-spp-occ-open
-#| fig-column: page-right
-
-#occ_spp |> select(species_code) |> slice(1:20) |> pull()
-
-ggarrange(eawp_occ)
-
+nocc |>
+  ggplot(aes(x = as.factor(year), y = fit, group = as.factor(year), fill = as.factor(year))) +
+  geom_boxplot() +
+  scale_fill_viridis_d() +
+  facet_wrap(~species) +
+  scale_x_discrete(breaks = c("2020","2022","2024")) +
+  theme_bw() +
+  ylab("Predicted within season occupancy") +
+  xlab("Year") +
+  theme(legend.position = "none")
+  
 ```
 
 ```{r}
@@ -1244,10 +1185,10 @@ ggarrange(eawp_occ)
 #| echo: false
 #| eval: false
 #| include: false
-#| results: hide
+#| results: false
 #| message: false
 
-coast_model <- glm(COYE ~ recording_date_time + coast_dist, offset=offstz$COYE.off, data=pei_wide_plus)
+coast_model <- glm(COYE ~ recording_date_time + coast_distance, offset=offstz$COYE.off, data=pei_wide_plus)
 
 pei_wide <- pei_main %>%
   wt_tidy_species(., remove = c("mammal","amphibian","abiotic","insect","unknown")) %>%
@@ -1266,15 +1207,20 @@ my_qpad_model <- glm(OVEN ~ recording_date_time, offset=offstz$OVEN.off, data=pe
 # Create a data frame for predictions
 predictions <- data.frame(
   recording_date_time = seq(min(pei_wide_plus$recording_date_time), 
-                            max(pei_wide_plus$recording_date_time), length.out = 464))
+                            max(pei_wide_plus$recording_date_time), length.out = 583))
 
 # Make predictions using the model
 predictions$predicted_abundance <- predict(my_qpad_model, data = predictions, type = "response")
 
+ggplot(predictions, aes(x=recording_date_time,y=predicted_abundance)) +
+  geom_point() +
+  geom_smooth() +
+  theme_bw()
+
 # Create the ggplot
-ggplot(pei_wide_plus, aes(x = recording_date_time, y = COYE)) +
+ggplot(pei_wide_plus, aes(x = recording_date_time, y = OVEN)) +
   geom_point(alpha = 0.5) +  # Scatter plot of actual data
-  geom_line(data = predictions, aes(x = recording_date_time, y = predicted_abundance), color = "blue", size = 1) +
+  geom_smooth() +
   labs(title = "Abundance vs. Recording Date Time",
        x = "Recording Date Time",
        y = "Abundance") +
@@ -1284,12 +1230,14 @@ ggplot(pei_wide_plus, aes(x = recording_date_time, y = COYE)) +
 
 ## Visual scanning
 
-BANS were detected at r jbm |> select(location) |> tally() distinct locations (`r jbm |> select(location) |> distinct() |> pull()`). Given the low number of detections across the scanned data, it is unlikely that Bank Swallows are occupying areas near these ponds.
+Bank Swallows (BANS) were detected at `r jbm |> select(location) |> distinct() |> pull()` locations. Given the low frequency of detections across the surveyed data, along with the cumulative probability analysis and modeling conducted, it is unlikely that Bank Swallows are occupying areas near these ponds. Instead, they are more likely using these locations transiently, potentially for dusk feeding activities.
 
 ```{r}
-library(dplyr)
-library(ggplot2)
-library(lubridate)
+#| warning: false
+#| echo: false
+#| eval: true
+#| include: true
+#| code-fold: true
 
 # Filter and preprocess data
 bans_data <- pei_main %>%
@@ -1335,7 +1283,7 @@ ggplot(daily_presence, aes(x = julian, y = presence)) +
 
 # Model detection probability using logistic regression
 detection_model <- glm(presence ~ julian, data = bans_data, family = binomial)
-summary(detection_model)
+#summary(detection_model)
 
 # Plot predicted detection probability
 bans_data <- bans_data %>%

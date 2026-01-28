@@ -45,7 +45,6 @@ library(lme4)
 library(ggpubr)
 library(vegan)
 library(MuMIn)
-library(ggmagnify)
 library(AICcmodavg)
 library(broom)
 
@@ -71,7 +70,7 @@ This report is dynamically generated, meaning its results may evolve with the ad
 #| eval: false
 #| include: false
 
-pei_projects <- wildrtrax::wt_get_download_summary(sensor = 'ARU') |>
+pei_projects <- wildrtrax::wt_get_projects(sensor = 'ARU') |>
   filter(grepl('^Prince Edward Island National Park', project)) |>
   select(project_id) |>
   pull()
@@ -82,7 +81,6 @@ pei_main <-
     .f = ~ wildrtrax::wt_download_report(
       project_id = .x,
       sensor_id = "ARU",
-      weather_cols = T,
       reports = "main"
     )
   )
@@ -121,7 +119,7 @@ Data were collected during the spring and summer seasons from `r min(pei_locs$ye
 -   2 locations deployed in First Nations communities (`ASC-1, LXI-1`) to complement the forest songbird and evening schedules,
 -   And one location (`PENP-E1`), which was to examine the effects of a single public event
 
-Locations were surveyed on rotation with `r length(repeats)` locations (`r repeats`) surveyed each year. A detailed list of all survey years can be found in Table 1 (@tbl-loc-summary) and illustrated in Figure 1 (@fig-locs). ARUs were deployed at the beginning of the breeding season in April-May, and rotated locations until their final retrieval in July-August. At the forest songbird locations (`PENP-*`), the ARUs were set to record for 30 minutes continuously every hour for four hours, starting one hour before dawn and ending three hours after dawn. For Bank Swallow Monitoring locations (`PENP-BS`), recordings were made every 5 minutes for a duration of 3 minutes each from 1.5 hours before dusk to 1.5 hours after dusk. On average, each ARU recorded for 
+Locations were surveyed on rotation with `r length(repeats)` locations (`r repeats`) surveyed each year. A detailed list of all survey years can be found in Table 1 (@tbl-loc-summary) and illustrated in Figure 1 (@fig-locs). ARUs were deployed at the beginning of the breeding season in April-May, and rotated locations until their final retrieval in July-August. At the forest songbird locations (`PENP-*`), the ARUs were set to record for 30 minutes continuously every hour for four hours, starting one hour before dawn and ending three hours after dawn. For Bank Swallow Monitoring locations (`PENP-BS`), recordings were made every 5 minutes for a duration of 3 minutes each from 1.5 hours before dusk to 1.5 hours after dusk. On average, each ARU recorded for
 
 ```{r}
 #| warning: false
@@ -318,41 +316,39 @@ A total of 12456 recordings were collected (see @fig-recs-collect). From 2019 - 
 #| include: true
 #| results: hide
 
-# wildtrax_penp_recs <- read_csv("penp_recordings.csv") %>%
-#   select(location, recordingDate, `length(s)`) %>%
-#   rename("recording_date_time" = recordingDate) %>%
-#   rename("length_seconds" = `length(s)`) %>%
-#   mutate(recording_date_time = as.POSIXct(recording_date_time, format="%Y-%m-%d %H:%M"))
+ wildtrax_penp_recs <- wt_get_sync("organization_recordings", organization = 5463) %>%
+   select(location, recording_date_time, recording_duration) %>%
+   mutate(recording_date_time = as.POSIXct(recording_date_time, format="%Y-%m-%d %H:%M"))
 
-# all_recs <- cirrus_penp_recs %>%
-#   select(location, recording_date_time, length_seconds) %>%
-#   bind_rows(., wildtrax_penp_recs) %>%
-#   select(location, recording_date_time, length_seconds) %>%
-#   distinct() %>%
-#   drop_na() %>%
-#   mutate(julian = yday(recording_date_time),
-#          hour = hour(recording_date_time),
-#          year = year(recording_date_time),
-#          month= month(recording_date_time, label = T))
-# 
-# count_recs <- nrow(all_recs)
-# 
-# average_deployment <- all_recs |>
-#   group_by(location, year) |>
-#   summarise(count = n_distinct(julian)) |>
-#   ungroup() |>
-#   summarise(mean = round(mean(count),2),
-#             sd = round(sd(count),2))
-# 
-# recs_plot <- all_recs |>
-#   rename("Location" = location) |>
-#   rename("Day of Year" = julian) |>
-#   ggplot(aes(x = `Day of Year`, y = Location, fill = Location)) +
-#   geom_density_ridges() +
-#   facet_wrap(~ year) +
-#   theme_minimal() +
-#   scale_fill_viridis_d()
-#   #scale_x_discrete(guide = guide_axis(check.overlap = TRUE))
+ all_recs <- cirrus_penp_recs %>%
+   select(location, recording_date_time, length_seconds) %>%
+   bind_rows(., wildtrax_penp_recs) %>%
+   select(location, recording_date_time, length_seconds) %>%
+   distinct() %>%
+   drop_na() %>%
+   mutate(julian = yday(recording_date_time),
+          hour = hour(recording_date_time),
+          year = year(recording_date_time),
+          month= month(recording_date_time, label = T))
+
+ count_recs <- nrow(all_recs)
+
+ average_deployment <- all_recs |>
+   group_by(location, year) |>
+   summarise(count = n_distinct(julian)) |>
+   ungroup() |>
+   summarise(mean = round(mean(count),2),
+             sd = round(sd(count),2))
+
+ recs_plot <- all_recs |>
+   rename("Location" = location) |>
+   rename("Day of Year" = julian) |>
+   ggplot(aes(x = `Day of Year`, y = Location, fill = Location)) +
+   geom_density_ridges() +
+   facet_wrap(~ year) +
+   theme_minimal() +
+   scale_fill_viridis_d() +
+   scale_x_discrete(guide = guide_axis(check.overlap = TRUE))
   
 ```
 
@@ -395,7 +391,6 @@ pei_main |> names()
 
 pei_tasks <- pei_main |>
   as_tibble() |>
-  filter(aru_task_status %in% c("Transcribed","New")) |>
   select(project_id, location, recording_date_time, task_duration, task_method, observer_id) |>
   distinct() |>
   mutate(hour = lubridate::hour(recording_date_time),
@@ -464,9 +459,9 @@ kable(verified_tags)
 #| tbl-cap: TMTT tags
 
 tmtt_tags <- pei_main |>
-  select(location, recording_date_time, species_code, individual_count) |>
+  select(location, recording_date_time, species_code, abundance) |>
   distinct() |>
-  filter(individual_count == "TMTT")
+  filter(abundance == "TMTT")
 
 kable(head(tmtt_tags))
 
@@ -522,7 +517,7 @@ Species richness, diversity and occupancy were calculated using the `r nrow(locs
 
 For testing species occupancy, we selected locations with a minimum of four dawn visits for each year across all five years, focusing on forest obligate species for ecological relevance (see @tbl-bird-guilds). Utilizing a single-season single-species occupancy model from @mackenzie2002estimating, we calculated the predicted occupancy of species at all locations surveyed in each year across years. Site-specific covariates included the distance to ocean edge (in meters) and the proportional area of each cover type from the [Prince Edward Island 2010 Corporate Land Use Inventory](https://data.princeedwardisland.ca/Environment-and-Food/OD0144-Corporate-Landuse-Inventory-2010/tc7z-7rpy) at 150 meter radius surrounding the ARU categorized into anthropogenic (pavement, soy), open (grass, sand dune, bare soil), deciduous (red maple, white birch, alder, poplar) and conifer (white spruce, black spruce, balsam fir). Observation covariates incorporated day of the year, hour, observer, and a quadratic term for both day of year ($doy^{2}$) and hour ($hr^{2}$). See @tbl-obvs-and-covs for more information. Despite variations in processing methodology between 2019 - 2021 (1SPM - species-individual detected per minute, i.e. repeat sampling each minute for 3 minute) and subsequent years (2022 - 2023; 1SPT), we maintained consistency by exclusively utilizing the time to the first detection of individuals from the 1SPM recordings. Model predictions were generated, with goodness-of-fit testing using methods from @occu-fit and the best model selected based on AIC and through `MuMIn::dregde`, `MuMIn::get.models` and `MuMIn::model.sel`. If more than one model existed, the average model was used using `MuMIn::model.avg`. The final predictions were then made and plotted over years and sorted by nesting guilds of species into conifer, deciduous, treed / shrubby and open.
 
-Trends in species abundance were assessed using a normalized count, calculated as the total species count divided by the number of surveyed locations per year. We focused on a subset of species representative of the forest songbird community: `r c("BTNW","BLBW","GCKI","YRWA","MAWA","BTBW","BHVI","AMRE","REVI","MOWA","BLJA","ALFL","EAWP","WTSP","AMRO","COYE","NOPA","YEWA")`. To evaluate temporal trends in abundance over the past six years, we applied generalized linear mixed models (GLMMs) each species as well as the total count of the species over the period. 
+Trends in species abundance were assessed using a normalized count, calculated as the total species count divided by the number of surveyed locations per year. We focused on a subset of species representative of the forest songbird community: `r c("BTNW","BLBW","GCKI","YRWA","MAWA","BTBW","BHVI","AMRE","REVI","MOWA","BLJA","ALFL","EAWP","WTSP","AMRO","COYE","NOPA","YEWA")`. To evaluate temporal trends in abundance over the past six years, we applied generalized linear mixed models (GLMMs) each species as well as the total count of the species over the period.
 
 ------------------------------------------------------------------------
 
@@ -624,7 +619,7 @@ datatable(guilds,
 pei_main |>
   wt_tidy_species(remove = c("mammal","amphibian","abiotic","insect","unknown"), zerofill = T) |>
   filter(!grepl('BS|ASC|LXI',location)) |>
-  select(location, recording_date_time, species_common_name, species_code, individual_count) |>
+  select(location, recording_date_time, species_common_name, species_code, abundance) |>
   mutate(julian = lubridate::yday(recording_date_time),
          month= month(recording_date_time),
          year = factor(year(recording_date_time))) |>
@@ -734,7 +729,7 @@ shannon_d <- pei_main |>
   filter(!grepl('BS',location)) |>
   wt_tidy_species(remove = c("mammal","amphibian","abiotic","insect","unknown"), zerofill = F) |>
   inner_join(wt_get_species() |> select(species_code, species_class, species_order), by = "species_code") |>
-  select(location, recording_date_time, species_code, species_common_name, individual_order, individual_count) |>
+  select(location, recording_date_time, species_code, species_common_name, individual_order, abundance) |>
   distinct() |>
   group_by(location, recording_date_time, species_code, species_common_name) |>
   summarise(count = max(individual_order)) |>
@@ -796,7 +791,7 @@ prop_a <- nrow(tot_a_mdm) / nrow(tot_a)
 plot_mdm <- 
   tot_a_mdm |>
   mutate(year = year(recording_date_time)) |>
-  select(location, year, species_code, individual_order, individual_count) |>
+  select(location, year, species_code, individual_order, abundance) |>
   group_by(location, year, species_code) |>
   summarise(individual_order = mean(individual_order)) |>
   ungroup() |>
@@ -822,7 +817,6 @@ plot_mdm |>
                                   by = 2))
 
 ```
-
 
 ```{r}
 #| warning: false
@@ -869,7 +863,7 @@ datatable(
 
 count_annual_mdm <- tot_a_mdm |>
   mutate(year = year(recording_date_time)) |>
-  select(location, year, species_code, individual_order, individual_count) |>
+  select(location, year, species_code, individual_order, abundance) |>
   group_by(location, year, species_code) |>
   summarise(individual_order = max(individual_order)) |>
   ungroup() |>
@@ -1153,7 +1147,7 @@ nested_occ <- tibble(
 ```{r}
 #| warning: false
 #| echo: false
-#| eval: true
+#| eval: false
 #| include: true
 #| fig-align: center
 #| fig-cap: Single-season occupancy models of common forest songbird species
@@ -1230,14 +1224,20 @@ ggplot(pei_wide_plus, aes(x = recording_date_time, y = OVEN)) +
 
 ## Visual scanning
 
-Bank Swallows (BANS) were detected at `r jbm |> select(location) |> distinct() |> pull()` locations. Given the low frequency of detections across the surveyed data, along with the cumulative probability analysis and modeling conducted, it is unlikely that Bank Swallows are occupying areas near these ponds. Instead, they are more likely using these locations transiently, potentially for dusk feeding activities.
+::: {.callout-note collapse="true" style="background-color: #f4f4f4; padding: 20px;"}
+Some of these analyses are still a work-in-progress. Check back soon for updates and additional details.
+:::
+
+Bank Swallows (BANS) were detected at `r jbm |> select(location) |> distinct() |> pull()` locations. Given the low frequency of detections across the surveyed data, along with the cumulative probability modeled, we further processed data by including the number of detection per recording processed and modelled the cumulative detection probability over time (see @fig-bans-dp).
 
 ```{r}
 #| warning: false
 #| echo: false
-#| eval: true
+#| eval: false
 #| include: true
 #| code-fold: true
+#| fig-cap: Bank Swallow cumulutative detection probability
+#| label: fig-bans-dp
 
 # Filter and preprocess data
 bans_data <- pei_main %>%
@@ -1308,7 +1308,7 @@ A total of `r amphs_only |> select(species_code) |> distinct() |> tally()` were 
 ```{r}
 #| warning: false
 #| echo: false
-#| eval: true
+#| eval: false
 #| include: true
 #| results: hide
 #| fig-cap: Seasonal and yearly activity plots for Green Frog and Spring Peeper

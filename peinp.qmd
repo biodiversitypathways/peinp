@@ -51,7 +51,7 @@ library(broom)
 wt_auth(force = T)
 
 load('pei.RData')
-#save.image('pei.RData')
+save.image('pei.RData')
 #cirrus_penp_recs  <- readRDS('penpcirrus.RDS')
 ```
 

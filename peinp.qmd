@@ -100,7 +100,7 @@ In 2019, Prince Edward Island National Park initiated a program incorporating au
 
 The objectives of this report are to:
 
--   Describe the data management and processing procedures for the acoustic data collected from 2019 to 2024;
+-   Describe the data management and processing procedures for the acoustic data collected from 2019 to 2025;
 -   Utilize traditional human tagging, visual scanning and automated recognition techniques to detect and count species and individuals heard on recordings;
 -   Define straightforward methods for evaluating species presence, species richness, and species occupancy over time at various locations;
 -   Offer recommendations for ongoing monitoring approaches to contribute to the assessment of ecological integrity in forest ecosystems;

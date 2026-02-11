@@ -258,7 +258,7 @@ leaflet() %>%
 
 ```
 
-```{r Location summary table}
+```{r}
 #| warning: false
 #| echo: false
 #| eval: true
@@ -480,7 +480,7 @@ Visual scanning is the concept of visually examining spectrograms in order to fi
 #| eval: false
 #| include: false
 
-just_bans <- wildrtrax::wt_get_download_summary(sensor = 'ARU') |>
+just_bans <- wildrtrax::wt_get_projects(sensor = 'ARU') |>
   filter(grepl('National Park Bank Swallow', project)) |>
   select(project_id) |>
   pull()
@@ -491,13 +491,11 @@ just_bans_main <-
     .f = ~ wildrtrax::wt_download_report(
       project_id = .x,
       sensor_id = "ARU",
-      weather_cols = T,
       reports = "main"
-    )
-  )
+  ))
 
 jbm <- just_bans_main |>
-  mutate(individual_count = as.character(individual_count)) |>
+  mutate(individual_count = as.character(abundance)) |>
   bind_rows(pei_main) |>
   filter(species_code == "BANS") |>
   select(location, recording_date_time, species_code, individual_order, individual_count) |>
@@ -1159,11 +1157,11 @@ amphs <- spp_table %>%
 
 amphs_only <- pei_main %>%
   filter(species_code %in% amphs$species_code) %>%
-  select(location, recording_date_time, species_code, individual_count) %>%
+  select(location, recording_date_time, species_code, abundance) %>%
   distinct()
 
 amphs_only %>%
-  mutate(individual_count = as.numeric(gsub('CI ','',individual_count)),
+  mutate(individual_count = as.numeric(gsub('CI ','',abundance)),
          julian = lubridate::yday(recording_date_time),
          year = lubridate::year(recording_date_time),
          recording_date_time = as.Date(recording_date_time)) %>%

@@ -47,3 +47,12 @@ po/*~
 
 # RStudio Connect folder
 rsconnect/
+
+# Large GIS files
+*.shp
+*.dbf
+*.shx
+*.prj
+*.gpkg
+*.tif
+*.zip

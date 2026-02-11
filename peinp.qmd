@@ -48,7 +48,7 @@ library(MuMIn)
 library(AICcmodavg)
 library(broom)
 
-wt_auth(force = T)
+wt_auth()
 
 load('pei.RData')
 #save.image('pei.RData')

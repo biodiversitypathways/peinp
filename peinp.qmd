@@ -68,7 +68,7 @@ load('pei.RData')
 
 # Abstract
 
-Passive acoustic monitoring has proven to be a valuable tool for monitoring vocalizing species. Environmental sensors are becoming increasingly easy to program and can autonomously generating extensive data sets of the soundscape, an invaluable resource for ecological integrity monitoring. Prince Edward Island National deployed autonomous recording units (ARUs) across `r pei_locs |> st_drop_geometry() |> select(location) |> distinct() |> tally()` locations during a comprehensive five-year survey. ARUs detected a total of `r nrow(distinct_spp)` species including birds, amphibians and mammals. The analysis revealed that songbird species richness and diversity remained relatively stable, while single-species occupancy exhibited diverse patterns. Common and generalist species showed consistent occupancy, but there was a notable reduction in conifer-nesting species in 2023, likely attributed to forest structural loss. Ongoing monitoring and dynamic models can yield more detailed and predictive results to ensure the continued maintenance of ecological integrity in the Park.
+Passive acoustic monitoring has proven to be a valuable tool for monitoring vocalizing species. Environmental sensors are becoming increasingly easy to program and can autonomously generating extensive data sets of the soundscape, an invaluable resource for ecological integrity monitoring. Prince Edward Island National deployed autonomous recording units (ARUs) across `r pei_locs |> st_drop_geometry() |> select(location) |> distinct() |> tally()` locations during a comprehensive `r pei_main |> pull(recording_date_time) |> year() |> n_distinct()`-year survey. ARUs detected a total of `r nrow(distinct_spp)` species including birds, amphibians and mammals. The analysis revealed that songbird species richness and diversity remained relatively stable, while single-species occupancy at individual sites exhibited diverse patterns. Common and generalist species showed consistent occupancy despite large sources of natural and anthropogenic disturbance. Ongoing monitoring and dynamic models can yield more detailed and predictive results to ensure the continued maintenance of ecological integrity in the Park.
 
 ::: {.callout-note collapse="true" style="background-color: #f4f4f4; padding: 20px;"}
 This report is dynamically generated, meaning its results may evolve with the addition of new data or further analyses. For the most recent updates, refer to the publication date and feel free to reach out to the authors.
@@ -145,10 +145,10 @@ The objectives of this report are to:
 
 ## Data collection
 
-Data were collected during the spring and summer seasons from `r min(pei_locs$year)` to `r max(pei_locs$year)`. A total of `r pei_locs |> st_drop_geometry() |> select(location) |> distinct() |> tally()` locations were surveyed over the six-year period:
+Data were collected during the spring and summer seasons from `r min(years)` to `r max(years)`. A total of `r pei_locs |> st_drop_geometry() |> select(location) |> distinct() |> tally()` locations were surveyed over the seven-year period:
 
 -   29 locations as part of the forest songbird monitoring program (code: `PENP-*`) with ARUs recording during the morning hours,
--   6 for Bank Swallow Monitoring (code: `PENP-BS-*`) with ARUs placed strategically beside ponds recording in the evening,
+-   6 for Bank Swallow Monitoring (code: `PENP-BS-*` and `BANS-*`) with ARUs placed strategically beside ponds recording in the evening,
 -   2 locations deployed in First Nations communities (`ASC-1, LXI-1`) to complement the forest songbird and evening schedules,
 -   And one location (`PENP-E1`), which was to examine the effects of a single public event
 
@@ -260,7 +260,7 @@ locs_summary <- pei_locs |>
   group_by(location) |>
   slice_min(coast_distance, n = 1, with_ties = FALSE) |>
   ungroup() |>
-  mutate(coast_distance = round(coast_distance,0)) |>
+  mutate(coast_distance = round(coast_distance, 0)) |>
   st_drop_geometry() |>
   inner_join(pei_main |> mutate(year = year(recording_date_time)) |> select(location, year) |> distinct()) |>
   group_by(location, year) |>
@@ -291,6 +291,14 @@ locs_summary <- pei_locs |>
 #| fig-cap: Locations from Prince Edward Island National Park ARU Monitoring Program
 #| label: fig-aru-monitoring-locations
 
+pei_locs2 <- pei_locs |> left_join(locs_summary |> select(Location, Site) |> distinct(), by = c("location" = "Location"))
+
+# Map visualization
+pal <- colorFactor(
+  palette = "Set3", 
+  domain = pei_locs2$Site
+)
+
 leaflet() %>%
   addTiles() %>%
   addPolygons(
@@ -301,7 +309,20 @@ leaflet() %>%
     fillOpacity = 0.4,
     popup = ~paste("Park:", NAME_E)
   ) %>%
-  addMarkers(data = pei_locs, popup = paste("Location:", pei_locs$location, "<br>")) %>%
+  addCircleMarkers(
+    data = pei_locs2,
+    popup = ~paste("Location:", location, "<br>Site:", Site),
+    fillColor = ~pal(Site),
+    color = ~pal(Site),
+    fillOpacity = 0.8,
+    radius = 6,
+    weight = 1
+  ) %>%
+  addLegend(
+    pal = pal,
+    values = pei_locs2$Site,
+    title = "Site"
+  ) %>%
   addMeasure() %>%
   addMiniMap(position = "bottomleft")
 
@@ -353,9 +374,7 @@ datatable(covs_all,
 
 ## Data management
 
-A total of 12456 recordings were collected (see @fig-recs-collect). From 2019 - 2021, data were transferred via hard drive to the University of Alberta in Edmonton, where they are redundantly stored on a server known as Cirrus. The recordings were standardized to ensure adherence to the naming convention of `LOCATION_DATETIME`, such as `PENP-1-1_20230625_053500.wav`. The remaining recordings (2022 - 2023) were directly uploaded to WildTrax by Parks Canada staff and can be downloaded from the platform's Recording tab, accessible under Manage \> Download list of recordings (see @fig-download-recs).
-
-![Downloading a list of recordings from WildTrax](assets/download-recs.png){#fig-download-recs}
+A total of 12456 recordings were collected (see @fig-recs-collect). From 2019 - 2021, data were transferred via hard drive to the University of Alberta in Edmonton, where they are redundantly stored on a server known as Cirrus. The recordings were standardized to ensure adherence to the naming convention of `LOCATION_DATETIME`, such as `PENP-1-1_20230625_053500.wav`. The remaining recordings (2022 - 2025) were directly uploaded to WildTrax by Parks Canada staff and can be downloaded from the platform's Recording tab, accessible under Manage \> Download list of recordings (see @fig-download-recs).
 
 ```{r}
 #| warning: false

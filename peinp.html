@@ -92,6 +92,9 @@ div.csl-indent {
 <script src="peinp_files/libs/bootstrap/bootstrap.min.js"></script>
 <link href="peinp_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="peinp_files/libs/bootstrap/bootstrap-d9ee3e7c13397ee64e8144b167ea800e.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="peinp_files/libs/quarto-contrib/glightbox/glightbox.min.js"></script>
+<link href="peinp_files/libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
+<link href="peinp_files/libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
 <link href="peinp_files/libs/htmltools-fill-0.5.9/fill.css" rel="stylesheet">
 <script src="peinp_files/libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
 <script src="peinp_files/libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -177,7 +180,7 @@ window.Quarto = {
   </ul></li>
   <li><a href="#discussion" id="toc-discussion" class="nav-link" data-scroll-target="#discussion">Discussion</a></li>
   </ul>
-</nav>
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="peinp.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></nav>
 </div>
 <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
 </div>
@@ -189,16 +192,23 @@ window.Quarto = {
 </div>
 
 
+<div class="quarto-title-meta-author">
+  <div class="quarto-title-meta-heading">Author</div>
+  <div class="quarto-title-meta-heading">Affiliation</div>
+  
+    <div class="quarto-title-meta-contents">
+    <p class="author">Alex MacPhail </p>
+  </div>
+  <div class="quarto-title-meta-contents">
+        <p class="affiliation">
+            Biodiversity Pathways Ltd.
+          </p>
+      </div>
+  </div>
 
 <div class="quarto-title-meta">
 
-    <div>
-    <div class="quarto-title-meta-heading">Author</div>
-    <div class="quarto-title-meta-contents">
-             <p>Alex MacPhail </p>
-          </div>
-  </div>
-    
+      
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
@@ -216,7 +226,7 @@ window.Quarto = {
 
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="peinpheader.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="float:left`;" alt="Photo of the ocean"></p>
+<p><a href="assets/peinpheader.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1"><img src="assets/peinpheader.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="float:left`;" alt="Photo of the ocean"></a></p>
 </figure>
 </div>
 <section id="abstract" class="level1">
@@ -317,7 +327,7 @@ Table&nbsp;2: Site covariates for each forest songbird monitoring (PENP-*) locat
 <div id="fig-download-recs" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-download-recs-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="download-recs.png" class="img-fluid figure-img">
+<a href="download-recs.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2" title="Figure&nbsp;2: Downloading a list of recordings from WildTrax"><img src="download-recs.png" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-download-recs-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;2: Downloading a list of recordings from WildTrax
@@ -328,6 +338,20 @@ Figure&nbsp;2: Downloading a list of recordings from WildTrax
 <section id="community-data-processing" class="level2">
 <h2 class="anchored" data-anchor-id="community-data-processing">Community data processing</h2>
 <p>The principal goal for data processing was to describe the acoustic community of species heard at locations while choosing a large enough subset of recordings for analyses. To ensure balanced replication, for each location and year surveyed, four randomly selected recordings were processed for 3-minutes between the hours of 4:00 AM - 7:59 AM ideally on four separate dates (see <a href="#tbl-loc-repl" class="quarto-xref">Table&nbsp;3</a>). Four recordings will ensure that we have the minimum number of samples for a simple occupancy analysis (<span class="citation" data-cites="mackenzie2002estimating">Darryl I. MacKenzie et al. (<a href="#ref-mackenzie2002estimating" role="doc-biblioref">2002</a>)</span> and <span class="citation" data-cites="imperfect-occu">Darryl I. MacKenzie et al. (<a href="#ref-imperfect-occu" role="doc-biblioref">2003</a>)</span>). Tags are made using count-removal (see <span class="citation" data-cites="farnsworth2002removal">Farnsworth et al. (<a href="#ref-farnsworth2002removal" role="doc-biblioref">2002</a>)</span>, <span class="citation" data-cites="time-removal">Sólymos et al. (<a href="#ref-time-removal" role="doc-biblioref">2018</a>)</span>) where tags are only made at the time of first detection of each individual heard on the recordings. In case a species was overly abundant a TMTT (‘too many to tag’) flag was used (see <a href="#tbl-tmtt" class="quarto-xref">Table&nbsp;5</a>). 0% of the total tags were TMTT but were subsequently converted to numeric using <code>wildrtrax::wt_replace_tmtt</code>. We also verified that all tags that were created were checked by a second observer (n = 4.01) to ensure accuracy of detections (see <a href="#tbl-verified" class="quarto-xref">Table&nbsp;4</a>). Amphibian abundance was estimated at the time of first detection using the <a href="https://www.usgs.gov/centers/eesc/science/north-american-amphibian-monitoring-program">North American Amphibian Monitoring Program</a> with abundance of species being estimated on the scale of “calling intensity index” (CI) of 1 - 3. Mammals such as Red Squirrel, were also noted on the recordings. After the data are processed in WildTrax, the <a href="https://abbiodiversity.github.io/wildrtrax/">wildrtrax</a> package is use to download the data into a standard format prepared for analysis. The <code>wt_download_report</code> function downloads the data directly to a R framework for easy manipulation (see <a href="https://abbiodiversity.github.io/wildrtrax/articles/apis.html">wildrtrax APIs</a>).</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Calling... /bis/download-tasks-by-project-id"
+[1] "Calling... /bis/download-tasks-by-project-id"
+[1] "Calling... /bis/download-tasks-by-project-id"
+[1] "Calling... /bis/download-tasks-by-project-id"
+[1] "Calling... /bis/download-tasks-by-project-id"
+[1] "Calling... /bis/download-tasks-by-project-id"
+[1] "Calling... /bis/download-tasks-by-project-id"
+[1] "Calling... /bis/download-tasks-by-project-id"
+[1] "Calling... /bis/download-tasks-by-project-id"
+[1] "Calling... /bis/download-tasks-by-project-id"</code></pre>
+</div>
+</div>
 <div class="cell">
 <div id="tbl-loc-repl" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
@@ -545,7 +569,7 @@ Table&nbsp;5: TMTT tags
 <div id="fig-project-dynamic" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-project-dynamic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="project-dynamic.png" class="img-fluid figure-img">
+<a href="project-dynamic.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3" title="Figure&nbsp;3: Dynamic spectrogram and project settings in WildTrax"><img src="project-dynamic.png" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-project-dynamic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;3: Dynamic spectrogram and project settings in WildTrax
@@ -573,10 +597,10 @@ Figure&nbsp;3: Dynamic spectrogram and project settings in WildTrax
 <p>A total of 102 species were found across the six years. <a href="#fig-spp-rich-locs" class="quarto-xref">Figure&nbsp;4</a> describes the relationship of species richness for each location across survey year.</p>
 <div class="cell page-columns page-full" data-layout-align="center" data-cap-location="margin">
 <div class="cell-output-display page-columns page-full">
-<div id="fig-spp-rich-locs" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" data-fig-align="center" data-cap-location="margin">
+<div id="fig-spp-rich-locs" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" data-cap-location="margin" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
 <div aria-describedby="fig-spp-rich-locs-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="peinp_files/figure-html/fig-spp-rich-locs-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672">
+<a href="peinp_files/figure-html/fig-spp-rich-locs-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4" title="Figure&nbsp;4: Species richness at forest monitoring locations across years"><img src="peinp_files/figure-html/fig-spp-rich-locs-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></a>
 </div>
 <figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-spp-rich-locs-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;4: Species richness at forest monitoring locations across years
@@ -602,10 +626,10 @@ Table&nbsp;6: Common bird forest species guilds. For nesting habitat; Ag = Agric
 </div>
 <div class="cell page-columns page-full" data-layout-align="center" data-cap-location="margin">
 <div class="cell-output-display page-columns page-full">
-<div id="fig-spp-activity" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" data-fig-align="center" data-cap-location="margin">
+<div id="fig-spp-activity" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" data-cap-location="margin" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
 <div aria-describedby="fig-spp-activity-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="peinp_files/figure-html/fig-spp-activity-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672">
+<a href="peinp_files/figure-html/fig-spp-activity-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-5" title="Figure&nbsp;5: Seasonal detection activity of most commonly detected forest species"><img src="peinp_files/figure-html/fig-spp-activity-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></a>
 </div>
 <figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-spp-activity-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;5: Seasonal detection activity of most commonly detected forest species
@@ -617,10 +641,10 @@ Figure&nbsp;5: Seasonal detection activity of most commonly detected forest spec
 <p>Shannon’s diversity was stable based on results. (see <a href="#fig-shannon" class="quarto-xref">Figure&nbsp;7</a>.)</p>
 <div class="cell page-columns page-full" data-layout-align="center" data-cap-location="margin">
 <div class="cell-output-display page-columns page-full">
-<div id="fig-ocean-richness" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" data-fig-align="center" data-cap-location="margin">
+<div id="fig-ocean-richness" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" data-cap-location="margin" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
 <div aria-describedby="fig-ocean-richness-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="peinp_files/figure-html/fig-ocean-richness-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672">
+<a href="peinp_files/figure-html/fig-ocean-richness-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-6" title="Figure&nbsp;6: Ocean distance and species richness"><img src="peinp_files/figure-html/fig-ocean-richness-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></a>
 </div>
 <figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-ocean-richness-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;6: Ocean distance and species richness
@@ -632,39 +656,39 @@ Figure&nbsp;6: Ocean distance and species richness
 <div class="cell" data-layout-align="center" data-cap-location="bottom">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1" data-cap-location="bottom"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>shannon_d <span class="ot">&lt;-</span> pei_main <span class="sc">|&gt;</span> </span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">grepl</span>(<span class="st">'BS'</span>,location)) <span class="sc">|&gt;</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">wt_tidy_species</span>(<span class="at">remove =</span> <span class="fu">c</span>(<span class="st">"mammal"</span>,<span class="st">"amphibian"</span>,<span class="st">"abiotic"</span>,<span class="st">"insect"</span>,<span class="st">"unknown"</span>), <span class="at">zerofill =</span> F) <span class="sc">|&gt;</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(<span class="fu">wt_get_species</span>() <span class="sc">|&gt;</span> <span class="fu">select</span>(species_code, species_class, species_order), <span class="at">by =</span> <span class="st">"species_code"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(location, recording_date_time, species_code, species_common_name, individual_order, abundance) <span class="sc">|&gt;</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>() <span class="sc">|&gt;</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(location, recording_date_time, species_code, species_common_name) <span class="sc">|&gt;</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">count =</span> <span class="fu">max</span>(individual_order)) <span class="sc">|&gt;</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">|&gt;</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> species_code, <span class="at">values_from =</span> count, <span class="at">values_fill =</span> <span class="dv">0</span>) <span class="sc">|&gt;</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="sc">-</span>(location<span class="sc">:</span>species_common_name), <span class="at">names_to =</span> <span class="st">"species"</span>, <span class="at">values_to =</span> <span class="st">"count"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(location, <span class="at">year =</span> <span class="fu">year</span>(recording_date_time), species) <span class="sc">|&gt;</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">total_count =</span> <span class="fu">sum</span>(count)) <span class="sc">|&gt;</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">|&gt;</span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(location, year) <span class="sc">|&gt;</span></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">shannon_index =</span> <span class="fu">diversity</span>(total_count, <span class="at">index =</span> <span class="st">"shannon"</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">|&gt;</span></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">factor</span>(year), <span class="at">y =</span> shannon_index, <span class="at">fill =</span> <span class="fu">factor</span>(year))) <span class="sc">+</span></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.6</span>, <span class="at">colour =</span> <span class="st">"grey"</span>) <span class="sc">+</span></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Year"</span>,</span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Shannon diversity index per location"</span>) <span class="sc">+</span></span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>) <span class="sc">+</span></span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_d</span>(<span class="at">alpha =</span> <span class="fl">0.7</span>)</span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>shannon_d</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2" data-cap-location="bottom"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>shannon_d <span class="ot">&lt;-</span> pei_main <span class="sc">|&gt;</span> </span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">grepl</span>(<span class="st">'BS'</span>,location)) <span class="sc">|&gt;</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">wt_tidy_species</span>(<span class="at">remove =</span> <span class="fu">c</span>(<span class="st">"mammal"</span>,<span class="st">"amphibian"</span>,<span class="st">"abiotic"</span>,<span class="st">"insect"</span>,<span class="st">"unknown"</span>), <span class="at">zerofill =</span> F) <span class="sc">|&gt;</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(<span class="fu">wt_get_species</span>() <span class="sc">|&gt;</span> <span class="fu">select</span>(species_code, species_class, species_order), <span class="at">by =</span> <span class="st">"species_code"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(location, recording_date_time, species_code, species_common_name, individual_order, abundance) <span class="sc">|&gt;</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>() <span class="sc">|&gt;</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(location, recording_date_time, species_code, species_common_name) <span class="sc">|&gt;</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">count =</span> <span class="fu">max</span>(individual_order)) <span class="sc">|&gt;</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">|&gt;</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> species_code, <span class="at">values_from =</span> count, <span class="at">values_fill =</span> <span class="dv">0</span>) <span class="sc">|&gt;</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="sc">-</span>(location<span class="sc">:</span>species_common_name), <span class="at">names_to =</span> <span class="st">"species"</span>, <span class="at">values_to =</span> <span class="st">"count"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(location, <span class="at">year =</span> <span class="fu">year</span>(recording_date_time), species) <span class="sc">|&gt;</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">total_count =</span> <span class="fu">sum</span>(count)) <span class="sc">|&gt;</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">|&gt;</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(location, year) <span class="sc">|&gt;</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">shannon_index =</span> <span class="fu">diversity</span>(total_count, <span class="at">index =</span> <span class="st">"shannon"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">|&gt;</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">factor</span>(year), <span class="at">y =</span> shannon_index, <span class="at">fill =</span> <span class="fu">factor</span>(year))) <span class="sc">+</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.6</span>, <span class="at">colour =</span> <span class="st">"grey"</span>) <span class="sc">+</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Year"</span>,</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Shannon diversity index per location"</span>) <span class="sc">+</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>) <span class="sc">+</span></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_d</span>(<span class="at">alpha =</span> <span class="fl">0.7</span>)</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>shannon_d</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
-<div id="fig-shannon" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center" data-cap-location="bottom">
+<div id="fig-shannon" class="quarto-float quarto-figure quarto-figure-center anchored" data-cap-location="bottom" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-shannon-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="peinp_files/figure-html/fig-shannon-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672">
+<a href="peinp_files/figure-html/fig-shannon-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-7" title="Figure&nbsp;7: Shannon diversity index over years"><img src="peinp_files/figure-html/fig-shannon-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-shannon-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;7: Shannon diversity index over years
@@ -680,22 +704,22 @@ Figure&nbsp;7: Shannon diversity index over years
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">datatable</span>(</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  plot_mdm <span class="sc">|&gt;</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(species_code) <span class="sc">|&gt;</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(<span class="at">models =</span> <span class="fu">list</span>(</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>      <span class="fu">lm</span>(normalized_count <span class="sc">~</span> year, <span class="at">data =</span> <span class="fu">cur_data</span>())</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    )) <span class="sc">|&gt;</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">model_summary =</span> <span class="fu">map</span>(models, tidy)) <span class="sc">|&gt;</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">unnest</span>(model_summary) <span class="sc">|&gt;</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(<span class="sc">-</span>models) <span class="sc">|&gt;</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.numeric), round, <span class="dv">2</span>)),</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">options =</span> <span class="fu">list</span>(</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">searching =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">paging =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">pageLength =</span> <span class="dv">10</span></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">datatable</span>(</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  plot_mdm <span class="sc">|&gt;</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(species_code) <span class="sc">|&gt;</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(<span class="at">models =</span> <span class="fu">list</span>(</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>      <span class="fu">lm</span>(normalized_count <span class="sc">~</span> year, <span class="at">data =</span> <span class="fu">cur_data</span>())</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    )) <span class="sc">|&gt;</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">model_summary =</span> <span class="fu">map</span>(models, tidy)) <span class="sc">|&gt;</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">unnest</span>(model_summary) <span class="sc">|&gt;</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(<span class="sc">-</span>models) <span class="sc">|&gt;</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.numeric), round, <span class="dv">2</span>)),</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">options =</span> <span class="fu">list</span>(</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">searching =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">paging =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">pageLength =</span> <span class="dv">10</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div id="tbl-normalized-count-mdm-year" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
@@ -714,42 +738,42 @@ Table&nbsp;7: Linear models of species trends using normalized mean count per lo
 <div class="cell" data-layout-align="center" data-cap-location="bottom">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3" data-cap-location="bottom"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>count_annual_mdm <span class="ot">&lt;-</span> tot_a_mdm <span class="sc">|&gt;</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">year =</span> <span class="fu">year</span>(recording_date_time)) <span class="sc">|&gt;</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(location, year, species_code, individual_order, abundance) <span class="sc">|&gt;</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(location, year, species_code) <span class="sc">|&gt;</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">individual_order =</span> <span class="fu">max</span>(individual_order)) <span class="sc">|&gt;</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">|&gt;</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">year =</span> <span class="fu">round</span>(year, <span class="dv">0</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(year) <span class="sc">|&gt;</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">sum_year =</span> <span class="fu">sum</span>(individual_order), </span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>            <span class="at">sample_size =</span> <span class="fu">n</span>()) <span class="sc">|&gt;</span></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">|&gt;</span></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">normalized_count =</span> sum_year <span class="sc">/</span> sample_size)</span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Linear model with normalized counts</span></span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>linear_model_count_annual_mdm <span class="ot">&lt;-</span> <span class="fu">lm</span>(normalized_count <span class="sc">~</span> year, <span class="at">data =</span> count_annual_mdm)</span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>slope_count_annual_mdm <span class="ot">&lt;-</span> <span class="fu">coef</span>(linear_model_count_annual_mdm)[<span class="dv">2</span>]</span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>p_value_count_annual_mdm <span class="ot">&lt;-</span> <span class="fu">summary</span>(linear_model_count_annual_mdm)<span class="sc">$</span>coefficients[<span class="dv">2</span>, <span class="dv">4</span>]</span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot with normalized counts</span></span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(count_annual_mdm, <span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> normalized_count)) <span class="sc">+</span></span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>) <span class="sc">+</span></span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
-<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_colour_viridis_d</span>(<span class="at">option =</span> <span class="st">"cividis"</span>) <span class="sc">+</span></span>
-<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Year"</span>, <span class="at">y =</span> <span class="st">"Normalized Count of Medium-Distance Migrants"</span>, <span class="at">fill =</span> <span class="st">"Ecoregion"</span>) <span class="sc">+</span></span>
-<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="fu">unique</span>(count_annual_mdm<span class="sc">$</span>year)) <span class="sc">+</span></span>
-<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
-<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
-<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">x =</span> <span class="dv">2020</span>, <span class="at">y =</span> <span class="fl">1.9</span>, </span>
-<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>           <span class="at">label =</span> <span class="fu">paste</span>(<span class="st">"Slope: "</span>, <span class="fu">round</span>(slope_count_annual_mdm, <span class="dv">2</span>), <span class="st">"</span><span class="sc">\n</span><span class="st">P-value: "</span>, <span class="fu">round</span>(p_value_count_annual_mdm, <span class="dv">4</span>)), </span>
-<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>           <span class="at">size =</span> <span class="dv">3</span>, <span class="at">hjust =</span> <span class="dv">0</span>, <span class="at">vjust =</span> <span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4" data-cap-location="bottom"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>count_annual_mdm <span class="ot">&lt;-</span> tot_a_mdm <span class="sc">|&gt;</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">year =</span> <span class="fu">year</span>(recording_date_time)) <span class="sc">|&gt;</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(location, year, species_code, individual_order, abundance) <span class="sc">|&gt;</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(location, year, species_code) <span class="sc">|&gt;</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">individual_order =</span> <span class="fu">max</span>(individual_order)) <span class="sc">|&gt;</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">|&gt;</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">year =</span> <span class="fu">round</span>(year, <span class="dv">0</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(year) <span class="sc">|&gt;</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">sum_year =</span> <span class="fu">sum</span>(individual_order), </span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>            <span class="at">sample_size =</span> <span class="fu">n</span>()) <span class="sc">|&gt;</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">|&gt;</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">normalized_count =</span> sum_year <span class="sc">/</span> sample_size)</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Linear model with normalized counts</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>linear_model_count_annual_mdm <span class="ot">&lt;-</span> <span class="fu">lm</span>(normalized_count <span class="sc">~</span> year, <span class="at">data =</span> count_annual_mdm)</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>slope_count_annual_mdm <span class="ot">&lt;-</span> <span class="fu">coef</span>(linear_model_count_annual_mdm)[<span class="dv">2</span>]</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>p_value_count_annual_mdm <span class="ot">&lt;-</span> <span class="fu">summary</span>(linear_model_count_annual_mdm)<span class="sc">$</span>coefficients[<span class="dv">2</span>, <span class="dv">4</span>]</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot with normalized counts</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(count_annual_mdm, <span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> normalized_count)) <span class="sc">+</span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>) <span class="sc">+</span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_colour_viridis_d</span>(<span class="at">option =</span> <span class="st">"cividis"</span>) <span class="sc">+</span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Year"</span>, <span class="at">y =</span> <span class="st">"Normalized Count of Medium-Distance Migrants"</span>, <span class="at">fill =</span> <span class="st">"Ecoregion"</span>) <span class="sc">+</span></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="fu">unique</span>(count_annual_mdm<span class="sc">$</span>year)) <span class="sc">+</span></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">x =</span> <span class="dv">2020</span>, <span class="at">y =</span> <span class="fl">1.9</span>, </span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>           <span class="at">label =</span> <span class="fu">paste</span>(<span class="st">"Slope: "</span>, <span class="fu">round</span>(slope_count_annual_mdm, <span class="dv">2</span>), <span class="st">"</span><span class="sc">\n</span><span class="st">P-value: "</span>, <span class="fu">round</span>(p_value_count_annual_mdm, <span class="dv">4</span>)), </span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>           <span class="at">size =</span> <span class="dv">3</span>, <span class="at">hjust =</span> <span class="dv">0</span>, <span class="at">vjust =</span> <span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
-<div id="fig-annual-count" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center" data-cap-location="bottom">
+<div id="fig-annual-count" class="quarto-float quarto-figure quarto-figure-center anchored" data-cap-location="bottom" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-annual-count-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="peinp_files/figure-html/fig-annual-count-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672">
+<a href="peinp_files/figure-html/fig-annual-count-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-8" title="Figure&nbsp;8: Annual count of medium-distance migrants"><img src="peinp_files/figure-html/fig-annual-count-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-annual-count-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;8: Annual count of medium-distance migrants
@@ -1289,6 +1313,38 @@ Ware, Lena, C. Lisa Mahon, Logan McLeod, and Jean-François Jetté. 2023. <span>
   });
   </script>
 </div> <!-- /content -->
+<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","descPosition":"bottom","loop":false,"openEffect":"zoom","selector":".lightbox"});
+(function() {
+  let previousOnload = window.onload;
+  window.onload = () => {
+    if (previousOnload) {
+      previousOnload();
+    }
+    lightboxQuarto.on('slide_before_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      const href = trigger.getAttribute('href');
+      if (href !== null) {
+        const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+        if (imgEl !== null) {
+          const srcAttr = imgEl.getAttribute("src");
+          if (srcAttr && srcAttr.startsWith("data:")) {
+            slideConfig.href = srcAttr;
+          }
+        }
+      } 
+    });
+  
+    lightboxQuarto.on('slide_after_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(slideNode);
+      }
+    });
+  
+  };
+  
+})();
+          </script>
 
 
 

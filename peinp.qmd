@@ -4,25 +4,36 @@ format:
   html:
     grid:
       margin-width: 300px
+  pdf:
+    toc: true
+    toc-depth: 3
+    number-sections: true
+    colorlinks: true
+    geometry:
+      - margin=1in
+    papersize: letter
 navbar: right
 theme: cosmo
+lightbox: true
 date: "26 February, 2026"
-author: "Alex MacPhail"
+author: 
+  - name: "Alex MacPhail"
+    affiliation: "Biodiversity Pathways Ltd."
 editor: visual
 bibliography: references.bib
 nocite: '@*'
 toc: true
 toc-depth: 3
 toc-expand: true
+prefer-html: true
 toc-location: left
 styles: styles.css
 github: https://github.com/biodiversitypathways/peinp
 ---
 
-![](peinpheader.png){style="float:left`;" fig-alt="Photo of the ocean" fig-align="center"}
+![](assets/peinpheader.png){style="float:left`;" fig-alt="Photo of the ocean" fig-align="center"}
 
-```{r}
-#| label: Load packages and authenticate to WildTrax
+```{r Download packages and load data}
 #| include: false
 #| echo: false
 #| eval: true
@@ -51,7 +62,7 @@ library(broom)
 wt_auth()
 
 load('pei.RData')
-#save.image('pei.RData')
+save.image('pei.RData')
 #cirrus_penp_recs  <- readRDS('penpcirrus.RDS')
 ```
 
@@ -71,7 +82,7 @@ This report is dynamically generated, meaning its results may evolve with the ad
 #| include: false
 
 pei_projects <- wildrtrax::wt_get_projects(sensor = 'ARU') |>
-  filter(grepl('^Prince Edward Island National Park', project)) |>
+  filter(grepl('Prince Edward Island National Park', project)) |>
   select(project_id) |>
   pull()
 
@@ -82,8 +93,30 @@ pei_main <-
       project_id = .x,
       sensor_id = "ARU",
       reports = "main"
-    )
-  )
+    ))
+
+pei_hawkears <-
+  map_dfr(
+    .x = pei_projects,
+    .f = ~ wildrtrax::wt_download_report(
+      project_id = .x,
+      sensor_id = "ARU",
+      reports = "ai"
+    ))
+
+balance <- pei_main |>
+  mutate(year = year(recording_date_time)) |>
+  group_by(location, year) |>
+  distinct(task_id) |>
+  slice_sample(n = 4) |>
+  ungroup() |>
+  distinct() |>
+  pull(task_id)
+
+pei_main <- pei_main |>
+  filter(task_id %in% balance)
+  
+  
 ```
 
 ------------------------------------------------------------------------
@@ -146,6 +179,80 @@ repeats <- pei_locs |>
   distinct() |>
   pull()
 
+# Define geospatial assets for covariates
+
+pei_shp <- read_sf('assets/PEI.shp')
+peinp_shp <- read_sf('assets/peinp.shp')
+peinp_shp <- st_transform(peinp_shp, st_crs(pei_locs)) |> st_make_valid()
+natlpark_shp <- read_sf('assets/National_Parks_and_National_Park_Reserves_of_Canada_Legislative_Boundaries.shp')
+coast <- read_sf('assets/coastal_waters/lhy_000h16a_e.shp')
+coast <- st_transform(coast, st_crs(pei_locs)) |> st_make_valid()
+clu <- read_sf('assets/CLUI_2020/Corporate_Land_Use_Inventory_(CLUI)_2020.shp')
+clu <- st_transform(clu, st_crs(pei_locs)) |> st_make_valid()
+clu_crop <- st_crop(clu, xmin=-63.8658, ymin=46.19434, xmax=-62.65111, ymax=46.6279)
+cover_cols = c("COVER1","COVER2","COVER3","COVER4","COVER5")
+wetland_cols = c("CLASS1","CLASS2","CLASS3","CLASS4","CLASS5","CLASS6","CLASS7")
+nearest_idx <- st_nearest_feature(pei_locs, coast)
+coast_nearest <- coast |> slice(nearest_idx)
+pei_locs <- pei_locs |> mutate(coast_distance = as.numeric(st_distance(geometry, coast_nearest$geometry, by_element = TRUE)), .after = year)
+
+locs_buff <- st_buffer(pei_locs, 150) |> 
+  select(location) |> 
+  distinct() %>%
+  mutate(buff_area = as.numeric(st_area(.)))
+ints <- st_intersection(clu_crop, locs_buff)
+ints2 <- ints %>% mutate(area = as.numeric(st_area(.)))
+
+df_long <- ints2 %>%
+  filter(!grepl('ASC|LXI',location)) %>%
+  select(location, COVER1, CLASS1, area) %>%
+  distinct() %>%
+  mutate(COVER1 = case_when(
+    !is.na(CLASS1) & CLASS1 != "NA" ~ CLASS1,  # use wetland class if present
+    TRUE ~ COVER1
+  )) %>%
+  st_drop_geometry() %>%
+  group_by(location, COVER1) %>%
+  summarise(area = sum(area)) %>%
+  ungroup() %>%
+  pivot_wider(names_from = COVER1, values_from = area) %>%
+  mutate_all(~replace(., is.na(.), 0)) %>%
+  mutate(across(-location, ~as.numeric(.x))) %>%
+  rowwise() %>%
+  mutate(total = sum(c_across(-location))) %>%
+  ungroup() %>%
+  mutate(across(-c(location, total), ~ .x / total)) %>%
+  mutate(missed = round((total / 70685.8), 2))
+
+lk_lc <- tibble(
+  land_cover = c("GRS","HAY","RM","SM","SOY","TRE","WS","PAV","OTH","WB","AL","DT","PO","CC","BAR","BS","BF","NA","PAS","SHR","DMW","SDW","MDW","SAW","SSW","OWW","BOW","WSW"),
+  description = c("Grass","Hay Field","Red Maple","Soft Maple","Soybean","Trees","White Spruce","Paved","Other","White Birch","Alder","Dead Trees","Poplar","CC","Bare Soil","Black Spruce","Balsam Fir","Not Available","Pasture","Shrub","Deep Marsh","Shrubby Wetland","Meadow Wetland","Saline Wetland","Shrubby Swamp","Open Water Wetland","Bog Wetland","Wooded Swamp")
+)
+
+df_lk <- df_long %>%
+  pivot_longer(-location, names_to = "landcover", values_to = "landcover_proportion") %>%
+  filter(!landcover_proportion == 0) %>%
+  inner_join(., lk_lc, by = c("landcover" = "land_cover")) 
+
+covs <- df_lk |>
+  inner_join(
+    pei_locs |> 
+      st_drop_geometry() |> 
+      select(location, coast_distance) |>
+      distinct(),                          # add this
+    by = "location"
+  ) |>
+  mutate(landcover = case_when(landcover %in% c("WS","BS","BF") ~ "Conifer",
+                               landcover %in% c("RM","WB","AL","PO") ~ "Deciduous",
+                               landcover %in% c("SOY","PAV","TRE","HAY","CC","SM","PAS","SHR","OTH") ~ "Anthro",
+                               landcover %in% c("BAR","GRS") ~ "Open",
+                               landcover %in% c("DMW", "SDW", "MDW", "SAW", "SSW", "OWW", "BOW", "WSW") ~ "Wetlands",
+                               landcover %in% c("NA") ~ NA_character_,
+                               TRUE ~ NA_character_)) |>
+  group_by(location, coast_distance, landcover) |>
+  summarise(landcover_proportion = sum((landcover_proportion))) |>
+  ungroup()
+
 locs_summary <- pei_locs |>
   mutate(coast_distance = round(coast_distance,0)) |>
   st_drop_geometry() |>
@@ -160,75 +267,10 @@ locs_summary <- pei_locs |>
                           grepl('PENP-4-*',location) ~ "Greenwich",
                           grepl('PENP-5-*',location) ~ "Skmaqn",
                           grepl('PENP-6-*',location) ~ "North Rustico",
-                          grepl('PENP-BS-*',location) ~ "Bank Swallow Monitoring",
+                          grepl('PENP-BS-*|*BANS*',location) ~ "Bank Swallow Monitoring",
                           grepl('PENP-E1-*',location) ~ "Skmaqn",
                           TRUE ~ "First Nations Communities")) %>%
   rename('Location' = location)
-
-# Define geospatial assets for covariates
-
-pei_shp <- read_sf('assets/PEI.shp')
-peinp_shp <- read_sf('assets/peinp.shp')
-peinp_shp <- st_transform(peinp_shp, st_crs(pei_locs)) |> st_make_valid()
-natlpark_shp <- read_sf('assets/National_Parks_and_National_Park_Reserves_of_Canada_Legislative_Boundaries.shp')
-coast <- read_sf('assets/coastal_waters/lhy_000h16a_e.shp')
-coast <- st_transform(coast, st_crs(pei_locs)) |> st_make_valid()
-clu <- read_sf('assets/CLUI_2020/Corporate_Land_Use_Inventory_(CLUI)_2020.shp')
-clu <- st_transform(clu, st_crs(pei_locs)) |> st_make_valid()
-clu_crop <- st_crop(clu, xmin=-63.8658, ymin=46.19434, xmax=-62.65111, ymax=46.6279)
-cover_cols = c("COVER1","COVER2","COVER3","COVER4","COVER5")
-wetland_cols = c("CLASS1","CLASS2","CLASS3","CLASS4","CLASS5","CLASS6","CLASS7")
-
-nearest_idx <- st_nearest_feature(pei_locs, coast)
-coast_nearest <- coast |> slice(nearest_idx)
-pei_locs <- pei_locs |>
-  mutate(
-    coast_distance = as.numeric(st_distance(geometry, coast_nearest$geometry, by_element = TRUE)), 
-    .after = year
-  )
-
-locs_buff <- st_buffer(pei_locs, 150) |> select(location) |> distinct()
-ints <- st_intersection(clu_crop, locs_buff)
-ints2 <- ints %>%
-  mutate(area = st_area(.))
-
-df_long <- ints2 %>%
-  filter(!grepl('ASC|LXI',location)) %>%
-  select(location, COVER1, area) %>%
-  distinct() %>%
-  st_drop_geometry() %>%
-  group_by(location, COVER1) %>%
-  summarise(area = sum(area)) %>%
-  ungroup() %>%
-  pivot_wider(names_from = COVER1, values_from = area) %>%
-  mutate_all(~replace(., is.na(.), 0)) %>%
-  mutate(across(-location, ~as.numeric(.x))) %>%
-  rowwise() %>%
-  mutate(total = sum(c_across(-location))) %>%
-  ungroup() %>%
-  mutate(across(-c(location,total), ~ .x / total)) %>%
-  select(-total)
-
-lk_lc <- tibble(
-  land_cover = c("GRS","HAY", "RM", "SM", "SOY", "TRE", "WS", "NA", "PAV", "OTH", "WB", "AL", "DT", "SDW", "PO", "CC", "BAR", "BS", "BF", "NA", "PAS","SHR"),
-  description = c("Grass", "Hay Field", "Red Maple", "SM", "SOY", "Trees", "White Spruce", "NA", "Paved", "Other", "White Birch", "Alder", "DT", "Sand Dune", "Poplar", "CC", "Bare Soil", "Black Spruce", "Balsam Fir", "Not Available", "PAS","SHR"))
-
-df_lk <- df_long %>%
-  pivot_longer(-location, names_to = "landcover", values_to = "landcover_proportion") %>%
-  filter(!landcover_proportion == 0) %>%
-  inner_join(., lk_lc, by = c("landcover" = "land_cover")) 
-
-covs <- df_lk |>
-  inner_join(pei_locs |> st_drop_geometry() |> select(location, coast_distance), by = "location") |>
-  mutate(landcover = case_when(landcover %in% c("WS","BS","BF") ~ "Conifer",
-                               landcover %in% c("RM","WB","AL","PO") ~ "Deciduous",
-                               landcover %in% c("SOY","NA","PAV","TRE","HAY","CC","SM","PAS","SHR") ~ "Anthro",
-                               landcover %in% c("SDW","BAR","GRS") ~ "Open",
-                               landcover %in% c("NA") ~ NA_character_,
-                               TRUE ~ NA_character_)) |>
-  group_by(location, coast_distance, landcover) |>
-  summarise(landcover_proportion = sum((landcover_proportion))) |>
-  ungroup()
 
 ```
 
@@ -267,11 +309,11 @@ leaflet() %>%
 #| label: tbl-loc-summary
 #| tbl-cap: Locations surveyed across years. Ones indicated a deployment in that year for that location
 
-datatable(locs_summary, 
+datatable(locs_summary |> arrange(Location), 
           options = list(
             searching = TRUE,  
             paging = TRUE,    
-            pageLength = 10   
+            pageLength = 10
           )) |>
   formatStyle(columns = colnames(locs_summary), 
               backgroundColor = styleEqual(c("NA"), "lightgray"))  
@@ -389,28 +431,7 @@ pei_main |> names()
 #| eval: true
 #| include: true
 
-pei_tasks <- pei_main |>
-  as_tibble() |>
-  select(project_id, location, recording_date_time, task_duration, task_method, observer_id) |>
-  distinct() |>
-  mutate(hour = lubridate::hour(recording_date_time),
-         year = lubridate::year(recording_date_time),
-         typ = case_when(
-    hour >= 4 & hour <= 7 ~ "Dawn",
-    hour > 7 & hour < 20 ~ "Day",
-    hour >= 19 & hour < 21 ~ "Dusk",
-    TRUE ~ "Night"
-  )) |>
-  group_by(location, year, task_duration, typ) |>
-  tally() |>
-  ungroup() |>
-  filter(location == "PENP-4-1")
-
-
-task_info <- fs::dir_ls('tasks', regexp = "*.csv") |>
-  map_dfr(~read_csv(., show_col_types = F)) |>
-  select(internal_task_id, rain:audioQuality) |>
-  distinct()
+task_info <- map_dfr(pei_projects, ~wt_get_sync("project_aru_tasks", .x))
 
 ```
 
@@ -421,9 +442,9 @@ task_info <- fs::dir_ls('tasks', regexp = "*.csv") |>
 #| message: false
 #| include: true
 #| label: tbl-loc-repl
-#| tbl-cap: Example of tasks and unit replication for listening at PENP-4-1
+#| tbl-cap: Example of tasks and unit replication
 
-kable(pei_tasks)
+kable(task_info)
 ```
 
 ```{r}
@@ -480,21 +501,35 @@ Visual scanning is the concept of visually examining spectrograms in order to fi
 #| eval: false
 #| include: false
 
-just_bans <- wildrtrax::wt_get_projects(sensor = 'ARU') |>
-  filter(grepl('National Park Bank Swallow', project)) |>
-  select(project_id) |>
-  pull()
+bans_projects <- wt_get_projects('ARU') |> filter(grepl('National Park Bank Swallow', project)) |> pull(project_id)
 
-just_bans_main <-
-  map_dfr(
-    .x = just_bans,
-    .f = ~ wildrtrax::wt_download_report(
-      project_id = .x,
-      sensor_id = "ARU",
-      reports = "main"
-  ))
+# Download and bind all the data
+bans_aru <- imap_dfr(
+  bans_projects,
+  ~ map_dfr(
+      .x, 
+      ~ wt_download_report(
+          project_id = .x,
+          sensor_id = "ARU",
+          reports = "main"
+        )
+    ) |> mutate(data_type = .y, .after = organization) 
+)
 
-jbm <- just_bans_main |>
+# Get all HawkEars detections
+bans_hawkears <- imap_dfr(
+  bans_projects,
+  ~ map_dfr(
+      .x, 
+      ~ wt_download_report(
+          project_id = .x,
+          sensor_id = "ARU",
+          reports = c("ai")
+        )
+    ) |> mutate(data_type = .y, .after = organization) 
+)
+
+jbm <- bans_aru |>
   mutate(individual_count = as.character(abundance)) |>
   bind_rows(pei_main) |>
   filter(species_code == "BANS") |>
@@ -587,7 +622,7 @@ spp_rich_location |>
 #| label: tbl-bird-guilds
 #| tbl-cap: Common bird forest species guilds. For nesting habitat; Ag = Agricultural, Be = Beach, Bo = Bog, CW = Coniferous Woodlands, ES = Early Successional, MW = Mixed Woodlands, OW = Open Woodlands, TSS = Treed/Shrubby Swamp, Ur = Urban. Species from CW, MW, OW, TSS were used for analysis.
 
-guilds <- read_csv("bird_guilds.csv") |>
+guilds <- read_csv("assets/bird_guilds.csv") |>
   select(species_common_name, habitat_nesting) |>
   filter(habitat_nesting %in% c("CW","MW","OW","TSS")) 
 
@@ -902,66 +937,80 @@ We selected from those same 15 forested species to represent the forest songbird
 #| eval: false
 #| include: true
 
-ss_occ_plot_loop <- function(input, species_choice) {
-
+ss_occ_plot_loop <- function(species_choice) {
+  
   # Preprocess input data
-  pei_occu_all <- input %>%
+  pei_occu_all <- pei_main %>%
     as_tibble() %>%
     filter(!grepl('BS|ASC|LXI|E1', location)) %>%
-    wt_tidy_species(remove = c("mammal","amphibian","abiotic","insect","unknown")) %>%
+    wt_tidy_species(remove = c("mammal","amphibian","abiotic","insect","unknown"), zerofill = T) %>%
     left_join(guilds %>% select(species_common_name, habitat_nesting)) %>%
-    filter(habitat_nesting %in% c("CW","MW","OW","TSS")) %>%
-    filter(!task_duration > 180, !(grepl('PENP-BS-*', location) & task_method != '1SPT')) %>%
+    filter(!task_duration > 180, !(grepl('PENP-BS-*', location) & task_method %in% c('1SPT','1SPM'))) %>%
     mutate(hour = hour(recording_date_time),
            year = year(recording_date_time)) %>%
-    filter(hour %in% 4:7)
-
+    filter(hour %in% 4:8)
+  
   # Split data by year
   pei_by_year <- pei_occu_all %>%
     group_split(year)
-
+  
   # Create site covariates for each year
-  site_covs_list <- map(pei_by_year, ~ .x %>%
-                          inner_join(covs) %>%
-                          select(location, year, coast_distance, landcover, landcover_proportion) %>%
-                          distinct() %>%
-                          pivot_wider(names_from = landcover, 
-                                      values_from = landcover_proportion, 
-                                      values_fill = 0) %>%
-                          group_by(location, year, coast_distance) %>%
-                          summarise(across(starts_with(c("Anthro","Deciduous","Open","Conifer")), max), .groups = "drop")
-                        )
-
+  site_covs_list <- map(pei_by_year, ~ {
+    
+    # Landcover proportions
+    landcover_covs <- .x %>%
+      inner_join(covs) %>%
+      select(location, year, landcover, landcover_proportion) %>%
+      distinct() %>%
+      pivot_wider(names_from = landcover,
+                  values_from = landcover_proportion,
+                  values_fill = 0) %>%
+      group_by(location, year) %>%
+      summarise(across(starts_with(c("Anthro","Deciduous","Open","Conifer","Wetlands")), max),
+                .groups = "drop")
+    
+    # Coast distance — minimum distance per site
+    coast_covs <- .x %>%
+      inner_join(covs) %>%
+      select(location, coast_distance) %>%
+      distinct() %>%
+      group_by(location) %>%
+      slice_min(coast_distance, n = 1, with_ties = FALSE) %>%
+      ungroup()
+    
+    landcover_covs %>%
+      left_join(coast_covs, by = "location")
+  })
+  
   # Format occupancy data for each year
-  occu_list <- map2(pei_by_year, site_covs_list, ~ wt_format_occupancy(.x, siteCovs = .y, species = species_choice))
-
+  occu_list <- map2(pei_by_year, site_covs_list, ~ 
+                      wt_format_occupancy(.x, siteCovs = .y, species = species_choice))  # use species_choice arg
+  
   # Scale site and obs covariates
-  site_vars <- c("coast_distance","Anthro","Open","Conifer","Deciduous")
-  obs_vars  <- c("doy","hr","doy2","hr2")
-
+  site_vars <- c("coast_distance", "Anthro", "Open", "Conifer", "Deciduous", "Wetlands")
+  obs_vars  <- c("doy", "hr", "doy2", "hr2")
+  
   occu_list <- map(occu_list, function(o) {
-    for (v in site_vars) o@siteCovs[[v]] <- scale(o@siteCovs[[v]])
-    for (v in obs_vars)  o@obsCovs[[v]]  <- scale(o@obsCovs[[v]])
+    for (v in site_vars) o@siteCovs[[v]] <- as.numeric(scale(o@siteCovs[[v]]))
+    for (v in obs_vars)  o@obsCovs[[v]]  <- as.numeric(scale(o@obsCovs[[v]]))
     o
   })
-
+  
   # Fit occupancy models
-  models <- map(occu_list, ~ occu(~ doy2 + hr2 ~ Anthro + Open + Deciduous + Conifer, .x))
-  names(models) <- unique(pei_occu_all$year)
-
-  # Function to get predictions per model
+  models <- map(occu_list, ~ occu(~ doy2 + hr2 ~ Anthro + Open + Deciduous + Conifer + Wetlands, .x))
+  names(models) <- map_chr(pei_by_year, ~ as.character(unique(.x$year)))
+  
+  # Generate predictions for each year
   get_occ_preds <- function(model, year, site_covariates) {
     predict(model, type = "state", newdata = site_covariates, interval = "confidence") %>%
       as_tibble() %>%
       mutate(Year = year)
   }
-
-  # Generate predictions for each year
+  
   all_preds <- imap_dfr(models, ~ get_occ_preds(.x, .y, site_covs_list[[which(names(models) == .y)]]))
-
+  
   return(all_preds)
 }
-
 
 safe_ss_occ_plot_loop <- possibly(ss_occ_plot_loop, otherwise = tibble())
 
@@ -972,7 +1021,7 @@ species_list <- c("WTSP", "AMRO", "REVI", "COYE", "AMRE", "BTNW", "NOPA", "YEWA"
 
 nested_occ <- tibble(
   species = species_list,
-  occupancy_results = map(species_list, ~ safe_ss_occ_plot_loop(pei_main, .x))
+  occupancy_results = map(species_list, ~ safe_ss_occ_plot_loop(.x))
 )
 
 
@@ -1074,9 +1123,9 @@ Bank Swallows (BANS) were detected at `r jbm |> select(location) |> distinct() |
 #| label: fig-bans-dp
 
 # Filter and preprocess data
-bans_data <- pei_main %>%
+bans_data <- bans_aru |>
+  bind_rows(pei_main) |>
   mutate(individual_count = abundance) |>
-  filter(grepl('BS', location)) %>%
   select(location, recording_date_time, task_id, species_code, individual_order, individual_count) %>%
   distinct() %>%
   mutate(presence = if_else(species_code == "BANS", 1, 0),
@@ -1133,6 +1182,22 @@ ggplot(bans_data, aes(x = julian, y = predicted_presence)) +
   theme_minimal()
 
 ```
+
+```{r}
+#| warning: false
+#| echo: false
+#| eval: false
+#| include: true
+#| code-fold: true
+#| fig-cap: Performance of two acoustic classifiers on the detectioin of Bank Swallow at the task level. Precision and recall were evaluated based on detections by humans in the entire PEINP EI Monitoring dataset.
+#| label: fig-bans-ai
+
+all_hawkears <- list(bind_rows(pei_hawkears, bans_hawkears) |> distinct(), bind_rows(pei_main, bans_aru))
+
+eval <- wt_evaluate_classifier(all_hawkears, resolution = "task", remove_species = TRUE, species = "Bank Swallow")
+ggplot(eval, aes(x=recall, y=precision, colour=classifier)) + geom_smooth() + theme_bw() + xlim(0,1) + ylim(0,1) + xlab("Classifier Recall") + ylab("Classifier Precision")
+```
+
 
 ------------------------------------------------------------------------
 

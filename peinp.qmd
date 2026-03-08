@@ -62,7 +62,7 @@ library(broom)
 wt_auth()
 
 load('pei.RData')
-save.image('pei.RData')
+#save.image('pei.RData')
 #cirrus_penp_recs  <- readRDS('penpcirrus.RDS')
 ```
 
@@ -152,7 +152,7 @@ Data were collected during the spring and summer seasons from `r min(pei_locs$ye
 -   2 locations deployed in First Nations communities (`ASC-1, LXI-1`) to complement the forest songbird and evening schedules,
 -   And one location (`PENP-E1`), which was to examine the effects of a single public event
 
-Locations were surveyed on rotation with `r length(repeats)` locations (`r repeats`) surveyed each year. A detailed list of all survey years can be found in Table 1 (@tbl-loc-summary) and illustrated in Figure 1 (@fig-locs). ARUs were deployed at the beginning of the breeding season in April-May, and rotated locations until their final retrieval in July-August. At the forest songbird locations (`PENP-*`), the ARUs were set to record for 30 minutes continuously every hour for four hours, starting one hour before dawn and ending three hours after dawn. For Bank Swallow Monitoring locations (`PENP-BS`), recordings were made every 5 minutes for a duration of 3 minutes each from 1.5 hours before dusk to 1.5 hours after dusk. On average, each ARU recorded for
+Locations were surveyed on rotation with `r length(repeats)` locations (`r repeats`) surveyed each year. A detailed list of all survey years can be found in Table 1 (@tbl-loc-summary) and illustrated in Figure 1 (@fig-aru-monitoring-locations). ARUs were deployed at the beginning of the breeding season in April-May, and rotated locations until their final retrieval in July-August. At the forest songbird locations (`PENP-*`), the ARUs were set to record for 30 minutes continuously every hour for four hours, starting one hour before dawn and ending three hours after dawn. For Bank Swallow Monitoring locations (`PENP-BS`,`BANS-`), recordings were made every 5 minutes for a duration of 3 minutes each from 1.5 hours before dusk to 1.5 hours after dusk. On average, each ARU recorded for
 
 ```{r}
 #| warning: false
@@ -163,14 +163,14 @@ Locations were surveyed on rotation with `r length(repeats)` locations (`r repea
 #| results: hide
 
 pei_locs <- pei_main |>
-  mutate(year = lubridate::year(recording_date_time)) |>
-  select(location, latitude, longitude, year) |>
+  select(location, latitude, longitude) |>
   distinct() |>
   drop_na(latitude) |>
   sf::st_as_sf(coords = c("longitude","latitude"), crs = 4326)
 
 repeats <- pei_locs |>
   st_drop_geometry() |>
+  inner_join(pei_main |> mutate(year = year(recording_date_time)) |> select(location, year) |> distinct(), by = "location") |>
   group_by(location) |>
   summarise(count = n_distinct(year)) |>
   ungroup() |>
@@ -180,21 +180,24 @@ repeats <- pei_locs |>
   pull()
 
 # Define geospatial assets for covariates
-
 pei_shp <- read_sf('assets/PEI.shp')
 peinp_shp <- read_sf('assets/peinp.shp')
 peinp_shp <- st_transform(peinp_shp, st_crs(pei_locs)) |> st_make_valid()
 natlpark_shp <- read_sf('assets/National_Parks_and_National_Park_Reserves_of_Canada_Legislative_Boundaries.shp')
+
+# Coast metrics
 coast <- read_sf('assets/coastal_waters/lhy_000h16a_e.shp')
 coast <- st_transform(coast, st_crs(pei_locs)) |> st_make_valid()
+nearest_idx <- st_nearest_feature(pei_locs, coast)
+coast_nearest <- coast |> slice(nearest_idx)
+pei_locs <- pei_locs |> mutate(coast_distance = as.numeric(st_distance(geometry, coast_nearest$geometry, by_element = TRUE)))
+
+# Landcover variables
 clu <- read_sf('assets/CLUI_2020/Corporate_Land_Use_Inventory_(CLUI)_2020.shp')
 clu <- st_transform(clu, st_crs(pei_locs)) |> st_make_valid()
 clu_crop <- st_crop(clu, xmin=-63.8658, ymin=46.19434, xmax=-62.65111, ymax=46.6279)
 cover_cols = c("COVER1","COVER2","COVER3","COVER4","COVER5")
 wetland_cols = c("CLASS1","CLASS2","CLASS3","CLASS4","CLASS5","CLASS6","CLASS7")
-nearest_idx <- st_nearest_feature(pei_locs, coast)
-coast_nearest <- coast |> slice(nearest_idx)
-pei_locs <- pei_locs |> mutate(coast_distance = as.numeric(st_distance(geometry, coast_nearest$geometry, by_element = TRUE)), .after = year)
 
 locs_buff <- st_buffer(pei_locs, 150) |> 
   select(location) |> 
@@ -254,8 +257,12 @@ covs <- df_lk |>
   ungroup()
 
 locs_summary <- pei_locs |>
+  group_by(location) |>
+  slice_min(coast_distance, n = 1, with_ties = FALSE) |>
+  ungroup() |>
   mutate(coast_distance = round(coast_distance,0)) |>
   st_drop_geometry() |>
+  inner_join(pei_main |> mutate(year = year(recording_date_time)) |> select(location, year) |> distinct()) |>
   group_by(location, year) |>
   mutate(value = row_number()) |>
   ungroup() |>
@@ -348,7 +355,7 @@ datatable(covs_all,
 
 A total of 12456 recordings were collected (see @fig-recs-collect). From 2019 - 2021, data were transferred via hard drive to the University of Alberta in Edmonton, where they are redundantly stored on a server known as Cirrus. The recordings were standardized to ensure adherence to the naming convention of `LOCATION_DATETIME`, such as `PENP-1-1_20230625_053500.wav`. The remaining recordings (2022 - 2023) were directly uploaded to WildTrax by Parks Canada staff and can be downloaded from the platform's Recording tab, accessible under Manage \> Download list of recordings (see @fig-download-recs).
 
-![Downloading a list of recordings from WildTrax](download-recs.png){#fig-download-recs}
+![Downloading a list of recordings from WildTrax](assets/download-recs.png){#fig-download-recs}
 
 ```{r}
 #| warning: false
@@ -381,16 +388,6 @@ A total of 12456 recordings were collected (see @fig-recs-collect). From 2019 - 
    ungroup() |>
    summarise(mean = round(mean(count),2),
              sd = round(sd(count),2))
-
- recs_plot <- all_recs |>
-   rename("Location" = location) |>
-   rename("Day of Year" = julian) |>
-   ggplot(aes(x = `Day of Year`, y = Location, fill = Location)) +
-   geom_density_ridges() +
-   facet_wrap(~ year) +
-   theme_minimal() +
-   scale_fill_viridis_d() +
-   scale_x_discrete(guide = guide_axis(check.overlap = TRUE))
   
 ```
 
@@ -406,7 +403,15 @@ A total of 12456 recordings were collected (see @fig-recs-collect). From 2019 - 
 #| label: fig-recs-collect
 #| cap-location: margin
 
-recs_plot
+all_recs |>
+   rename("Location" = location) |>
+   rename("Day of Year" = julian) |>
+   ggplot(aes(x = `Day of Year`, y = Location, fill = Location)) +
+   geom_density_ridges() +
+   facet_wrap(~ year) +
+   theme_minimal() +
+   scale_fill_viridis_d() +
+   scale_x_discrete(guide = guide_axis(check.overlap = TRUE))
 
 ```
 
@@ -428,10 +433,10 @@ pei_main |> names()
 ```{r}
 #| warning: false
 #| echo: false
-#| eval: true
+#| eval: false
 #| include: true
 
-task_info <- map_dfr(pei_projects, ~wt_get_sync("project_aru_tasks", .x))
+task_info <- suppressMessages(map_dfr(pei_projects, ~wt_get_sync("project_aru_tasks", .x)))
 
 ```
 
@@ -444,7 +449,14 @@ task_info <- map_dfr(pei_projects, ~wt_get_sync("project_aru_tasks", .x))
 #| label: tbl-loc-repl
 #| tbl-cap: Example of tasks and unit replication
 
-kable(task_info)
+datatable(task_info, 
+          options = list(
+            searching = TRUE,  
+            paging = TRUE,    
+            pageLength = 10   
+          )) |>
+  formatStyle(columns = colnames(task_info), 
+              backgroundColor = styleEqual(c("NA"), "lightgray"))  
 ```
 
 ```{r}
@@ -467,7 +479,7 @@ verified_tags <- pei_main |>
   rename("Count" = n) |>
   rename("Tag is verified" = tag_is_verified)
 
-kable(verified_tags)
+datatable(verified_tags)
 ```
 
 ```{r}
@@ -484,7 +496,7 @@ tmtt_tags <- pei_main |>
   distinct() |>
   filter(abundance == "TMTT")
 
-kable(head(tmtt_tags))
+datatable(head(tmtt_tags))
 
 ```
 
@@ -492,7 +504,7 @@ kable(head(tmtt_tags))
 
 Visual scanning is the concept of visually examining spectrograms in order to find a signal within an audio recording. Visual scanning can be a useful processing method allowing trained users to process recordings much faster than traditional listening. It has been used for detecting different taxa (amphibians: @vis-scan-amphs, mammals: @aru-vs-cams-wolves) with comparable biological metrics, as well as helping to maximize species detection in large acoustic monitoring data sets (@all-the-scans). WildTrax's project settings and dynamic spectrogram settings in the processing interface allow users to upload many recordings, while also allowing frequency-limited or time-limited spectrograms. These changes are easily made by adjusting project settings in WildTrax (see @fig-project-dynamic).
 
-![Dynamic spectrogram and project settings in WildTrax](project-dynamic.png){#fig-project-dynamic}
+![Dynamic spectrogram and project settings in WildTrax](assets/project-dynamic.png){#fig-project-dynamic}
 
 ```{r}
 #| warning: false
@@ -758,7 +770,7 @@ ggplot(ocean_richness, aes(x = coast_distance, y = species_count)) +
 #| cap-location: bottom
 #| code-fold: true
 
-shannon_d <- pei_main |> 
+pei_main |> 
   filter(!grepl('BS',location)) |>
   wt_tidy_species(remove = c("mammal","amphibian","abiotic","insect","unknown"), zerofill = F) |>
   inner_join(wt_get_species() |> select(species_code, species_class, species_order), by = "species_code") |>
@@ -784,7 +796,6 @@ shannon_d <- pei_main |>
   theme(legend.position = "none") +
   scale_fill_viridis_d(alpha = 0.7)
 
-shannon_d
 ```
 
 ## Trends in abundance over time
@@ -794,7 +805,7 @@ Most forest species showed slight increasing and decreasing trends, with only fu
 ```{r}
 #| warning: false
 #| echo: false
-#| eval: false
+#| eval: true
 #| message: false
 #| include: true
 #| results: hide
@@ -1031,7 +1042,7 @@ nested_occ <- tibble(
 ```{r}
 #| warning: false
 #| echo: false
-#| eval: false
+#| eval: true
 #| include: true
 #| fig-align: center
 #| fig-cap: Single-season occupancy models of common forest songbird species
@@ -1150,6 +1161,16 @@ ggplot(cumulative_detection, aes(x = row_n, y = cumulative_rate)) +
        x = "Number of Recordings",
        y = "Cumulative Detection Rate") +
   theme_minimal()
+```
+
+```{r}
+#| warning: false
+#| echo: false
+#| eval: true
+#| include: true
+#| code-fold: true
+#| fig-cap: Bank Swallow 
+#| label: fig-bans-dp2
 
 # Aggregate data by Julian day
 daily_presence <- bans_data %>%
@@ -1186,7 +1207,7 @@ ggplot(bans_data, aes(x = julian, y = predicted_presence)) +
 ```{r}
 #| warning: false
 #| echo: false
-#| eval: false
+#| eval: true
 #| include: true
 #| code-fold: true
 #| fig-cap: Performance of two acoustic classifiers on the detectioin of Bank Swallow at the task level. Precision and recall were evaluated based on detections by humans in the entire PEINP EI Monitoring dataset.
@@ -1197,7 +1218,6 @@ all_hawkears <- list(bind_rows(pei_hawkears, bans_hawkears) |> distinct(), bind_
 eval <- wt_evaluate_classifier(all_hawkears, resolution = "task", remove_species = TRUE, species = "Bank Swallow")
 ggplot(eval, aes(x=recall, y=precision, colour=classifier)) + geom_smooth() + theme_bw() + xlim(0,1) + ylim(0,1) + xlab("Classifier Recall") + ylab("Classifier Precision")
 ```
-
 
 ------------------------------------------------------------------------
 

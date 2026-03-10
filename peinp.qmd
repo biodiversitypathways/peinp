@@ -57,6 +57,7 @@ library(ggpubr)
 library(vegan)
 library(MuMIn)
 library(AICcmodavg)
+library(mapview)
 library(broom)
 
 wt_auth()
@@ -115,7 +116,6 @@ balance <- pei_main |>
 
 pei_main <- pei_main |>
   filter(task_id %in% balance)
-  
   
 ```
 
@@ -228,8 +228,15 @@ df_long <- ints2 %>%
   mutate(missed = round((total / 70685.8), 2))
 
 lk_lc <- tibble(
-  land_cover = c("GRS","HAY","RM","SM","SOY","TRE","WS","PAV","OTH","WB","AL","DT","PO","CC","BAR","BS","BF","NA","PAS","SHR","DMW","SDW","MDW","SAW","SSW","OWW","BOW","WSW"),
-  description = c("Grass","Hay Field","Red Maple","Soft Maple","Soybean","Trees","White Spruce","Paved","Other","White Birch","Alder","Dead Trees","Poplar","CC","Bare Soil","Black Spruce","Balsam Fir","Not Available","Pasture","Shrub","Deep Marsh","Shrubby Wetland","Meadow Wetland","Saline Wetland","Shrubby Swamp","Open Water Wetland","Bog Wetland","Wooded Swamp")
+  land_cover = c("DMW", "SDW", "WB", "WS", "GRS", "HAY", "RM", "SM", "SOY",
+                 "TRE", "MDW", "PAV", "SAW", "OTH", "AL", "SSW", "DT", 
+                 "PO", "CC", "OWW", "BF", "BOW", "WSW", "BS", "BAR", "PAS", "SHR"),
+  description = c("Deep Marsh", "Sand Dune", "White Birch", "White Spruce", 
+                  "Grass", "Hay", "Red Maple", "Sugar Maple", "Soy",
+                  "Trees", "Meadow", "Paved", "Salt Marsh", "Other", "Alder", 
+                  "Shrub Swamp", NA, 
+                  "Poplar", "Clear Cut", "Open Water", "Balsam Fir", "Bog", 
+                  "Wooded Swamp", "Black Spruce", "Bare Soil", "Pasture", "Shrubs")
 )
 
 df_lk <- df_long %>%
@@ -291,6 +298,7 @@ locs_summary <- pei_locs |>
 #| fig-cap: Locations from Prince Edward Island National Park ARU Monitoring Program
 #| label: fig-aru-monitoring-locations
 
+<<<<<<< HEAD
 pei_locs2 <- pei_locs |> left_join(locs_summary |> select(Location, Site) |> distinct(), by = c("location" = "Location"))
 
 # Map visualization
@@ -300,6 +308,15 @@ pal <- colorFactor(
 )
 
 leaflet() %>%
+=======
+pei_locs2 <- pei_locs |> 
+  left_join(locs_summary |> select(Location, Site) |> distinct(), 
+            by = c("location" = "Location"))
+
+pal <- colorFactor(palette = "Set3", domain = pei_locs2$Site)
+
+m <- leaflet() %>%
+>>>>>>> 79c5143 (rebuild bank swallow section for 2025 data.)
   addTiles() %>%
   addPolygons(
     data = peinp_shp,
@@ -310,6 +327,7 @@ leaflet() %>%
     popup = ~paste("Park:", NAME_E)
   ) %>%
   addCircleMarkers(
+<<<<<<< HEAD
     data = pei_locs2,
     popup = ~paste("Location:", location, "<br>Site:", Site),
     fillColor = ~pal(Site),
@@ -317,6 +335,15 @@ leaflet() %>%
     fillOpacity = 0.8,
     radius = 6,
     weight = 1
+=======
+  data = pei_locs2,
+  popup = ~paste("Location:", location, "<br>Site:", Site),
+  fillColor = ~pal(Site),
+  color = "black",      # border color
+  fillOpacity = 0.8,
+  radius = 6,
+  weight = 3            # border thickness
+>>>>>>> 79c5143 (rebuild bank swallow section for 2025 data.)
   ) %>%
   addLegend(
     pal = pal,
@@ -326,6 +353,13 @@ leaflet() %>%
   addMeasure() %>%
   addMiniMap(position = "bottomleft")
 
+if (knitr::is_html_output()) {
+  m
+} else {
+  map_file <- "map_aru_locations.png"
+  if (!file.exists(map_file)) mapview::mapshot2(m, file = map_file)
+  knitr::include_graphics(map_file)
+}
 ```
 
 ```{r}
@@ -337,14 +371,7 @@ leaflet() %>%
 #| label: tbl-loc-summary
 #| tbl-cap: Locations surveyed across years. Ones indicated a deployment in that year for that location
 
-datatable(locs_summary |> arrange(Location), 
-          options = list(
-            searching = TRUE,  
-            paging = TRUE,    
-            pageLength = 10
-          )) |>
-  formatStyle(columns = colnames(locs_summary), 
-              backgroundColor = styleEqual(c("NA"), "lightgray"))  
+kable(locs_summary |> arrange(Location))
 ```
 
 ```{r}
@@ -354,27 +381,24 @@ datatable(locs_summary |> arrange(Location),
 #| message: false
 #| include: true
 #| label: tbl-obvs-and-covs
-#| tbl-cap: Site covariates for each forest songbird monitoring (PENP-*) location. Landcover is measured as proportion cover at 150 meter radius surrounding the ARU categorized into anthropogenic (pavement, soy), open (grass, sand dune, bare soil), deciduous (red maple, white birch, alder, poplar) and conifer (white spruce, black spruce, balsam fir).
+#| tbl-cap: Site covariates for each forest songbird monitoring (PENP-*) location. Landcover is measured as proportion cover at 150 meter radius surrounding the ARU categorized into anthropogenic (pavement, soy), open (grass, sand dune, bare soil), deciduous (red maple, white birch, alder, poplar) and conifer (white spruce, black spruce, balsam fir) and wetlands.
 
 covs_all <- covs %>%
   mutate_at(vars(landcover_proportion, coast_distance), ~round(., 2)) |>
   pivot_wider(names_from = landcover, values_from = landcover_proportion, values_fill = 0) |>
   rename("Distance from coast (m)" = coast_distance)
 
-datatable(covs_all, 
-          options = list(
-            searching = TRUE,  
-            paging = TRUE,    
-            pageLength = 10   
-          )) |>
-  formatStyle(columns = colnames(covs_all), 
-              backgroundColor = styleEqual(c("NA"), "lightgray"))  
+kable(covs_all)
 
 ```
 
 ## Data management
 
+<<<<<<< HEAD
 A total of 12456 recordings were collected (see @fig-recs-collect). From 2019 - 2021, data were transferred via hard drive to the University of Alberta in Edmonton, where they are redundantly stored on a server known as Cirrus. The recordings were standardized to ensure adherence to the naming convention of `LOCATION_DATETIME`, such as `PENP-1-1_20230625_053500.wav`. The remaining recordings (2022 - 2025) were directly uploaded to WildTrax by Parks Canada staff and can be downloaded from the platform's Recording tab, accessible under Manage \> Download list of recordings (see @fig-download-recs).
+=======
+A total of 12456 recordings were collected (see @fig-recs-collect). From 2019 - 2021, data were transferred via hard drive to the University of Alberta in Edmonton, where they are redundantly stored on a server known as Cirrus. The recordings were standardized to ensure adherence to the naming convention of `LOCATION_DATETIME`, such as `PENP-1-1_20230625_053500.wav`. The remaining recordings (2022 - 2025) were directly uploaded to WildTrax by Parks Canada staff and can be downloaded from the platform's Recording tab, accessible under Manage \> Download list of recordings.
+>>>>>>> 79c5143 (rebuild bank swallow section for 2025 data.)
 
 ```{r}
 #| warning: false
@@ -413,7 +437,7 @@ A total of 12456 recordings were collected (see @fig-recs-collect). From 2019 - 
 ```{r}
 #| warning: false
 #| echo: false
-#| eval: false
+#| eval: true
 #| message: false
 #| include: true
 #| results: hide
@@ -468,14 +492,8 @@ task_info <- suppressMessages(map_dfr(pei_projects, ~wt_get_sync("project_aru_ta
 #| label: tbl-loc-repl
 #| tbl-cap: Example of tasks and unit replication
 
-datatable(task_info, 
-          options = list(
-            searching = TRUE,  
-            paging = TRUE,    
-            pageLength = 10   
-          )) |>
-  formatStyle(columns = colnames(task_info), 
-              backgroundColor = styleEqual(c("NA"), "lightgray"))  
+kable(head(task_info))
+
 ```
 
 ```{r}
@@ -498,7 +516,7 @@ verified_tags <- pei_main |>
   rename("Count" = n) |>
   rename("Tag is verified" = tag_is_verified)
 
-datatable(verified_tags)
+kable(head(verified_tags))
 ```
 
 ```{r}
@@ -515,15 +533,40 @@ tmtt_tags <- pei_main |>
   distinct() |>
   filter(abundance == "TMTT")
 
-datatable(head(tmtt_tags))
+kable(head(tmtt_tags))
+
+```
+
+```{r}
+#| warning: false
+#| echo: false
+#| eval: true
+#| message: false
+#| include: true
+#| label: tbl-bird-guilds
+#| tbl-cap: Common bird forest species guilds. For nesting habitat; Ag = Agricultural, Be = Beach, Bo = Bog, CW = Coniferous Woodlands, ES = Early Successional, MW = Mixed Woodlands, OW = Open Woodlands, TSS = Treed/Shrubby Swamp, Ur = Urban. Species from CW, MW, OW, TSS were used for analysis.
+
+guilds <- read_csv("assets/bird_guilds.csv") |>
+  select(species_common_name, habitat_nesting) |>
+  filter(habitat_nesting %in% c("CW","MW","OW","TSS")) |>
+  mutate(habitat_nesting = case_when(habitat_nesting == "CW" ~ "Coniferous woodland",
+                                     habitat_nesting == "MW" ~ "Mixed Woodlands",
+                                     habitat_nesting == "OW" ~ "Open Woodlands",
+                                     habitat_nesting == "TSS" ~ "Treed/Shrubby Swamp",
+                                     habitat_nesting == "Ur" ~ "Urban",
+                                     TRUE ~ habitat_nesting))
+
+kable(guilds)
 
 ```
 
 ## Visual scanning
 
-Visual scanning is the concept of visually examining spectrograms in order to find a signal within an audio recording. Visual scanning can be a useful processing method allowing trained users to process recordings much faster than traditional listening. It has been used for detecting different taxa (amphibians: @vis-scan-amphs, mammals: @aru-vs-cams-wolves) with comparable biological metrics, as well as helping to maximize species detection in large acoustic monitoring data sets (@all-the-scans). WildTrax's project settings and dynamic spectrogram settings in the processing interface allow users to upload many recordings, while also allowing frequency-limited or time-limited spectrograms. These changes are easily made by adjusting project settings in WildTrax (see @fig-project-dynamic).
+Visual scanning is the concept of visually examining spectrograms in order to find a signal within an audio recording. Visual scanning can be a useful processing method allowing trained users to process recordings much faster than traditional listening. It has been used for detecting different taxa (amphibians: @vis-scan-amphs, mammals: @aru-vs-cams-wolves) with comparable biological metrics, as well as helping to maximize species detection in large acoustic monitoring data sets (@all-the-scans). WildTrax's project settings and dynamic spectrogram settings in the processing interface allow users to upload many recordings, while also allowing frequency-limited or time-limited spectrograms. These changes are easily made by adjusting project settings in WildTrax (see @fig-project-dynamic). Bank Swallow (*Riparia riparia*) are federally listed as threatened in Canada (see [Government of Canada](https://wildlife-species.canada.ca/bird-status/oiseau-bird-eng.aspx?sY=2019&sL=e&sM=p1&sB=BANS)) and provincially. They produce distinctive, broadband vocalizations that are readily identifiable on a spectrogram, making them well-suited to visual scanning workflows. We used visual scanning techniques to examine the presence of Bank Swallow at targeted sites across PEINP. ARUs were placed near ponds where Bank Swallow are known to forage, as foraging habitat quality and availability may play an important role in supporting local breeding populations (@cite-foraging-habitat). Documenting pond use by Bank Swallow can therefore inform habitat management and conservation planning within the park. In 2025, we refined our processing approach using dynamic spectrogram settings (see @fig-project-dynamic-2025), constraining the frequency range to the 95% CI of Bank Swallow vocalizations while expanding the time window, reducing visual noise and expediting detection. To complement visual scanning and further reduce false negatives, we evaluated two automated classifiers, BirdNET v2.0 (@kahl2021birdnet) and HawkEars v1.0.8 (@huus2025hawkears), with classifier outputs overlaid directly on spectrograms in WildTrax, allowing reviewers to cross-reference detections and apply expert judgment where classifier confidence was low.
 
 ![Dynamic spectrogram and project settings in WildTrax](assets/project-dynamic.png){#fig-project-dynamic}
+
+![Dynamic spectrogram and project settings in WildTrax](assets/project-dynamic-2025.png){#fig-project-dynamic-2025}
 
 ```{r}
 #| warning: false
@@ -560,6 +603,11 @@ bans_hawkears <- imap_dfr(
     ) |> mutate(data_type = .y, .after = organization) 
 )
 
+bans_aru |>
+  mutate(year = year(recording_date_time)) |>
+  filter(year == 2025, task_is_complete == T) |>
+  summarise(sum = sum(task_duration) / 3600)
+
 jbm <- bans_aru |>
   mutate(individual_count = as.character(abundance)) |>
   bind_rows(pei_main) |>
@@ -569,8 +617,6 @@ jbm <- bans_aru |>
 
 ```
 
-In order to use of ponds by Bank Swallow (BANS) as roosting locations at `PENP-BS-*` site, visual scanning was employed to identify the number of times vocalizations of BANS were heard at these locations. A total of `r pei_main |> filter(grepl('BS',location)) |> select(location, recording_date_time, task_method) |> distinct() |> tally() |> pull() + nrow(just_bans_main)` recordings were visually scanned for BANS.
-
 ## Automated recognition
 
 Automated recognition is a well-known process to help detect rare and elusive species (@knight2019classification. @shonfield2018utility) as well as species that may have a low detectability by collecting large data sets. In order to determine the presence of a few key species-at-risk, we utilized automated recognizers and deployed them across all the recordings in the 2019 data set. We constructed a recognizer for Eastern Wood-Pewee (EAWP) and used three previously constructed Wildlife Acoustics SongScope recognizers for Olive-sided Flycatcher (OSFL), Rusty Blackbird (RUBL) and Canada Warbler (CAWA) to detect for the presence of these species in the 2019 data set. All recognizers are freely available on WildTrax under Methods and Protocols \> [Automated Recognizers](https://wildtrax.ca/resources/methods-protocols/automated-recognizers/). Hits were verified and true positives for presence at each location (recording where the species was first positively detected) were uploaded to WildTrax via the `wt_songscope_tags` function in `wildrtrax`.
@@ -579,9 +625,7 @@ Automated recognition is a well-known process to help detect rare and elusive sp
 
 Species richness, diversity and occupancy were calculated using the r nrow(locs_summary) - 9 forest songbird monitoring locations (`PENP-`). We calculated species richness as distinct species found at each location and year surveyed (see @fig-spp-rich-locs), omitting species using `wildrtrax::wt_tidy_species()` for abiotic, amphibians, unknowns and insects. To determine if there were any changes to species diversity, we used Shannon's diversity index (@shannon1948mathematical) over years using `vegan::diversity(index="shannon")` (see @fig-shannon).
 
-For testing species occupancy, we selected locations with a minimum of four dawn visits for each year across all five years, focusing on forest obligate species for ecological relevance (see @tbl-bird-guilds). Utilizing a single-season single-species occupancy model from @mackenzie2002estimating, we calculated the predicted occupancy of species at all locations surveyed in each year across years. Site-specific covariates included the distance to ocean edge (in meters) and the proportional area of each cover type from the [Prince Edward Island 2010 Corporate Land Use Inventory](https://data.princeedwardisland.ca/Environment-and-Food/OD0144-Corporate-Landuse-Inventory-2010/tc7z-7rpy) at 150 meter radius surrounding the ARU categorized into anthropogenic (pavement, soy), open (grass, sand dune, bare soil), deciduous (red maple, white birch, alder, poplar) and conifer (white spruce, black spruce, balsam fir). Observation covariates incorporated day of the year, hour, observer, and a quadratic term for both day of year ($doy^{2}$) and hour ($hr^{2}$). See @tbl-obvs-and-covs for more information. Despite variations in processing methodology between 2019 - 2021 (1SPM - species-individual detected per minute, i.e. repeat sampling each minute for 3 minute) and subsequent years (2022 - 2023; 1SPT), we maintained consistency by exclusively utilizing the time to the first detection of individuals from the 1SPM recordings. Model predictions were generated, with goodness-of-fit testing using methods from @occu-fit and the best model selected based on AIC and through `MuMIn::dregde`, `MuMIn::get.models` and `MuMIn::model.sel`. If more than one model existed, the average model was used using `MuMIn::model.avg`. The final predictions were then made and plotted over years and sorted by nesting guilds of species into conifer, deciduous, treed / shrubby and open.
-
-Trends in species abundance were assessed using a normalized count, calculated as the total species count divided by the number of surveyed locations per year. We focused on a subset of species representative of the forest songbird community: `r c("BTNW","BLBW","GCKI","YRWA","MAWA","BTBW","BHVI","AMRE","REVI","MOWA","BLJA","ALFL","EAWP","WTSP","AMRO","COYE","NOPA","YEWA")`. To evaluate temporal trends in abundance over the past six years, we applied generalized linear mixed models (GLMMs) each species as well as the total count of the species over the period.
+For testing species occupancy, we selected locations with a minimum of four dawn visits for each year across all five years, focusing on forest obligate species for ecological relevance (see @tbl-bird-guilds). Utilizing a single-season single-species occupancy model from @mackenzie2002estimating, we calculated the predicted occupancy of species at all locations surveyed in each year across years. Site-specific covariates included the distance to ocean edge (in meters) and the proportional area of each cover type from the [Prince Edward Island 2010 Corporate Land Use Inventory](https://data.princeedwardisland.ca/Environment-and-Food/OD0144-Corporate-Landuse-Inventory-2010/tc7z-7rpy) at 150 meter radius surrounding the ARU categorized into anthropogenic (pavement, soy), open (grass, sand dune, bare soil), deciduous (red maple, white birch, alder, poplar) and conifer (white spruce, black spruce, balsam fir). Observation covariates incorporated day of the year, hour, observer, and a quadratic term for both day of year ($doy^{2}$) and hour ($hr^{2}$). See @tbl-obvs-and-covs for more information. Despite variations in processing methodology between 2019 - 2021 (1SPM - species-individual detected per minute, i.e. repeat sampling each minute for 3 minute) and subsequent years (2022 - 2025; 1SPT), we maintained consistency by exclusively utilizing the time to the first detection of individuals from the 1SPM recordings. Model predictions were generated, with goodness-of-fit testing using methods from @occu-fit and the best model selected based on AIC and through `MuMIn::dregde`, `MuMIn::get.models` and `MuMIn::model.sel`. If more than one model existed, the average model was used using `MuMIn::model.avg`. The final predictions were then made and plotted over years and sorted by nesting guilds of species into conifer, deciduous, treed / shrubby, wetlands and open. Trends in species abundance were assessed using a normalized count, calculated as the total species count divided by the number of surveyed locations per year. We focused on a subset of species representative of the forest songbird community: `r c("BTNW","BLBW","GCKI","YRWA","MAWA","BTBW","BHVI","AMRE","REVI","MOWA","BLJA","ALFL","EAWP","WTSP","AMRO","COYE","NOPA","YEWA")`. To evaluate temporal trends in abundance over the past six years, we applied generalized linear mixed models (GLMMs) each species as well as the total count of the species over the period.
 
 ------------------------------------------------------------------------
 
@@ -589,7 +633,7 @@ Trends in species abundance were assessed using a normalized count, calculated a
 
 ## Species richness and diversity
 
-A total of `r nrow(distinct_spp)` species were found across the six years. @fig-spp-rich-locs describes the relationship of species richness for each location across survey year.
+A total of `r nrow(distinct_spp)` species were found across the seven years. @fig-spp-rich-locs describes the relationship of species richness for each location across survey year. Shannon's diversity was stable based on results (see @fig-shannon).
 
 ```{r}
 #| warning: false
@@ -644,27 +688,45 @@ spp_rich_location |>
 
 ```
 
+
 ```{r}
 #| warning: false
-#| echo: false
+#| echo: true
 #| eval: true
 #| message: false
 #| include: true
-#| label: tbl-bird-guilds
-#| tbl-cap: Common bird forest species guilds. For nesting habitat; Ag = Agricultural, Be = Beach, Bo = Bog, CW = Coniferous Woodlands, ES = Early Successional, MW = Mixed Woodlands, OW = Open Woodlands, TSS = Treed/Shrubby Swamp, Ur = Urban. Species from CW, MW, OW, TSS were used for analysis.
+#| results: hide
+#| fig-align: center
+#| fig-cap: Shannon diversity index over years
+#| label: fig-shannon
+#| cap-location: bottom
+#| code-fold: true
 
-guilds <- read_csv("assets/bird_guilds.csv") |>
-  select(species_common_name, habitat_nesting) |>
-  filter(habitat_nesting %in% c("CW","MW","OW","TSS")) 
-
-datatable(guilds, 
-          options = list(
-            searching = TRUE,  
-            paging = TRUE,    
-            pageLength = 10   
-          )) |>
-  formatStyle(columns = colnames(guilds), 
-              backgroundColor = styleEqual(c("NA"), "lightgray"))  
+pei_main |> 
+  filter(!grepl('BS',location)) |>
+  wt_tidy_species(remove = c("mammal","amphibian","abiotic","insect","unknown"), zerofill = F) |>
+  inner_join(wt_get_species() |> select(species_code, species_class, species_order), by = "species_code") |>
+  select(location, recording_date_time, species_code, species_common_name, individual_order, abundance) |>
+  distinct() |>
+  group_by(location, recording_date_time, species_code, species_common_name) |>
+  summarise(count = max(individual_order)) |>
+  ungroup() |>
+  pivot_wider(names_from = species_code, values_from = count, values_fill = 0) |>
+  pivot_longer(cols = -(location:species_common_name), names_to = "species", values_to = "count") |>
+  group_by(location, year = year(recording_date_time), species) |>
+  summarise(total_count = sum(count)) |>
+  ungroup() |>
+  group_by(location, year) |>
+  summarise(shannon_index = diversity(total_count, index = "shannon")) |>
+  ungroup() |>
+  ggplot(aes(x = factor(year), y = shannon_index, fill = factor(year))) +
+  geom_boxplot() +
+  geom_point(alpha = 0.6, colour = "grey") +
+  labs(x = "Year",
+       y = "Shannon diversity index per location") +
+  theme_bw() +
+  theme(legend.position = "none") +
+  scale_fill_viridis_d(alpha = 0.7)
 
 ```
 
@@ -689,7 +751,6 @@ pei_main |>
          year = factor(year(recording_date_time))) |>
   inner_join(guilds |> select(species_common_name, habitat_nesting)) |>
   arrange(species_code) |>
-  filter(habitat_nesting %in% c("CW","MW","OW","TSS")) |>
   group_by(species_code) |>
   add_tally() |>
   ungroup() |>
@@ -711,8 +772,6 @@ pei_main |>
   ylab("Species")
 
 ```
-
-Shannon's diversity was stable based on results. (see @fig-shannon.)
 
 ```{r}
 #| warning: false
@@ -774,47 +833,6 @@ ggplot(ocean_richness, aes(x = coast_distance, y = species_count)) +
 # ocean_richness <- cbind(ocean_richness, dist_new=predict(BC_model, ocean_richness$species_count)) # append the transformed variable to cars
 # 
 # lm(dist_new ~ coast_distance, data = ocean_richness)
-```
-
-```{r}
-#| warning: false
-#| echo: true
-#| eval: true
-#| message: false
-#| include: true
-#| results: hide
-#| fig-align: center
-#| fig-cap: Shannon diversity index over years
-#| label: fig-shannon
-#| cap-location: bottom
-#| code-fold: true
-
-pei_main |> 
-  filter(!grepl('BS',location)) |>
-  wt_tidy_species(remove = c("mammal","amphibian","abiotic","insect","unknown"), zerofill = F) |>
-  inner_join(wt_get_species() |> select(species_code, species_class, species_order), by = "species_code") |>
-  select(location, recording_date_time, species_code, species_common_name, individual_order, abundance) |>
-  distinct() |>
-  group_by(location, recording_date_time, species_code, species_common_name) |>
-  summarise(count = max(individual_order)) |>
-  ungroup() |>
-  pivot_wider(names_from = species_code, values_from = count, values_fill = 0) |>
-  pivot_longer(cols = -(location:species_common_name), names_to = "species", values_to = "count") |>
-  group_by(location, year = year(recording_date_time), species) |>
-  summarise(total_count = sum(count)) |>
-  ungroup() |>
-  group_by(location, year) |>
-  summarise(shannon_index = diversity(total_count, index = "shannon")) |>
-  ungroup() |>
-  ggplot(aes(x = factor(year), y = shannon_index, fill = factor(year))) +
-  geom_boxplot() +
-  geom_point(alpha = 0.6, colour = "grey") +
-  labs(x = "Year",
-       y = "Shannon diversity index per location") +
-  theme_bw() +
-  theme(legend.position = "none") +
-  scale_fill_viridis_d(alpha = 0.7)
-
 ```
 
 ## Trends in abundance over time
@@ -892,7 +910,7 @@ plot_mdm |>
 #| code-fold: true
 #| tbl-cap: Linear models of species trends using normalized mean count per location
 
-datatable(
+kable(
   plot_mdm |>
     group_by(species_code) |>
     summarise(models = list(
@@ -901,13 +919,7 @@ datatable(
     mutate(model_summary = map(models, tidy)) |>
     unnest(model_summary) |>
     select(-models) |>
-    mutate(across(where(is.numeric), round, 2)),
-  options = list(
-    searching = TRUE,
-    paging = TRUE,
-    pageLength = 10
-  )
-)
+    mutate(across(where(is.numeric), round, 2)))
 
 ```
 
@@ -959,7 +971,7 @@ ggplot(count_annual_mdm, aes(x = year, y = normalized_count)) +
 
 ## Species occupancy
 
-We selected from those same 15 forested species to represent the forest songbird community into 4 separate habitat nesting guilds (see @tbl-bird-guilds and @fig-spp-occ). Analysis of species occupancy revealed diverse and varied changes across these species. Analytically, many models were singular, and a few exhibited overdispersion (indicated by *c-hat* in @tbl-c-hat), likely due to low detections or a limited sample size of spatial locations. Ubiquitous species such as Red-eyed Vireo, Yellow-rumped Warbler, Magnolia Warbler and Northern Parula, demonstrated stable site occupancy across the years. Generalist species or those capable of capitalizing on utilizing mixed habitats, exemplified by the Northern Parula, also maintained consistent occupancy levels. There were notable breakpoints in the occupancy of certain species: coniferous species, including the Black-throated Green Warbler, Black-throated Blue Warbler, Blackburnian Warbler, Golden-crowned Kinglet, and Mourning Warbler, experiencing declines in 2023. Conversely, increases were observed in guilds of species that favor more open or shrubby habitats, such as the Alder Flycatcher and American Redstart. Thrushes (American Robin, Swainson's Thrush, Hermit Thrush) had notably wavering occupancy throughout the years.
+We selected from those same 15 forested species to represent the forest songbird community into 4 separate habitat nesting guilds (see @tbl-bird-guilds and @fig-spp-occ). Analysis of species occupancy revealed diverse and varied changes across these species. Analytically, many models were singular, and a few exhibited overdispersion, likely due to low detections or a limited sample size of spatial locations. Ubiquitous species such as Red-eyed Vireo, Yellow-rumped Warbler, Magnolia Warbler and Northern Parula, demonstrated stable site occupancy across the years. Generalist species or those capable of capitalizing on utilizing mixed habitats, exemplified by the Northern Parula, also maintained consistent occupancy levels. There were notable breakpoints in the occupancy of certain species: coniferous species, including the Black-throated Green Warbler, Black-throated Blue Warbler, Blackburnian Warbler, Golden-crowned Kinglet, and Mourning Warbler, experiencing declines in 2023. Conversely, increases were observed in guilds of species that favor more open or shrubby habitats, such as the Alder Flycatcher and American Redstart. Thrushes (American Robin, Swainson's Thrush, Hermit Thrush) had notably wavering occupancy throughout the years.
 
 ```{r}
 #| warning: false
@@ -1141,12 +1153,12 @@ ggplot(pei_wide_plus, aes(x = recording_date_time, y = OVEN)) +
 Some of these analyses are still a work-in-progress. Check back soon for updates and additional details.
 :::
 
-Bank Swallows (BANS) were detected at `r jbm |> select(location) |> distinct() |> pull()` locations. Given the low frequency of detections across the surveyed data, along with the cumulative probability modeled, we further processed data by including the number of detection per recording processed and modelled the cumulative detection probability over time (see @fig-bans-dp).
+Bank Swallow vocalizations were detected at all `r bans_aru |> filter(species_code == "BANS") |> select(location) |> distinct() |> nrow()` monitoring locations, though detections were strongly seasonally and temporally concentrated. The daily presence count (see @fig-bans-daily) shows that all confirmed detections occurred between approximately Julian Day 205–235, corresponding to late July through mid-August, with no detections recorded earlier in the season despite substantial survey effort from Julian Day 100 onward, although EI sites were not targeted not suitable habitat. Peak daily presence counts of up to 10 recordings across locations were observed around Julian Day 212–215, with detections declining through mid-August. This temporal pattern was corroborated by the modeled detection probability curve (see @fig-bans-dp), which remained near zero prior to Julian Day 195 before rising steeply through the remainder of the season, suggesting that Bank Swallow activity at the monitored pond sites was restricted to a discrete window consistent with post-breeding foraging aggregations. The cumulative detection curve (see @fig-bans-cumulative) further illustrates the rarity of detections relative to survey effort, the detection rate remained near zero across the first ~6,000 recordings before increasing sharply, indicating that the majority of detections were concentrated within a small proportion of the total processed data. Together, these patterns suggest that acoustic detectability of Bank Swallow at these sites is highly seasonal, and that survey effort earlier in the year contributed little to detection despite adequate recording coverage. We also used all the detection data to evaluate the performance of each of the classifiers' performance see at @fig-bans-ai. Precision-recall analysis revealed that neither classifier performed with sufficient reliability to be used as a standalone detection tool for Bank Swallow (see @fig-pr-curve). Both BirdNET v2.1 and HawkEars v1.0.8 maintained low precision across all recall levels, plateauing at approximately 0.25–0.33, indicating that roughly one in three to four classifier detections represented a true positive. BirdNET v2.1 demonstrated more stable precision as recall approached 1.0, whereas HawkEars v1.0.8 exhibited a marked decline in precision at recall values exceeding ~0.85, suggesting that recovering the full set of true positives with HawkEars came at a substantially greater false positive cost.
 
 ```{r}
 #| warning: false
 #| echo: false
-#| eval: false
+#| eval: true
 #| include: true
 #| code-fold: true
 #| fig-cap: Bank Swallow cumulutative detection probability
@@ -1168,18 +1180,62 @@ detection_rate <- bans_data %>%
             detection_rate = detections / total_recordings)
 
 # Cumulative detection curve
-cumulative_detection <- bans_data %>%
+cumulative_detection <- bans_aru %>%
+  filter(task_is_complete == TRUE) %>%       # only processed tasks
   arrange(recording_date_time) %>%
-  mutate(cumulative_detections = cumsum(presence),
-         cumulative_rate = cumulative_detections / row_number(),
-         row_n = row_number())
+  mutate(
+    presence = if_else(species_code == "BANS", 1, 0),
+    cumulative_detections = cumsum(presence),
+    cumulative_rate = cumulative_detections / row_number(),
+    row_n = row_number(),
+    julian = yday(recording_date_time),
+    hour = hour(recording_date_time)
+  )
 
-ggplot(cumulative_detection, aes(x = row_n, y = cumulative_rate)) +
+ggplot(cumulative_detection, aes(x = julian, y = cumulative_rate)) +
   geom_smooth(color = "darkgreen") +
   labs(title = "Cumulative Detection Curve for BANS",
-       x = "Number of Recordings",
+       x = "Date",
        y = "Cumulative Detection Rate") +
   theme_minimal()
+
+hourly_detection <- bans_aru %>%
+  filter(task_is_complete == TRUE) %>%
+  group_by(task_id, recording_date_time) %>%
+  summarise(presence = as.integer(any(species_code == "BANS")), .groups = "drop") %>%
+  mutate(
+    hour = hour(recording_date_time),
+    period = case_when(
+      hour >= 4  & hour <= 8  ~ "Dawn (04:00–08:00)",
+      hour >= 19 & hour <= 22 ~ "Dusk (19:00–22:00)",
+      TRUE ~ NA_character_
+    )
+  ) %>%
+  filter(!is.na(period)) %>%
+  group_by(hour, period) %>%
+  summarise(
+    total_tasks   = n(),
+    bans_detected = sum(presence),
+    detection_rate = bans_detected / total_tasks,
+    .groups = "drop"
+  )
+
+ggplot(hourly_detection, aes(x = hour, y = detection_rate, fill = period)) +
+  geom_col() +
+  scale_fill_manual(values = c(
+    "Dawn (04:00–08:00)" = "#F4A460",
+    "Dusk (19:00–22:00)" = "#4A6FA5"
+  )) +
+  scale_x_continuous(breaks = c(4:8, 19:22)) +
+  scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
+  labs(
+    title    = "Hourly Detection Rate of Bank Swallow Vocalizations",
+    subtitle = "Proportion of completed tasks with ≥1 BANS detection, by hour",
+    x        = "Hour of Day",
+    y        = "Detection Rate",
+    fill     = "Survey Period"
+  ) +
+  theme_minimal(base_size = 13)
 ```
 
 ```{r}
@@ -1191,23 +1247,9 @@ ggplot(cumulative_detection, aes(x = row_n, y = cumulative_rate)) +
 #| fig-cap: Bank Swallow 
 #| label: fig-bans-dp2
 
-# Aggregate data by Julian day
-daily_presence <- bans_data %>%
-  mutate(julian = yday(recording_date_time)) %>%
-  group_by(julian) %>%
-  summarise(presence = sum(presence), .groups = 'drop')
-
-# Create daily presence plot
-ggplot(daily_presence, aes(x = julian, y = presence)) +
-  geom_col(fill = "steelblue", alpha = 0.8) +
-  labs(title = "Daily Presence of BANS Vocalizations",
-       x = "Julian Day",
-       y = "Total Presence Count") +
-  theme_minimal()
-
 # Model detection probability using logistic regression
 detection_model <- glm(presence ~ julian, data = bans_data, family = binomial)
-#summary(detection_model)
+summary(detection_model)
 
 # Plot predicted detection probability
 bans_data <- bans_data %>%
@@ -1221,6 +1263,23 @@ ggplot(bans_data, aes(x = julian, y = predicted_presence)) +
        y = "Probability of Detection") +
   theme_minimal()
 
+# Model detection probability using logistic regression
+detection_model <- glm(presence ~ hour, data = bans_data |> mutate(hour = hour(recording_date_time)), family = binomial)
+summary(detection_model)
+
+# Plot predicted detection probability
+bans_data <- bans_data %>%
+  mutate(hour = hour(recording_date_time)) |>
+  mutate(predicted_presence = predict(detection_model, type = "response"))
+
+ggplot(bans_data, aes(x = hour, y = predicted_presence)) +
+  geom_line(color = "blue") +
+  geom_point(aes(y = presence), color = "red", alpha = 0.5) +
+  labs(title = "Predicted Detection Probability for BANS",
+       x = "Hour of the day",
+       y = "Probability of Detection") +
+  theme_minimal()
+
 ```
 
 ```{r}
@@ -1229,12 +1288,13 @@ ggplot(bans_data, aes(x = julian, y = predicted_presence)) +
 #| eval: true
 #| include: true
 #| code-fold: true
-#| fig-cap: Performance of two acoustic classifiers on the detectioin of Bank Swallow at the task level. Precision and recall were evaluated based on detections by humans in the entire PEINP EI Monitoring dataset.
+#| fig-cap: Performance of two acoustic classifiers on the detection of Bank Swallow at the task level. Precision and recall were evaluated based on detections by humans in the entire PEINP EI Monitoring dataset.
 #| label: fig-bans-ai
 
 all_hawkears <- list(bind_rows(pei_hawkears, bans_hawkears) |> distinct(), bind_rows(pei_main, bans_aru))
 
 eval <- wt_evaluate_classifier(all_hawkears, resolution = "task", remove_species = TRUE, species = "Bank Swallow")
+wt_classifier_threshold(eval)
 ggplot(eval, aes(x=recall, y=precision, colour=classifier)) + geom_smooth() + theme_bw() + xlim(0,1) + ylim(0,1) + xlab("Classifier Recall") + ylab("Classifier Precision")
 ```
 
@@ -1247,12 +1307,11 @@ A total of `r amphs_only |> select(species_code) |> distinct() |> tally()` were 
 ```{r}
 #| warning: false
 #| echo: false
-#| eval: false
+#| eval: true
 #| include: true
 #| results: hide
 #| fig-cap: Seasonal and yearly activity plots for Green Frog and Spring Peeper
 #| label: fig-spp-amphs-day
-#| fig-column: page-right
 
 spp_table <- wt_get_species()
 

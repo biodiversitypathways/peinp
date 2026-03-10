@@ -63,7 +63,7 @@ library(broom)
 wt_auth()
 
 load('pei.RData')
-#save.image('pei.RData')
+save.image('pei.RData')
 #cirrus_penp_recs  <- readRDS('penpcirrus.RDS')
 ```
 
@@ -298,17 +298,6 @@ locs_summary <- pei_locs |>
 #| fig-cap: Locations from Prince Edward Island National Park ARU Monitoring Program
 #| label: fig-aru-monitoring-locations
 
-<<<<<<< HEAD
-pei_locs2 <- pei_locs |> left_join(locs_summary |> select(Location, Site) |> distinct(), by = c("location" = "Location"))
-
-# Map visualization
-pal <- colorFactor(
-  palette = "Set3", 
-  domain = pei_locs2$Site
-)
-
-leaflet() %>%
-=======
 pei_locs2 <- pei_locs |> 
   left_join(locs_summary |> select(Location, Site) |> distinct(), 
             by = c("location" = "Location"))
@@ -316,7 +305,6 @@ pei_locs2 <- pei_locs |>
 pal <- colorFactor(palette = "Set3", domain = pei_locs2$Site)
 
 m <- leaflet() %>%
->>>>>>> 79c5143 (rebuild bank swallow section for 2025 data.)
   addTiles() %>%
   addPolygons(
     data = peinp_shp,
@@ -327,23 +315,13 @@ m <- leaflet() %>%
     popup = ~paste("Park:", NAME_E)
   ) %>%
   addCircleMarkers(
-<<<<<<< HEAD
     data = pei_locs2,
     popup = ~paste("Location:", location, "<br>Site:", Site),
     fillColor = ~pal(Site),
-    color = ~pal(Site),
+    color = "black",
     fillOpacity = 0.8,
     radius = 6,
-    weight = 1
-=======
-  data = pei_locs2,
-  popup = ~paste("Location:", location, "<br>Site:", Site),
-  fillColor = ~pal(Site),
-  color = "black",      # border color
-  fillOpacity = 0.8,
-  radius = 6,
-  weight = 3            # border thickness
->>>>>>> 79c5143 (rebuild bank swallow section for 2025 data.)
+    weight = 3
   ) %>%
   addLegend(
     pal = pal,
@@ -394,11 +372,7 @@ kable(covs_all)
 
 ## Data management
 
-<<<<<<< HEAD
 A total of 12456 recordings were collected (see @fig-recs-collect). From 2019 - 2021, data were transferred via hard drive to the University of Alberta in Edmonton, where they are redundantly stored on a server known as Cirrus. The recordings were standardized to ensure adherence to the naming convention of `LOCATION_DATETIME`, such as `PENP-1-1_20230625_053500.wav`. The remaining recordings (2022 - 2025) were directly uploaded to WildTrax by Parks Canada staff and can be downloaded from the platform's Recording tab, accessible under Manage \> Download list of recordings (see @fig-download-recs).
-=======
-A total of 12456 recordings were collected (see @fig-recs-collect). From 2019 - 2021, data were transferred via hard drive to the University of Alberta in Edmonton, where they are redundantly stored on a server known as Cirrus. The recordings were standardized to ensure adherence to the naming convention of `LOCATION_DATETIME`, such as `PENP-1-1_20230625_053500.wav`. The remaining recordings (2022 - 2025) were directly uploaded to WildTrax by Parks Canada staff and can be downloaded from the platform's Recording tab, accessible under Manage \> Download list of recordings.
->>>>>>> 79c5143 (rebuild bank swallow section for 2025 data.)
 
 ```{r}
 #| warning: false

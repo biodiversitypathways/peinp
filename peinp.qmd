@@ -413,7 +413,7 @@ A total of 12456 recordings were collected (see @fig-recs-collect). From 2019 - 
 
  count_recs <- nrow(all_recs)
 
- average_deployment <- all_recs |>
+ average_deployment <- all_rginecs |>
    group_by(location, year) |>
    summarise(count = n_distinct(julian)) |>
    ungroup() |>
@@ -433,7 +433,7 @@ A total of 12456 recordings were collected (see @fig-recs-collect). From 2019 - 
 #| fig-height: 8
 #| fig-cap: Ridgeplot of recordings collected for each location over each survey year
 #| label: fig-recs-collect
-#| cap-location: margin
+
 
 all_recs |>
   filter(!grepl('KRUM',location)) |>
@@ -663,7 +663,7 @@ distinct_spp <- pei_main |>
 #| fig-align: center
 #| fig-cap: Species richness at forest monitoring locations across years
 #| label: fig-spp-rich-locs
-#| cap-location: margin
+
 
 spp_rich_location |>
   ggplot(aes(x=as.factor(year), y=species_count, fill=as.factor(year), group=as.factor(year))) +
@@ -729,7 +729,7 @@ pei_main |>
 #| fig-align: center
 #| fig-cap: Seasonal detection activity of most commonly detected forest species
 #| label: fig-spp-activity
-#| cap-location: margin
+
 
 pei_main |>
   wt_tidy_species(remove = c("mammal","amphibian","abiotic","insect","unknown"), zerofill = T) |>
@@ -774,7 +774,7 @@ Proximity to the ocean may influence avian species richness detected at ARU stat
 #| fig-align: center
 #| fig-cap: Relationship between distance to coastline and species richness across ARU monitoring locations.
 #| label: fig-ocean-richness
-#| cap-location: margin
+
 
 ocean_richness <- spp_rich_location |>
   inner_join(pei_locs |> select(location, coast_distance) |> distinct(), by = "location") |>
@@ -804,7 +804,7 @@ Most forest species showed slight increasing and decreasing trends, with only fu
 #| fig-height: 8
 #| fig-cap: Normalized count abundance of mean number of medium-distance migrants by year
 #| label: fig-normalized-count-mdm-year
-#| cap-location: margin
+
 
 z <- locs_summary |>
   rowwise() |>

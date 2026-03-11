@@ -15,7 +15,7 @@ format:
 navbar: right
 theme: cosmo
 lightbox: true
-date: "26 February, 2026"
+date: "10 March, 2026"
 author: 
   - name: "Alex MacPhail"
     affiliation: "Biodiversity Pathways Ltd."
@@ -63,7 +63,7 @@ library(broom)
 wt_auth()
 
 load('pei.RData')
-save.image('pei.RData')
+#save.image('pei.RData')
 #cirrus_penp_recs  <- readRDS('penpcirrus.RDS')
 ```
 
@@ -664,7 +664,6 @@ distinct_spp <- pei_main |>
 #| fig-cap: Species richness at forest monitoring locations across years
 #| label: fig-spp-rich-locs
 
-
 spp_rich_location |>
   ggplot(aes(x=as.factor(year), y=species_count, fill=as.factor(year), group=as.factor(year))) +
   geom_boxplot(alpha = 0.7) +
@@ -680,7 +679,7 @@ spp_rich_location |>
 
 ```{r}
 #| warning: false
-#| echo: true
+#| echo: false
 #| eval: true
 #| message: false
 #| include: true
@@ -764,7 +763,7 @@ pei_main |>
 
 ### Proximity to ocean effects
 
-Proximity to the ocean may influence avian species richness detected at ARU stations through elevated ambient noise levels. Wave action and wind-driven coastal noise can reduce the effective detection distance of ARUs, potentially masking vocalizations and leading to systematic underdetection at exposed coastal sites (@pijanowski2011soundscape). To examine whether distance to the nearest coastline was associated with observed species richness, we compared species counts across monitoring locations as a function of coast distance. Contrary to expectations, distance to the nearest coastline showed no meaningful association with species richness across ARU monitoring locations (see @fig-ocean-richness). Species richness was highly variable at all distances, ranging from approximately 3–32 species regardless of coastal proximity, and the fitted regression line was nearly flat across the full range of distances sampled (0-2, 200 m). This suggests that, within PEINP, coastal noise does not appear to systematically suppress acoustic detectability or species richness at the distances represented by our monitoring network, though the majority of stations were clustered within 500 m of the coastline, limiting inference at greater distances.
+Proximity to the ocean may influence avian species richness detected at ARU stations through elevated ambient noise levels. Wave action and wind-driven coastal noise can reduce the effective detection distance of ARUs, potentially masking vocalizations and leading to systematic underdetection at exposed coastal sites (@pijankowski2011landscape). To examine whether distance to the nearest coastline was associated with observed species richness, we compared species counts across monitoring locations as a function of coast distance. Contrary to expectations, distance to the nearest coastline showed no meaningful association with species richness across ARU monitoring locations (see @fig-ocean-richness). Species richness was highly variable at all distances, ranging from approximately 3–32 species regardless of coastal proximity, and the fitted regression line was nearly flat across the full range of distances sampled (0-2, 200 m). This suggests that, within PEINP, coastal noise does not appear to systematically suppress acoustic detectability or species richness at the distances represented by our monitoring network, though the majority of stations were clustered within 500 m of the coastline, limiting inference at greater distances.
 
 ```{r}
 #| warning: false
@@ -797,7 +796,7 @@ Most forest species showed slight increasing and decreasing trends, with only fu
 #| echo: false
 #| eval: true
 #| message: false
-#| include: true
+#| include: false
 #| results: hide
 #| fig-align: center
 #| fig-width: 8
@@ -854,7 +853,7 @@ plot_mdm |>
 
 ```{r}
 #| warning: false
-#| echo: true
+#| echo: false
 #| eval: true
 #| message: false
 #| include: true
@@ -878,7 +877,7 @@ kable(
 
 ```{r}
 #| warning: false
-#| echo: true
+#| echo: false
 #| eval: true
 #| message: false
 #| include: true
@@ -1029,6 +1028,8 @@ nested_occ <- tibble(
 #| eval: true
 #| include: true
 #| fig-align: center
+#| fig-height: 8
+#| fig-width: 8
 #| fig-cap: Single-season occupancy models of common forest songbird species
 #| label: fig-spp-occ
 #| cap-location: bottom
@@ -1159,6 +1160,7 @@ ggplot(cumulative_detection, aes(x = julian, y = cumulative_rate)) +
 #| echo: false
 #| eval: true
 #| include: true
+#| fig-width: 8
 #| code-fold: true
 #| fig-cap: Hourly Detection Rate of Bank Swallow Vocalizations
 #| label: fig-bans-hourly
@@ -1193,8 +1195,6 @@ ggplot(hourly_detection, aes(x = hour, y = detection_rate, fill = period)) +
   scale_x_continuous(breaks = c(4:8, 19:22)) +
   scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
   labs(
-    title    = "Hourly Detection Rate of Bank Swallow Vocalizations",
-    subtitle = "Proportion of completed tasks with ≥1 BANS detection, by hour",
     x        = "Hour of Day",
     y        = "Detection Rate",
     fill     = "Survey Period"

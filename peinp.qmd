@@ -59,6 +59,7 @@ library(MuMIn)
 library(AICcmodavg)
 library(mapview)
 library(broom)
+library(gt)
 
 #wt_auth()
 
@@ -137,7 +138,7 @@ The objectives of this report are to:
 * Utilize traditional human tagging, visual scanning and automated recognition techniques to detect and count species and individuals heard on recordings;
 * Define straightforward methods for evaluating species presence, species richness, and species occupancy over time at various locations;
 * Assess the potential of ARUs to detect roosting-associated Bank Swallow activity at pond sites within PEINP, including the timing, call frequency, and configuration effects across monitoring years;
-* Offer recommendations for ongoing monitoring approaches — including ARU deployment configurations and scheduling — to contribute to the assessment of ecological integrity in forest and wetland ecosystems;
+* Offer recommendations for ongoing monitoring approaches, including ARU deployment configurations and scheduling, to contribute to the assessment of ecological integrity in forest and wetland ecosystems;
 * Facilitate data publication to the public, resource managers, academic institutions, and any other relevant agencies
 
 ------------------------------------------------------------------------
@@ -572,7 +573,7 @@ To address the question of whether ARUs can detect roosting-associated activity,
 #| eval: false
 #| include: false
 
-bans_projects <- wt_get_projects('ARU') |> filter(grepl('Bank Swallow Monitoring 2025|Bank Swallow Monitoring 2023', project)) |> pull(project_id)
+bans_projects <- wt_get_projects('ARU') |> filter(grepl('Bank Swallow Monitoring 2025|Bank Swallow Monitoring 2023|Bank Swallow Monitoring 2022|Prince Edward Island National Park Forest Songbird Monitoring 2021', project)) |> pull(project_id)
 
 # Download and bind all the data
 bans_aru <- imap_dfr(
@@ -618,32 +619,117 @@ jbm <- bans_aru |>
 #| warning: false
 #| echo: false
 #| eval: true
-#| message: false
 #| include: true
-#| label: tbl-bans
-#| collapse: true
 #| code-fold: true
-#| tbl-cap: Summary of audio data processed for Bank Swallow at each location
+#| label: tbl-bans-sites
+#| tbl-cap: "Summary of Bank Swallow ARU monitoring sites within PEINP, 2021–2025. Hours collected reflect total recording effort; hours analyzed reflect processed tasks only. Proportion analyzed is calculated per site per year. BANS detections are the number of unique detections of BANS within a recording under a count-removal framework at the 30-minute recording level."
 
-bans_locs <- c("BANS-BOW-E","BANS-BOW-N","BANS-BOW-W","PENP-BS-6")
+# Site name lookup
+site_names <- c(
+  "PENP-BS-1"   = "Clarke's Pond",
+  "PENP-BS-2"   = "Stanhope",
+  "PENP-BS-3"   = "Gulf Shore Parkway",
+  "PENP-BS-4"   = "North Rustico",
+  "PENP-BS-5"   = "Blooming Point",
+  "PENP-BS-6"   = "Bowley Pond",
+  "PENP-BS-1-1" = "Clarke's Pond",
+  "BANS-BOW-E"  = "Bowley Pond (East)",
+  "BANS-BOW-N"  = "Bowley Pond (North)",
+  "BANS-BOW-W"  = "Bowley Pond (West)"
+)
 
-tbl_bans_analyze <- bans_aru |>
+# Detector count per site per year
+detector_config <- tibble::tribble(
+  ~location,     ~year, ~n_detectors,
+  "PENP-BS-1",   2021,  1,
+  "PENP-BS-2",   2021,  1,
+  "PENP-BS-3",   2021,  1,
+  "PENP-BS-4",   2021,  1,
+  "PENP-BS-5",   2021,  1,
+  "PENP-BS-1",   2022,  1,
+  "PENP-BS-6",   2023,  1,
+  "PENP-BS-1-1", 2024,  1,
+  "BANS-BOW-E",  2025,  1,
+  "BANS-BOW-N",  2025,  1,
+  "BANS-BOW-W",  2025,  1
+)
+
+# Hours analyzed (from processed tasks in bans_aru)
+tbl_analyzed <- bans_aru |>
+  filter(location %in% detector_config$location) |>
   filter(task_is_complete == TRUE) |>
-  group_by(location) |>
-  summarise(sum_analyzed = round((sum(task_duration)/3600),2))
+  mutate(year = year(recording_date_time)) |>
+  group_by(location, year) |>
+  summarise(hrs_analyzed = round(sum(task_duration) / 3600, 1), .groups = "drop")
+
+tbl_detections <- bans_aru |>
+  filter(task_is_complete == TRUE,
+         species_code == "BANS") |>
+  mutate(year = year(recording_date_time)) |>
+  group_by(location, year) |>
+  summarise(bans_detections = n(), .groups = "drop")
+
+# Full table
+bans_locs <- c("BANS-BOW-E","BANS-BOW-N","BANS-BOW-W",
+               "PENP-BS-6","PENP-BS-1","PENP-BS-2","PENP-BS-3",
+               "PENP-BS-4","PENP-BS-5","PENP-BS-1-1")
 
 total_bans <- all_recs |>
   mutate(year = year(recording_date_time)) |>
   filter(location %in% bans_locs) |>
   group_by(location, year) |>
-  summarise(sum = round((sum(recording_duration)/3600),2)) |>
-  left_join(tbl_bans_analyze, by = "location") |>
-  mutate(proportion_analyzed = round(((sum_analyzed / sum)*100),2))
+  summarise(hrs_collected = round(sum(recording_duration) / 3600, 1), .groups = "drop") |>
+  left_join(tbl_analyzed,   by = c("location", "year")) |>
+  left_join(tbl_detections, by = c("location", "year")) |>
+  mutate(
+    site_name       = site_names[location],
+    pct_analyzed    = round((hrs_analyzed / hrs_collected) * 100, 0),
+    hrs_analyzed    = replace_na(hrs_analyzed, 0),
+    pct_analyzed    = replace_na(pct_analyzed, 0),
+    bans_detections = replace_na(bans_detections, 0)
+  ) |>
+  arrange(year, location) |>
+  select(year, location, site_name, hrs_collected, hrs_analyzed, pct_analyzed, bans_detections)
 
-datatable(total_bans)
-
+total_bans |>
+  gt(groupname_col = "year") |>
+  cols_label(
+    location        = "Location ID",
+    site_name       = "Site",
+    hrs_collected   = "Hours collected",
+    hrs_analyzed    = "Hours analyzed",
+    pct_analyzed    = "% analyzed",
+    bans_detections = "BANS detections"
+  ) |>
+  data_color(
+    columns        = pct_analyzed,
+    target_columns = pct_analyzed,
+    method         = "numeric",
+    palette        = c("#f7f7f7", "#4A6FA5"),
+    domain         = c(0, 100)
+  ) |>
+  data_color(
+    columns        = bans_detections,
+    target_columns = bans_detections,
+    method         = "numeric",
+    palette        = c("#f7f7f7", "#F4A460"),
+    domain         = c(0, NA)
+  ) |>
+  tab_style(
+    style     = cell_text(weight = "bold"),
+    locations = cells_row_groups()
+  ) |>
+  tab_style(
+    style     = cell_fill(color = "#f9f9f9"),
+    locations = cells_row_groups()
+  ) |>
+  tab_options(
+    table.width               = pct(100),
+    column_labels.font.weight = "bold",
+    row_group.font.weight     = "bold",
+    table.font.size           = px(13)
+  )
 ```
-
 
 ## Automated recognition
 
@@ -1288,7 +1374,7 @@ ggplot(eval, aes(x=recall, y=precision, colour=classifier)) + geom_smooth() + th
 
 ## Amphibians
 
-A total of `r amphs_only |> select(species_code) |> distinct() |> tally()` were detected: `r amphs_only |> select(species_code) |> distinct() |> pull()`. A preliminary pattern of amphibian activity can be seen in @fig-spp-amphs-day for Green Frog and Spring Peeper where there were enough detections to generate activity patterns. Spring peeper activity commenced much earlier than Green Frog although seasonal patterns are consistent with the species' phenology (see @lovett2013peepers, @ackleh2010measuring).
+A total of `r amphs_only |> select(species_common_name) |> distinct() |> tally()` amphibians were detected: `r amphs_only |> select(species_code) |> distinct() |> pull()`. A preliminary pattern of amphibian activity can be seen in @fig-spp-amphs-day for Green Frog and Spring Peeper where there were enough detections to generate activity patterns. Spring peeper activity commenced much earlier than Green Frog although seasonal patterns are consistent with the species' phenology (see @lovett2013peepers, @ackleh2010measuring).
 
 ```{r}
 #| warning: false
@@ -1304,7 +1390,8 @@ amphs <- spp_table %>%
 amphs_only <- pei_main %>%
   filter(species_code %in% amphs$species_code) %>%
   select(location, recording_date_time, species_code, abundance) %>%
-  distinct()
+  distinct() |>
+  left_join(wt_get_species(), by = "species_code")
 
 ```
 
@@ -1326,7 +1413,7 @@ amphs_only %>%
   ggplot(., aes(x = julian, y = species_code, fill = species_code)) + 
   geom_density_ridges(scale = 0.3, bandwith = 0.1) + 
   scale_fill_viridis_d() +
-  labs(title = "Activity per location", x = "Location", y = "Species") +
+  labs(title = "Activity per location", x = "Time of Year (Julian Date)", y = "Species") +
   theme_bw()
 
 ```

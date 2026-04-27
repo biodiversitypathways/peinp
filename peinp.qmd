@@ -669,6 +669,19 @@ tbl_detections <- bans_aru |>
   group_by(location, year) |>
   summarise(bans_detections = n(), .groups = "drop")
 
+tbl_dates <- all_recs |>
+  mutate(year = year(recording_date_time)) |>
+  filter(location %in% bans_locs) |>
+  group_by(location, year) |>
+  summarise(
+    survey_period = paste(
+      format(min(recording_date_time), "%b %d"),
+      "–",
+      format(max(recording_date_time), "%b %d")
+    ),
+    .groups = "drop"
+  )
+
 # Full table
 bans_locs <- c("BANS-BOW-E","BANS-BOW-N","BANS-BOW-W",
                "PENP-BS-6","PENP-BS-1","PENP-BS-2","PENP-BS-3",
@@ -680,6 +693,7 @@ total_bans <- all_recs |>
   group_by(location, year) |>
   summarise(hrs_collected = round(sum(recording_duration) / 3600, 1), .groups = "drop") |>
   left_join(tbl_analyzed,   by = c("location", "year")) |>
+  left_join(tbl_dates,      by = c("location", "year")) |>
   left_join(tbl_detections, by = c("location", "year")) |>
   mutate(
     site_name       = site_names[location],
@@ -689,13 +703,14 @@ total_bans <- all_recs |>
     bans_detections = replace_na(bans_detections, 0)
   ) |>
   arrange(year, location) |>
-  select(year, location, site_name, hrs_collected, hrs_analyzed, pct_analyzed, bans_detections)
+  select(year, location, site_name, survey_period, hrs_collected, hrs_analyzed, pct_analyzed, bans_detections)
 
 total_bans |>
   gt(groupname_col = "year") |>
   cols_label(
     location        = "Location ID",
     site_name       = "Site",
+    survey_period = "Survey Period",
     hrs_collected   = "Hours collected",
     hrs_analyzed    = "Hours analyzed",
     pct_analyzed    = "% analyzed",
@@ -707,13 +722,6 @@ total_bans |>
     method         = "numeric",
     palette        = c("#f7f7f7", "#4A6FA5"),
     domain         = c(0, 100)
-  ) |>
-  data_color(
-    columns        = bans_detections,
-    target_columns = bans_detections,
-    method         = "numeric",
-    palette        = c("#f7f7f7", "#F4A460"),
-    domain         = c(0, NA)
   ) |>
   tab_style(
     style     = cell_text(weight = "bold"),
@@ -728,6 +736,12 @@ total_bans |>
     column_labels.font.weight = "bold",
     row_group.font.weight     = "bold",
     table.font.size           = px(13)
+  ) |>
+  data_color(
+    columns  = bans_detections,
+    method   = "numeric",
+    palette  = c("#f7f7f7", "#F4A460"),
+    domain   = c(0, max(total_bans$bans_detections, na.rm = TRUE))
   )
 ```
 

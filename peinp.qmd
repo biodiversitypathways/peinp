@@ -15,7 +15,7 @@ format:
 navbar: right
 theme: cosmo
 lightbox: true
-date: "10 March, 2026"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
 author: 
   - name: "Alex MacPhail"
     affiliation: "Biodiversity Pathways Ltd."
@@ -60,7 +60,7 @@ library(AICcmodavg)
 library(mapview)
 library(broom)
 
-wt_auth()
+#wt_auth()
 
 load('pei.RData')
 #save.image('pei.RData')
@@ -133,11 +133,12 @@ In 2019, Prince Edward Island National Park initiated a program incorporating au
 
 The objectives of this report are to:
 
--   Describe the data management and processing procedures for the acoustic data collected from 2019 to 2025;
--   Utilize traditional human tagging, visual scanning and automated recognition techniques to detect and count species and individuals heard on recordings;
--   Define straightforward methods for evaluating species presence, species richness, and species occupancy over time at various locations;
--   Offer recommendations for ongoing monitoring approaches to contribute to the assessment of ecological integrity in forest ecosystems;
--   Facilitate data publication to the public, resource managers, academic institutions, and any other relevant agencies
+* Describe the data management and processing procedures for the acoustic data collected from 2019 to 2025;
+* Utilize traditional human tagging, visual scanning and automated recognition techniques to detect and count species and individuals heard on recordings;
+* Define straightforward methods for evaluating species presence, species richness, and species occupancy over time at various locations;
+* Assess the potential of ARUs to detect roosting-associated Bank Swallow activity at pond sites within PEINP, including the timing, call frequency, and configuration effects across monitoring years;
+* Offer recommendations for ongoing monitoring approaches — including ARU deployment configurations and scheduling — to contribute to the assessment of ecological integrity in forest and wetland ecosystems;
+* Facilitate data publication to the public, resource managers, academic institutions, and any other relevant agencies
 
 ------------------------------------------------------------------------
 
@@ -549,13 +550,20 @@ kable(guilds)
 
 ```
 
-## Visual scanning
+## Bank swallows
 
-Visual scanning is the concept of visually examining spectrograms in order to find a signal within an audio recording. Visual scanning can be a useful processing method allowing trained users to process recordings much faster than traditional listening. It has been used for detecting different taxa (amphibians: @vis-scan-amphs, mammals: @aru-vs-cams-wolves) with comparable biological metrics, as well as helping to maximize species detection in large acoustic monitoring data sets (@all-the-scans). WildTrax's project settings and dynamic spectrogram settings in the processing interface allow users to upload many recordings, while also allowing frequency-limited or time-limited spectrograms. These changes are easily made by adjusting project settings in WildTrax (see @fig-project-dynamic). Bank Swallow (*Riparia riparia*) are federally listed as threatened in Canada (see [Government of Canada](https://wildlife-species.canada.ca/bird-status/oiseau-bird-eng.aspx?sY=2019&sL=e&sM=p1&sB=BANS)) and provincially. They produce distinctive, broadband vocalizations that are readily identifiable on a spectrogram, making them well-suited to visual scanning workflows. We used visual scanning techniques to examine the presence of Bank Swallow at targeted sites across PEINP. ARUs were placed near ponds where Bank Swallow are known to forage, as foraging habitat quality and availability may play an important role in supporting local breeding populations. Documenting pond use by Bank Swallow can therefore inform habitat management and conservation planning within the park. In 2025, we refined our processing approach using dynamic spectrogram settings (see @fig-project-dynamic-2025), constraining the frequency range to the 95% CI of Bank Swallow vocalizations while expanding the time window, reducing visual noise and expediting detection. To complement visual scanning and further reduce false negatives, we evaluated two automated classifiers, BirdNET v2.0 (@kahl2021birdnet) and HawkEars v1.0.8 (@huus2025hawkears), with classifier outputs overlaid directly on spectrograms in WildTrax, allowing reviewers to cross-reference detections and apply expert judgment where classifier confidence was low.
+![Bank swallow (C) Environment and Climate Change Canada](./assets/bans.png)
+
+Visual scanning is the concept of visually examining spectrograms in order to find a signal within an audio recording. Visual scanning can be a useful processing method allowing trained users to process recordings much faster than traditional listening. It has been used for detecting different taxa (amphibians: @vis-scan-amphs, mammals: @aru-vs-cams-wolves) with comparable biological metrics, as well as helping to maximize species detection in large acoustic monitoring data sets (@all-the-scans). WildTrax's project settings and dynamic spectrogram settings in the processing interface allow users to upload many recordings, while also allowing frequency-limited or time-limited spectrograms. These changes are easily made by adjusting project settings in WildTrax (see @fig-project-dynamic). Bank Swallow (Riparia riparia) are federally listed as threatened in Canada (see Government of Canada) and provincially. They produce distinctive, broadband vocalizations that are readily identifiable on a spectrogram, making them well-suited to visual scanning workflows.
+
+ARUs were placed near ponds where Bank Swallow are known to forage and roost, as these habitats may support pre-migratory staging aggregations in late summer. Documenting pond use, and in particular the timing and density of vocalizations during dawn and dusk periods, can inform whether ARU deployments are capable of capturing acoustic signatures consistent with roosting behaviour, such as sustained high call-rate events associated with group entry or departure from wetland sites. All targeted recordings were reviewed by a trained observer using visual scanning, with human detections serving as the primary record of Bank Swallow presence.
+
+In 2025, we refined our processing approach using dynamic spectrogram settings (see @fig-project-dynamic), constraining the frequency range to the 95% CI of Bank Swallow vocalizations (2000-7500 Hz) while expanding the time window (1x -> 2x), reducing visual noise and expediting detection. To complement visual scanning and further reduce false negatives, we evaluated two automated classifiers, BirdNET v2.1 (@kahl2021birdnet) and HawkEars v1.0.8 (@huus2025hawkears), against the human-verified detection record. Classifier outputs were overlaid directly on spectrograms in WildTrax, allowing reviewers to cross-reference detections and apply expert judgment where classifier confidence was low. Precision-recall analysis was used to evaluate classifier performance relative to the human record, providing a basis for assessing whether either classifier could serve as a reliable detection tool for this species and behaviour in future seasons. A summary of total data collected and recordings analyzed are summarized in @tbl-bans.
+
+To address the question of whether ARUs can detect roosting-associated activity, detections were examined by year and site to account for variation in deployment configuration across monitoring seasons. Call counts per recording, rather than binary presence, were used to characterize detection intensity during dawn (04:00–08:00) and dusk (19:00–22:00) survey periods, the windows most likely to capture pre-roost and post-roost vocalizations. Sites monitored in multiple years under different configurations (e.g., Bowley Pond, where one unit was deployed in 2023 and three units in 2025) were examined separately to explore whether detector density affected detection rates or call volume during these periods.
 
 ![Dynamic spectrogram and project settings in WildTrax](assets/project-dynamic.png){#fig-project-dynamic}
 
-![Dynamic spectrogram and project settings in WildTrax](assets/project-dynamic-2025.png){#fig-project-dynamic-2025}
 
 ```{r}
 #| warning: false
@@ -564,7 +572,7 @@ Visual scanning is the concept of visually examining spectrograms in order to fi
 #| eval: false
 #| include: false
 
-bans_projects <- wt_get_projects('ARU') |> filter(grepl('National Park Bank Swallow', project)) |> pull(project_id)
+bans_projects <- wt_get_projects('ARU') |> filter(grepl('Bank Swallow Monitoring 2025|Bank Swallow Monitoring 2023', project)) |> pull(project_id)
 
 # Download and bind all the data
 bans_aru <- imap_dfr(
@@ -606,6 +614,37 @@ jbm <- bans_aru |>
 
 ```
 
+```{r}
+#| warning: false
+#| echo: false
+#| eval: true
+#| message: false
+#| include: true
+#| label: tbl-bans
+#| collapse: true
+#| code-fold: true
+#| tbl-cap: Summary of audio data processed for Bank Swallow at each location
+
+bans_locs <- c("BANS-BOW-E","BANS-BOW-N","BANS-BOW-W","PENP-BS-6")
+
+tbl_bans_analyze <- bans_aru |>
+  filter(task_is_complete == TRUE) |>
+  group_by(location) |>
+  summarise(sum_analyzed = round((sum(task_duration)/3600),2))
+
+total_bans <- all_recs |>
+  mutate(year = year(recording_date_time)) |>
+  filter(location %in% bans_locs) |>
+  group_by(location, year) |>
+  summarise(sum = round((sum(recording_duration)/3600),2)) |>
+  left_join(tbl_bans_analyze, by = "location") |>
+  mutate(proportion_analyzed = round(((sum_analyzed / sum)*100),2))
+
+datatable(total_bans)
+
+```
+
+
 ## Automated recognition
 
 Automated recognition is a well-known process to help detect rare and elusive species (@knight2019classification. @shonfield2018utility) as well as species that may have a low detectability by collecting large data sets. In order to determine the presence of a few key species-at-risk, we utilized automated recognizers and deployed them across all the recordings in the 2019 data set. We constructed a recognizer for Eastern Wood-Pewee (EAWP) and used three previously constructed Wildlife Acoustics SongScope recognizers for Olive-sided Flycatcher (OSFL), Rusty Blackbird (RUBL) and Canada Warbler (CAWA) to detect for the presence of these species in the 2019 data set. All recognizers are freely available on WildTrax under Methods and Protocols \> [Automated Recognizers](https://wildtrax.ca/resources/methods-protocols/automated-recognizers/). Hits were verified and true positives for presence at each location (recording where the species was first positively detected) were uploaded to WildTrax via the `wt_songscope_tags` function in `wildrtrax`.
@@ -628,7 +667,7 @@ A total of `r nrow(distinct_spp)` species were found across the seven years. @fi
 #| warning: false
 #| message: false
 #| echo: false
-#| eval: true
+#| eval: false
 #| include: false
 
 spp_rich_location <- pei_main |>
@@ -680,17 +719,11 @@ spp_rich_location |>
 ```{r}
 #| warning: false
 #| echo: false
-#| eval: true
+#| eval: false
 #| message: false
 #| include: true
-#| results: hide
-#| fig-align: center
-#| fig-cap: Shannon diversity index over years
-#| label: fig-shannon
-#| cap-location: bottom
-#| code-fold: true
 
-pei_main |> 
+shannon_d <- pei_main |> 
   filter(!grepl('BS',location)) |>
   wt_tidy_species(remove = c("mammal","amphibian","abiotic","insect","unknown"), zerofill = F) |>
   inner_join(wt_get_species() |> select(species_code, species_class, species_order), by = "species_code") |>
@@ -706,8 +739,23 @@ pei_main |>
   ungroup() |>
   group_by(location, year) |>
   summarise(shannon_index = diversity(total_count, index = "shannon")) |>
-  ungroup() |>
-  ggplot(aes(x = factor(year), y = shannon_index, fill = factor(year))) +
+  ungroup()
+```
+
+```{r}
+#| warning: false
+#| echo: false
+#| eval: true
+#| message: false
+#| include: true
+#| results: hide
+#| fig-align: center
+#| fig-cap: Shannon diversity index over years
+#| label: fig-shannon
+#| cap-location: bottom
+#| code-fold: true
+
+ggplot(shannon_d, aes(x = factor(year), y = shannon_index, fill = factor(year))) +
   geom_boxplot() +
   geom_point(alpha = 0.6, colour = "grey") +
   labs(x = "Year",
@@ -721,16 +769,11 @@ pei_main |>
 ```{r}
 #| warning: false
 #| echo: false
-#| eval: true
+#| eval: false
 #| message: false
 #| include: true
-#| results: hide
-#| fig-align: center
-#| fig-cap: Seasonal detection activity of most commonly detected forest species
-#| label: fig-spp-activity
 
-
-pei_main |>
+seas_det <- pei_main |>
   wt_tidy_species(remove = c("mammal","amphibian","abiotic","insect","unknown"), zerofill = T) |>
   filter(!grepl('BS|ASC|LXI',location)) |>
   select(location, recording_date_time, species_common_name, species_code, abundance) |>
@@ -750,8 +793,23 @@ pei_main |>
     habitat_nesting == "TSS" ~ "Tree Shrub / Swamp",
     TRUE ~ as.character(habitat_nesting)
   )) |>
-  rename("Nesting habitat" = habitat_nesting) |>
-  ggplot(aes(x = julian, y = species_common_name, fill = `Nesting habitat`)) + 
+  rename("Nesting habitat" = habitat_nesting)
+
+```
+
+
+```{r}
+#| warning: false
+#| echo: false
+#| eval: true
+#| message: false
+#| include: true
+#| results: hide
+#| fig-align: center
+#| fig-cap: Seasonal detection activity of most commonly detected forest species
+#| label: fig-spp-activity
+
+ggplot(seas_det, aes(x = julian, y = species_common_name, fill = `Nesting habitat`)) + 
   geom_density_ridges(scale = 3, rel_min_height = 0.005, alpha = 0.4) + 
   scale_fill_viridis_d() +
   xlim(120,230) +
@@ -774,7 +832,6 @@ Proximity to the ocean may influence avian species richness detected at ARU stat
 #| fig-cap: Relationship between distance to coastline and species richness across ARU monitoring locations.
 #| label: fig-ocean-richness
 
-
 ocean_richness <- spp_rich_location |>
   inner_join(pei_locs |> select(location, coast_distance) |> distinct(), by = "location") |>
   filter(!location %in% c("ASC-1"))
@@ -794,16 +851,9 @@ Most forest species showed slight increasing and decreasing trends, with only fu
 ```{r}
 #| warning: false
 #| echo: false
-#| eval: true
+#| eval: false
 #| message: false
-#| include: false
-#| results: hide
-#| fig-align: center
-#| fig-width: 8
-#| fig-height: 8
-#| fig-cap: Normalized count abundance of mean number of medium-distance migrants by year
-#| label: fig-normalized-count-mdm-year
-
+#| include: true
 
 z <- locs_summary |>
   rowwise() |>
@@ -836,6 +886,21 @@ plot_mdm <-
   ) |>
   ungroup() |>
   mutate(normalized_count = total_abundance / sample_size)
+
+```
+
+```{r}
+#| warning: false
+#| echo: false
+#| eval: true
+#| message: false
+#| include: false
+#| results: hide
+#| fig-align: center
+#| fig-width: 8
+#| fig-height: 8
+#| fig-cap: Normalized count abundance of mean number of medium-distance migrants by year
+#| label: fig-normalized-count-mdm-year
 
 plot_mdm |>
   ggplot(aes(x = year, y = normalized_count, colour = species_code)) +
@@ -1101,105 +1166,52 @@ ggplot(pei_wide_plus, aes(x = recording_date_time, y = OVEN)) +
 
 ```
 
-## Visual scanning
+## Bank Swallows
 
 ::: {.callout-note collapse="true" style="background-color: #f4f4f4; padding: 20px;"}
 Some of these analyses are still a work-in-progress. Check back soon for updates and additional details.
 :::
 
-Bank Swallow vocalizations were detected at all `r bans_aru |> filter(species_code == "BANS") |> select(location) |> distinct() |> nrow()` monitoring locations, though detections were strongly seasonally and temporally concentrated. The daily presence count (see @fig-bans-hourly) shows that all confirmed detections occurred between approximately Julian Day 205–235, corresponding to late July through mid-August, with no detections recorded earlier in the season despite substantial survey effort from Julian Day 100 onward, although EI sites were not targeted as suitable habitat. Peak daily presence counts of up to 10 recordings across locations were observed around Julian Day 212–215, with detections declining through mid-August. This temporal pattern was corroborated by the modeled detection probability curve (see @fig-bans-dp2), which remained near zero prior to Julian Day 195 before rising steeply through the remainder of the season, suggesting that Bank Swallow activity at the monitored pond sites was restricted to a discrete window consistent with post-breeding foraging aggregations. The cumulative detection curve (see @fig-bans-dp) further illustrates the rarity of detections relative to survey effort, the detection rate remained negligible across the majority of processed recordings before rising sharply, reflecting the concentration of detections in the final portion of the dataset corresponding to late-season survey effort. Together, these patterns suggest that acoustic detectability of Bank Swallow at these sites is highly seasonal, and that survey effort earlier in the year contributed little to detection despite adequate recording coverage. Precision-recall analysis revealed that neither classifier performed with sufficient reliability to be used as a standalone detection tool for Bank Swallow (see @fig-bans-ai). Both BirdNET v2.1 and HawkEars v1.0.8 maintained low precision across all recall levels, plateauing at approximately 0.25–0.33, indicating that roughly one in three to four classifier detections represented a true positive. BirdNET v2.1 demonstrated more stable precision as recall approached 1.0, whereas HawkEars v1.0.8 exhibited a marked decline in precision at recall values exceeding ~0.85, suggesting that recovering the full set of true positives with HawkEars came at a substantially greater false positive cost.
-
-
 ```{r}
 #| warning: false
 #| echo: false
 #| eval: true
-#| include: true
-#| code-fold: true
-#| fig-cap: Bank Swallow cumulutative detection probability
-#| label: fig-bans-dp
+#| include: false
+#| results: false
+#| message: false
 
-# Filter and preprocess data
-bans_data <- bans_aru |>
-  bind_rows(pei_main) |>
-  mutate(individual_count = abundance) |>
-  select(location, recording_date_time, task_id, species_code, individual_order, individual_count) %>%
-  distinct() %>%
-  mutate(presence = if_else(species_code == "BANS", 1, 0),
-         julian = yday(recording_date_time))
-
-# Calculate detection rate
-detection_rate <- bans_data %>%
-  summarise(total_recordings = n(),
-            detections = sum(presence),
-            detection_rate = detections / total_recordings)
-
-# Cumulative detection curve
-cumulative_detection <- bans_aru %>%
-  filter(task_is_complete == TRUE) %>%       # only processed tasks
-  arrange(recording_date_time) %>%
+bowley_hour <- bans_aru |>
+  filter(task_is_complete == TRUE,
+         grepl("BOW", location),
+         species_code == "BANS") |>
   mutate(
-    presence = if_else(species_code == "BANS", 1, 0),
-    cumulative_detections = cumsum(presence),
-    cumulative_rate = cumulative_detections / row_number(),
-    row_n = row_number(),
-    julian = yday(recording_date_time),
-    hour = hour(recording_date_time)
-  )
-
-ggplot(cumulative_detection, aes(x = julian, y = cumulative_rate)) +
-  geom_smooth(color = "darkgreen") +
-  labs(title = "Cumulative Detection Curve for BANS",
-       x = "Date",
-       y = "Cumulative Detection Rate") +
-  theme_minimal()
-```
-
-```{r}
-#| warning: false
-#| echo: false
-#| eval: true
-#| include: true
-#| fig-width: 8
-#| code-fold: true
-#| fig-cap: Hourly Detection Rate of Bank Swallow Vocalizations
-#| label: fig-bans-hourly
-
-hourly_detection <- bans_aru %>%
-  filter(task_is_complete == TRUE) %>%
-  group_by(task_id, recording_date_time) %>%
-  summarise(presence = as.integer(any(species_code == "BANS")), .groups = "drop") %>%
-  mutate(
-    hour = hour(recording_date_time),
+    hour   = hour(recording_date_time),
     period = case_when(
       hour >= 4  & hour <= 8  ~ "Dawn (04:00–08:00)",
-      hour >= 19 & hour <= 22 ~ "Dusk (19:00–22:00)",
-      TRUE ~ NA_character_
+      hour >= 18 & hour <= 22 ~ "Dusk (18:00–22:00)",
+      TRUE                    ~ "Other"
     )
-  ) %>%
-  filter(!is.na(period)) %>%
-  group_by(hour, period) %>%
-  summarise(
-    total_tasks   = n(),
-    bans_detected = sum(presence),
-    detection_rate = bans_detected / total_tasks,
-    .groups = "drop"
   )
 
-ggplot(hourly_detection, aes(x = hour, y = detection_rate, fill = period)) +
-  geom_col() +
+ggplot(bowley_hour, aes(x = hour, fill = period)) +
+  geom_histogram(binwidth = 1, colour = "white", linewidth = 0.3) +
+  facet_wrap(~ location, ncol = 1) +
   scale_fill_manual(values = c(
     "Dawn (04:00–08:00)" = "#F4A460",
-    "Dusk (19:00–22:00)" = "#4A6FA5"
+    "Dusk (18:00–22:00)" = "#4A6FA5",
+    "Other"              = "grey75"
   )) +
-  scale_x_continuous(breaks = c(4:8, 19:22)) +
-  scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
+  scale_x_continuous(breaks = 0:23) +
   labs(
-    x        = "Hour of Day",
-    y        = "Detection Rate",
-    fill     = "Survey Period"
+    x    = "Hour of day",
+    y    = "Total calls detected",
+    fill = "Survey period"
   ) +
-  theme_minimal(base_size = 13)
+  theme_minimal(base_size = 13) +
+  theme(
+    strip.text    = element_text(size = 11, face = "bold"),
+    panel.spacing = unit(1, "lines")
+  )
 ```
 
 ```{r}
@@ -1208,42 +1220,57 @@ ggplot(hourly_detection, aes(x = hour, y = detection_rate, fill = period)) +
 #| eval: true
 #| include: true
 #| code-fold: true
-#| fig-cap: Bank Swallow predicted detection probability
-#| label: fig-bans-dp2
+#| fig-cap: "Bank Swallow detections at Bowley Pond over the season, faceted by detector unit. Bars show total calls detected per day."
+#| label: fig-bans-bowley-doy
 
-# Model detection probability using logistic regression
-detection_model <- glm(presence ~ julian, data = bans_data, family = binomial)
-summary(detection_model)
+bowley_doy <- bans_aru |>
+  filter(task_is_complete == TRUE,
+         grepl("BOW", location),
+         species_code == "BANS") |>
+  mutate(
+    date   = as_date(recording_date_time),
+    hour   = hour(recording_date_time),
+    period = case_when(
+      hour >= 4  & hour <= 8  ~ "Dawn (04:00–08:00)",
+      hour >= 18 & hour <= 22 ~ "Dusk (18:00–22:00)",
+      TRUE                    ~ "Other"
+    )
+  )
 
-# Plot predicted detection probability
-bans_data <- bans_data %>%
-  mutate(predicted_presence = predict(detection_model, type = "response"))
+ggplot(bowley_doy, aes(x = date, fill = period)) +
+  geom_histogram(binwidth = 1, colour = "white", linewidth = 0.3) +
+  facet_wrap(~ location, ncol = 1) +
+  scale_fill_manual(values = c(
+    "Dawn (04:00–08:00)" = "#F4A460",
+    "Dusk (18:00–22:00)" = "#4A6FA5",
+    "Other"              = "grey75"
+  )) +
+  scale_x_date(date_breaks = "1 week", date_labels = "%b %d") +
+  labs(
+    x    = NULL,
+    y    = "Total calls detected",
+    fill = "Survey period"
+  ) +
+  theme_minimal(base_size = 13) +
+  theme(
+    strip.text   = element_text(size = 11, face = "bold"),
+    axis.text.x  = element_text(angle = 30, hjust = 1),
+    panel.spacing = unit(1, "lines")
+  )
 
-# ggplot(bans_data, aes(x = julian, y = predicted_presence)) +
-#   geom_line(color = "blue") +
-#   geom_point(aes(y = presence), color = "red", alpha = 0.5) +
-#   labs(title = "Predicted Detection Probability for BANS",
-#        x = "Julian Day",
-#        y = "Probability of Detection") +
-#   theme_minimal()
 
-# Model detection probability using logistic regression
-detection_model <- glm(presence ~ hour, data = bans_data |> mutate(hour = hour(recording_date_time)), family = binomial)
-summary(detection_model)
+```
 
-# Plot predicted detection probability
-bans_data <- bans_data %>%
-  mutate(hour = hour(recording_date_time)) |>
-  mutate(predicted_presence = predict(detection_model, type = "response"))
+```{r}
+#| warning: false
+#| echo: false
+#| eval: false
+#| include: true
 
-ggplot(bans_data, aes(x = hour, y = predicted_presence)) +
-  geom_line(color = "blue") +
-  geom_point(aes(y = presence), color = "red", alpha = 0.5) +
-  labs(title = "Predicted Detection Probability for BANS",
-       x = "Hour of the day",
-       y = "Probability of Detection") +
-  theme_minimal()
+all_hawkears <- list(bind_rows(pei_hawkears, bans_hawkears) |> distinct(), bind_rows(pei_main, bans_aru))
 
+eval <- wt_evaluate_classifier(all_hawkears, resolution = "task", remove_species = TRUE, species = "Bank Swallow")
+wt_classifier_threshold(eval)
 ```
 
 ```{r}
@@ -1254,11 +1281,6 @@ ggplot(bans_data, aes(x = hour, y = predicted_presence)) +
 #| code-fold: true
 #| fig-cap: Performance of two acoustic classifiers on the detection of Bank Swallow at the task level. Precision and recall were evaluated based on detections by humans in the entire PEINP EI Monitoring dataset.
 #| label: fig-bans-ai
-
-all_hawkears <- list(bind_rows(pei_hawkears, bans_hawkears) |> distinct(), bind_rows(pei_main, bans_aru))
-
-eval <- wt_evaluate_classifier(all_hawkears, resolution = "task", remove_species = TRUE, species = "Bank Swallow")
-wt_classifier_threshold(eval)
 ggplot(eval, aes(x=recall, y=precision, colour=classifier)) + geom_smooth() + theme_bw() + xlim(0,1) + ylim(0,1) + xlab("Classifier Recall") + ylab("Classifier Precision")
 ```
 
@@ -1271,11 +1293,8 @@ A total of `r amphs_only |> select(species_code) |> distinct() |> tally()` were 
 ```{r}
 #| warning: false
 #| echo: false
-#| eval: true
+#| eval: false
 #| include: true
-#| results: hide
-#| fig-cap: Seasonal and yearly activity plots for Green Frog and Spring Peeper
-#| label: fig-spp-amphs-day
 
 spp_table <- wt_get_species()
 
@@ -1286,6 +1305,17 @@ amphs_only <- pei_main %>%
   filter(species_code %in% amphs$species_code) %>%
   select(location, recording_date_time, species_code, abundance) %>%
   distinct()
+
+```
+
+```{r}
+#| warning: false
+#| echo: false
+#| eval: true
+#| include: true
+#| results: hide
+#| fig-cap: Seasonal and yearly activity plots for Green Frog and Spring Peeper
+#| label: fig-spp-amphs-day
 
 amphs_only %>%
   mutate(individual_count = as.numeric(gsub('CI ','',abundance)),

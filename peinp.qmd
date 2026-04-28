@@ -573,7 +573,7 @@ To address the question of whether ARUs can detect roosting-associated activity,
 #| eval: false
 #| include: false
 
-bans_projects <- wt_get_projects('ARU') |> filter(grepl('Bank Swallow Monitoring 2025|Bank Swallow Monitoring 2023|Bank Swallow Monitoring 2022|Prince Edward Island National Park Forest Songbird Monitoring 2021', project)) |> pull(project_id)
+bans_projects <- wt_get_projects('ARU') |> filter(grepl('Bank Swallow Monitoring|Prince Edward Island National Park Forest Songbird Monitoring 2021', project)) |> pull(project_id)
 
 # Download and bind all the data
 bans_aru <- imap_dfr(
@@ -615,143 +615,13 @@ jbm <- bans_aru |>
 
 ```
 
-```{r}
-#| warning: false
-#| echo: false
-#| eval: true
-#| include: true
-#| code-fold: true
-#| label: tbl-bans-sites
-#| tbl-cap: "Summary of Bank Swallow ARU monitoring sites within PEINP, 2021–2025. Hours collected reflect total recording effort; hours analyzed reflect processed tasks only. Proportion analyzed is calculated per site per year. BANS detections are the number of unique detections of BANS within a recording under a count-removal framework at the 30-minute recording level."
-
-# Site name lookup
-site_names <- c(
-  "PENP-BS-1"   = "Clarke's Pond",
-  "PENP-BS-2"   = "Stanhope",
-  "PENP-BS-3"   = "Gulf Shore Parkway",
-  "PENP-BS-4"   = "North Rustico",
-  "PENP-BS-5"   = "Blooming Point",
-  "PENP-BS-6"   = "Bowley Pond",
-  "PENP-BS-1-1" = "Clarke's Pond",
-  "BANS-BOW-E"  = "Bowley Pond (East)",
-  "BANS-BOW-N"  = "Bowley Pond (North)",
-  "BANS-BOW-W"  = "Bowley Pond (West)"
-)
-
-# Detector count per site per year
-detector_config <- tibble::tribble(
-  ~location,     ~year, ~n_detectors,
-  "PENP-BS-1",   2021,  1,
-  "PENP-BS-2",   2021,  1,
-  "PENP-BS-3",   2021,  1,
-  "PENP-BS-4",   2021,  1,
-  "PENP-BS-5",   2021,  1,
-  "PENP-BS-1",   2022,  1,
-  "PENP-BS-6",   2023,  1,
-  "PENP-BS-1-1", 2024,  1,
-  "BANS-BOW-E",  2025,  1,
-  "BANS-BOW-N",  2025,  1,
-  "BANS-BOW-W",  2025,  1
-)
-
-# Hours analyzed (from processed tasks in bans_aru)
-tbl_analyzed <- bans_aru |>
-  filter(location %in% detector_config$location) |>
-  filter(task_is_complete == TRUE) |>
-  mutate(year = year(recording_date_time)) |>
-  group_by(location, year) |>
-  summarise(hrs_analyzed = round(sum(task_duration) / 3600, 1), .groups = "drop")
-
-tbl_detections <- bans_aru |>
-  filter(task_is_complete == TRUE,
-         species_code == "BANS") |>
-  mutate(year = year(recording_date_time)) |>
-  group_by(location, year) |>
-  summarise(bans_detections = n(), .groups = "drop")
-
-tbl_dates <- all_recs |>
-  mutate(year = year(recording_date_time)) |>
-  filter(location %in% bans_locs) |>
-  group_by(location, year) |>
-  summarise(
-    survey_period = paste(
-      format(min(recording_date_time), "%b %d"),
-      "–",
-      format(max(recording_date_time), "%b %d")
-    ),
-    .groups = "drop"
-  )
-
-# Full table
-bans_locs <- c("BANS-BOW-E","BANS-BOW-N","BANS-BOW-W",
-               "PENP-BS-6","PENP-BS-1","PENP-BS-2","PENP-BS-3",
-               "PENP-BS-4","PENP-BS-5","PENP-BS-1-1")
-
-total_bans <- all_recs |>
-  mutate(year = year(recording_date_time)) |>
-  filter(location %in% bans_locs) |>
-  group_by(location, year) |>
-  summarise(hrs_collected = round(sum(recording_duration) / 3600, 1), .groups = "drop") |>
-  left_join(tbl_analyzed,   by = c("location", "year")) |>
-  left_join(tbl_dates,      by = c("location", "year")) |>
-  left_join(tbl_detections, by = c("location", "year")) |>
-  mutate(
-    site_name       = site_names[location],
-    pct_analyzed    = round((hrs_analyzed / hrs_collected) * 100, 0),
-    hrs_analyzed    = replace_na(hrs_analyzed, 0),
-    pct_analyzed    = replace_na(pct_analyzed, 0),
-    bans_detections = replace_na(bans_detections, 0)
-  ) |>
-  arrange(year, location) |>
-  select(year, location, site_name, survey_period, hrs_collected, hrs_analyzed, pct_analyzed, bans_detections)
-
-total_bans |>
-  gt(groupname_col = "year") |>
-  cols_label(
-    location        = "Location ID",
-    site_name       = "Site",
-    survey_period = "Survey Period",
-    hrs_collected   = "Hours collected",
-    hrs_analyzed    = "Hours analyzed",
-    pct_analyzed    = "% analyzed",
-    bans_detections = "BANS detections"
-  ) |>
-  data_color(
-    columns        = pct_analyzed,
-    target_columns = pct_analyzed,
-    method         = "numeric",
-    palette        = c("#f7f7f7", "#4A6FA5"),
-    domain         = c(0, 100)
-  ) |>
-  tab_style(
-    style     = cell_text(weight = "bold"),
-    locations = cells_row_groups()
-  ) |>
-  tab_style(
-    style     = cell_fill(color = "#f9f9f9"),
-    locations = cells_row_groups()
-  ) |>
-  tab_options(
-    table.width               = pct(100),
-    column_labels.font.weight = "bold",
-    row_group.font.weight     = "bold",
-    table.font.size           = px(13)
-  ) |>
-  data_color(
-    columns  = bans_detections,
-    method   = "numeric",
-    palette  = c("#f7f7f7", "#F4A460"),
-    domain   = c(0, max(total_bans$bans_detections, na.rm = TRUE))
-  )
-```
-
 ## Automated recognition
 
-Automated recognition is a well-known process to help detect rare and elusive species (@knight2019classification. @shonfield2018utility) as well as species that may have a low detectability by collecting large data sets. In order to determine the presence of a few key species-at-risk, we utilized automated recognizers and deployed them across all the recordings in the 2019 data set. We constructed a recognizer for Eastern Wood-Pewee (EAWP) and used three previously constructed Wildlife Acoustics SongScope recognizers for Olive-sided Flycatcher (OSFL), Rusty Blackbird (RUBL) and Canada Warbler (CAWA) to detect for the presence of these species in the 2019 data set. All recognizers are freely available on WildTrax under Methods and Protocols \> [Automated Recognizers](https://wildtrax.ca/resources/methods-protocols/automated-recognizers/). Hits were verified and true positives for presence at each location (recording where the species was first positively detected) were uploaded to WildTrax via the `wt_songscope_tags` function in `wildrtrax`.
+Automated recognition is a well-known process to help detect rare and elusive species (@knight2019classification. @shonfield2018utility) as well as species that may have a low detectability by collecting large data sets. In order to determine the presence of a few key species-at-risk, we utilized automated recognizers and deployed them across all the recordings in the 2019 data set. We constructed a recognizer for Eastern Wood-Pewee (EAWP) and used three previously constructed Wildlife Acoustics SongScope recognizers for Olive-sided Flycatcher (OSFL), Rusty Blackbird (RUBL) and Canada Warbler (CAWA) to detect for the presence of these species in the 2019 data set. Hits were verified and true positives for presence at each location (recording where the species was first positively detected) were uploaded to WildTrax via the `wt_songscope_tags` function in `wildrtrax` for verification.
 
 ## Analyses
 
-Species richness, diversity and occupancy were calculated using the r nrow(locs_summary) - 9 forest songbird monitoring locations (`PENP-`). We calculated species richness as distinct species found at each location and year surveyed (see @fig-spp-rich-locs), omitting species using `wildrtrax::wt_tidy_species()` for abiotic, amphibians, unknowns and insects. To determine if there were any changes to species diversity, we used Shannon's diversity index (@shannon1948mathematical) over years using `vegan::diversity(index="shannon")` (see @fig-shannon).
+Species richness, diversity and occupancy were calculated using the `r nrow(locs_summary)`, 9 forest songbird monitoring locations (`PENP-`). We calculated species richness as distinct species found at each location and year surveyed (see @fig-spp-rich-locs), omitting species using `wildrtrax::wt_tidy_species()` for abiotic, amphibians, unknowns and insects. To determine if there were any changes to species diversity, we used Shannon's diversity index (@shannon1948mathematical) over years using `vegan::diversity(index="shannon")` (see @fig-shannon).
 
 For testing species occupancy, we selected locations with a minimum of four dawn visits for each year across all five years, focusing on forest obligate species for ecological relevance (see @tbl-bird-guilds). Utilizing a single-season single-species occupancy model from @mackenzie2002estimating, we calculated the predicted occupancy of species at all locations surveyed in each year across years. Site-specific covariates included the distance to ocean edge (in meters) and the proportional area of each cover type from the [Prince Edward Island 2010 Corporate Land Use Inventory](https://data.princeedwardisland.ca/Environment-and-Food/OD0144-Corporate-Landuse-Inventory-2010/tc7z-7rpy) at 150 meter radius surrounding the ARU categorized into anthropogenic (pavement, soy), open (grass, sand dune, bare soil), deciduous (red maple, white birch, alder, poplar) and conifer (white spruce, black spruce, balsam fir). Observation covariates incorporated day of the year, hour, observer, and a quadratic term for both day of year ($doy^{2}$) and hour ($hr^{2}$). See @tbl-obvs-and-covs for more information. Despite variations in processing methodology between 2019 - 2021 (1SPM - species-individual detected per minute, i.e. repeat sampling each minute for 3 minute) and subsequent years (2022 - 2025; 1SPT), we maintained consistency by exclusively utilizing the time to the first detection of individuals from the 1SPM recordings. Model predictions were generated, with goodness-of-fit testing using methods from @occu-fit and the best model selected based on AIC and through `MuMIn::dregde`, `MuMIn::get.models` and `MuMIn::model.sel`. If more than one model existed, the average model was used using `MuMIn::model.avg`. The final predictions were then made and plotted over years and sorted by nesting guilds of species into conifer, deciduous, treed / shrubby, wetlands and open. Trends in species abundance were assessed using a normalized count, calculated as the total species count divided by the number of surveyed locations per year. We focused on a subset of species representative of the forest songbird community: `r c("BTNW","BLBW","GCKI","YRWA","MAWA","BTBW","BHVI","AMRE","REVI","MOWA","BLJA","ALFL","EAWP","WTSP","AMRO","COYE","NOPA","YEWA")`. To evaluate temporal trends in abundance over the past six years, we applied generalized linear mixed models (GLMMs) each species as well as the total count of the species over the period.
 
@@ -1266,7 +1136,7 @@ ggplot(pei_wide_plus, aes(x = recording_date_time, y = OVEN)) +
 
 ```
 
-## Bank Swallows
+## Bank swallows
 
 ::: {.callout-note collapse="true" style="background-color: #f4f4f4; padding: 20px;"}
 Some of these analyses are still a work-in-progress. Check back soon for updates and additional details.
@@ -1276,42 +1146,145 @@ Some of these analyses are still a work-in-progress. Check back soon for updates
 #| warning: false
 #| echo: false
 #| eval: true
+#| include: true
+#| code-fold: true
+#| label: tbl-bans-sites
+#| tbl-cap: "Summary of Bank Swallow ARU monitoring sites within PEINP, 2021–2025. Hours collected reflect total recording effort; hours analyzed reflect processed tasks only. Proportion analyzed is calculated per site per year. BANS detections are the number of unique detections of BANS within a recording under a count-removal framework at the recording level."
+
+# Site name lookup
+site_names <- c(
+  "PENP-BS-1"   = "Clarke's Pond",
+  "PENP-BS-2"   = "Stanhope",
+  "PENP-BS-3"   = "Gulf Shore Parkway",
+  "PENP-BS-4"   = "North Rustico",
+  "PENP-BS-5"   = "Blooming Point",
+  "PENP-BS-6"   = "Bowley Pond",
+  "PENP-BS-1-1" = "Clarke's Pond",
+  "BANS-BOW-E"  = "Bowley Pond (East)",
+  "BANS-BOW-N"  = "Bowley Pond (North)",
+  "BANS-BOW-W"  = "Bowley Pond (West)")
+
+# Detector count per site per year
+detector_config <- tibble::tribble(
+  ~location,     ~year, ~n_detectors,
+  "PENP-BS-1",   2021,  1,
+  "PENP-BS-2",   2021,  1,
+  "PENP-BS-3",   2021,  1,
+  "PENP-BS-4",   2021,  1,
+  "PENP-BS-5",   2021,  1,
+  "PENP-BS-1",   2022,  1,
+  "PENP-BS-6",   2023,  1,
+  "PENP-BS-1-1", 2024,  1,
+  "BANS-BOW-E",  2025,  1,
+  "BANS-BOW-N",  2025,  1,
+  "BANS-BOW-W",  2025,  1
+)
+
+# Hours analyzed (from processed tasks in bans_aru)
+tbl_analyzed <- bans_aru |>
+  filter(location %in% detector_config$location) |>
+  filter(task_is_complete == TRUE) |>
+  mutate(year = year(recording_date_time)) |>
+  group_by(location, year) |>
+  summarise(hrs_analyzed = round(sum(task_duration) / 3600, 1), .groups = "drop")
+
+tbl_detections <- bans_aru |>
+  filter(task_is_complete == TRUE,
+         species_code == "BANS") |>
+  mutate(year = year(recording_date_time)) |>
+  group_by(location, year) |>
+  summarise(bans_detections = n(), .groups = "drop")
+
+tbl_dates <- all_recs |>
+  mutate(year = year(recording_date_time)) |>
+  filter(location %in% bans_locs) |>
+  group_by(location, year) |>
+  summarise(
+    survey_period = paste(
+      format(min(recording_date_time), "%b %d"),
+      "–",
+      format(max(recording_date_time), "%b %d")
+    ),
+    .groups = "drop"
+  )
+
+# Full table
+bans_locs <- c("BANS-BOW-E","BANS-BOW-N","BANS-BOW-W",
+               "PENP-BS-6","PENP-BS-1","PENP-BS-2","PENP-BS-3",
+               "PENP-BS-4","PENP-BS-5","PENP-BS-1-1")
+
+total_bans <- all_recs |>
+  mutate(year = year(recording_date_time)) |>
+  filter(location %in% bans_locs) |>
+  group_by(location, year) |>
+  summarise(hrs_collected = round(sum(recording_duration) / 3600, 1), .groups = "drop") |>
+  left_join(tbl_analyzed,   by = c("location", "year")) |>
+  left_join(tbl_dates,      by = c("location", "year")) |>
+  left_join(tbl_detections, by = c("location", "year")) |>
+  mutate(
+    site_name       = site_names[location],
+    pct_analyzed    = round((hrs_analyzed / hrs_collected) * 100, 0),
+    hrs_analyzed    = replace_na(hrs_analyzed, 0),
+    pct_analyzed    = replace_na(pct_analyzed, 0),
+    bans_detections = replace_na(bans_detections, 0)
+  ) |>
+  arrange(year, location) |>
+  select(year, location, site_name, survey_period, hrs_collected, hrs_analyzed, pct_analyzed, bans_detections)
+
+total_bans |>
+  gt(groupname_col = "year") |>
+  cols_label(
+    location        = "Location ID",
+    site_name       = "Site",
+    survey_period = "Survey Period",
+    hrs_collected   = "Hours collected",
+    hrs_analyzed    = "Hours analyzed",
+    pct_analyzed    = "% analyzed",
+    bans_detections = "BANS detections"
+  ) |>
+  data_color(
+    columns        = pct_analyzed,
+    target_columns = pct_analyzed,
+    method         = "numeric",
+    palette        = c("#f7f7f7", "#4A6FA5"),
+    domain         = c(0, 100)
+  ) |>
+  tab_style(
+    style     = cell_text(weight = "bold"),
+    locations = cells_row_groups()
+  ) |>
+  tab_style(
+    style     = cell_fill(color = "#f9f9f9"),
+    locations = cells_row_groups()
+  ) |>
+  tab_options(
+    table.width               = pct(100),
+    column_labels.font.weight = "bold",
+    row_group.font.weight     = "bold",
+    table.font.size           = px(13)
+  ) |>
+  data_color(
+    columns  = bans_detections,
+    method   = "numeric",
+    palette  = c("#f7f7f7", "#F4A460"),
+    domain   = c(0, max(total_bans$bans_detections, na.rm = TRUE))
+  )
+```
+
+```{r}
+#| warning: false
+#| echo: false
+#| eval: true
 #| include: false
 #| results: false
 #| message: false
 
-bowley_hour <- bans_aru |>
-  filter(task_is_complete == TRUE,
-         grepl("BOW", location),
-         species_code == "BANS") |>
-  mutate(
-    hour   = hour(recording_date_time),
-    period = case_when(
-      hour >= 4  & hour <= 8  ~ "Dawn (04:00–08:00)",
-      hour >= 18 & hour <= 22 ~ "Dusk (18:00–22:00)",
-      TRUE                    ~ "Other"
-    )
-  )
-
-ggplot(bowley_hour, aes(x = hour, fill = period)) +
-  geom_histogram(binwidth = 1, colour = "white", linewidth = 0.3) +
-  facet_wrap(~ location, ncol = 1) +
-  scale_fill_manual(values = c(
-    "Dawn (04:00–08:00)" = "#F4A460",
-    "Dusk (18:00–22:00)" = "#4A6FA5",
-    "Other"              = "grey75"
-  )) +
-  scale_x_continuous(breaks = 0:23) +
-  labs(
-    x    = "Hour of day",
-    y    = "Total calls detected",
-    fill = "Survey period"
-  ) +
-  theme_minimal(base_size = 13) +
-  theme(
-    strip.text    = element_text(size = 11, face = "bold"),
-    panel.spacing = unit(1, "lines")
-  )
+bans_aru |>
+  filter(location %in% detector_config$location, species_code == "BANS") |>
+  mutate(hour = hour(recording_date_time)) |>
+  group_by(hour) |>
+  tally() |>
+  ungroup()
 ```
 
 ```{r}

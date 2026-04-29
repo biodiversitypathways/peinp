@@ -48,6 +48,7 @@ library(sf)
 library(terra)
 library(vctrs)
 library(ggridges)
+library(mgcv)
 library(scales)
 library(kableExtra)
 library(plotly)
@@ -64,7 +65,7 @@ library(gt)
 #wt_auth()
 
 load('pei.RData')
-#save.image('pei.RData')
+save.image('pei.RData')
 #cirrus_penp_recs  <- readRDS('penpcirrus.RDS')
 ```
 
@@ -562,6 +563,8 @@ ARUs were placed near ponds where Bank Swallow are known to forage and roost, as
 In 2025, we refined our processing approach using dynamic spectrogram settings (see @fig-project-dynamic), constraining the frequency range to the 95% CI of Bank Swallow vocalizations (2000-7500 Hz) while expanding the time window (1x -> 2x), reducing visual noise and expediting detection. To complement visual scanning and further reduce false negatives, we evaluated two automated classifiers, BirdNET v2.1 (@kahl2021birdnet) and HawkEars v1.0.8 (@huus2025hawkears), against the human-verified detection record. Classifier outputs were overlaid directly on spectrograms in WildTrax, allowing reviewers to cross-reference detections and apply expert judgment where classifier confidence was low. Precision-recall analysis was used to evaluate classifier performance relative to the human record, providing a basis for assessing whether either classifier could serve as a reliable detection tool for this species and behaviour in future seasons. A summary of total data collected and recordings analyzed are summarized in @tbl-bans.
 
 To address the question of whether ARUs can detect roosting-associated activity, detections were examined by year and site to account for variation in deployment configuration across monitoring seasons. Call counts per recording, rather than binary presence, were used to characterize detection intensity during dawn (04:00–08:00) and dusk (19:00–22:00) survey periods, the windows most likely to capture pre-roost and post-roost vocalizations. Sites monitored in multiple years under different configurations (e.g., Bowley Pond, where one unit was deployed in 2023 and three units in 2025) were examined separately to explore whether detector density affected detection rates or call volume during these periods.
+
+To characterize the temporal distribution of Bank Swallow calling activity, ARU recordings were converted to binary presence/absence records at the individual recording level. Each recording was assigned a day of year and hour of day derived from its timestamp. A generalized additive model (GAM) with a binomial response was fit using the mgcv package in R, with smooth terms for day of year (thin plate regression spline, k = 10), hour of day (cyclic cubic spline, k = 10), and a tensor product interaction term to capture shifting diel patterns across the season. Model parameters were estimated using restricted maximum likelihood (REML). Predicted calling probabilities were generated across a full grid of all hour-by-date combinations within the survey window and visualized as a heatmap, with dawn (04:00–08:00) and dusk (18:00–22:00) survey periods highlighted for reference.
 
 ![Dynamic spectrogram and project settings in WildTrax](assets/project-dynamic.png){#fig-project-dynamic}
 
@@ -1236,11 +1239,18 @@ total_bans |>
   cols_label(
     location        = "Location ID",
     site_name       = "Site",
-    survey_period = "Survey Period",
+    survey_period   = "Survey Period",
     hrs_collected   = "Hours collected",
     hrs_analyzed    = "Hours analyzed",
     pct_analyzed    = "% analyzed",
     bans_detections = "BANS detections"
+  ) |>
+  summary_rows(
+    groups    = everything(),
+    columns   = c(hrs_collected, hrs_analyzed, bans_detections),
+    fns       = list(Total = ~sum(., na.rm = TRUE)),
+    formatter = fmt_number,
+    decimals  = 1
   ) |>
   data_color(
     columns        = pct_analyzed,
@@ -1256,6 +1266,14 @@ total_bans |>
   tab_style(
     style     = cell_fill(color = "#f9f9f9"),
     locations = cells_row_groups()
+  ) |>
+  tab_style(
+    style     = cell_text(weight = "bold", color = "white"),
+    locations = cells_summary()
+  ) |>
+  tab_style(
+    style     = cell_fill(color = "#4A6FA5"),
+    locations = cells_summary()
   ) |>
   tab_options(
     table.width               = pct(100),
@@ -1286,6 +1304,8 @@ bans_aru |>
   tally() |>
   ungroup()
 ```
+
+Further breaking down responses at Bowley Pond in 2025, @fig-bans-bowley-day describes the frequency and number of calls detected across the season broken up by dawn and dusk hours of the day throughout the deployment of the recorder. Activity was centered around dusk hours with frequency of detection increasing over the evening hours. 
 
 ```{r}
 #| warning: false
@@ -1334,6 +1354,8 @@ ggplot(bowley_doy, aes(x = date, fill = period)) +
 
 ```
 
+Evaluation of the performance of BirdNET and HawkEars on Bank swallow detections can be summarized in the precision-recall curve in @fig-bans-ai. 
+
 ```{r}
 #| warning: false
 #| echo: false
@@ -1357,7 +1379,172 @@ wt_classifier_threshold(eval)
 ggplot(eval, aes(x=recall, y=precision, colour=classifier)) + geom_smooth() + theme_bw() + xlim(0,1) + ylim(0,1) + xlab("Classifier Recall") + ylab("Classifier Precision")
 ```
 
-------------------------------------------------------------------------
+Finally the predicted heatmap of detection at Bowley Pond (@fig-bowley-heat) and for all Bank swallow monitoring locations (@fig-all-heat).
+
+```{r}
+#| warning: false
+#| echo: false
+#| eval: true
+#| include: true
+#| code-fold: true
+#| fig-cap: Heatmap of predicted probability of detection of Bank swallow at Bowley Pond in 2025 with 3 ARU detectors placed around the pond.
+#| label: fig-bowley-heat
+
+bans_rec <- bans_aru |>         
+  group_by(recording_id, recording_date_time, location) |>
+  summarise(
+    bans_present = as.integer(any(species_code == "BANS")),
+    .groups = "drop"
+  ) |>
+  mutate(
+    doy  = yday(recording_date_time),
+    hour = hour(recording_date_time)
+  ) |>
+  filter(
+    # 2025 Bowley Pond survey window
+    doy >= yday(as.Date("2025-07-25")),
+    doy <= yday(as.Date("2025-08-28"))
+  )
+
+mod_bans <- gam(
+  bans_present ~
+    s(doy,  bs = "tp", k = 10) +
+    s(hour, bs = "cc", k = 10) +
+    ti(doy, hour, bs = c("tp", "cc")),
+  family = binomial,
+  data   = bans_rec,
+  method = "REML"
+)
+
+doy_min <- min(bans_rec$doy)
+doy_max <- max(bans_rec$doy)
+
+newdat <- expand.grid(
+  doy  = doy_min:doy_max,
+  hour = 0:23
+)
+
+newdat$pred <- predict(
+  mod_bans,
+  newdata = newdat,
+  type    = "response"
+)
+
+newdat <- newdat |>
+  mutate(date = as.Date(doy - 1, origin = "2025-01-01"))
+
+# --- 5. Plot ---
+ggplot(newdat, aes(date, hour, fill = pred)) +
+  geom_raster() +
+  scale_fill_viridis_c(
+    limits = c(0, 1),
+    name   = "Predicted\nProbability",
+    option = "magma"       # warm palette suits activity data well
+  ) +
+  scale_y_continuous(
+    breaks = c(0, 4, 8, 12, 16, 18, 20, 22),
+    labels = c("00:00", "04:00", "08:00", "12:00",
+               "16:00", "18:00", "20:00", "22:00")
+  ) +
+  # highlight your survey windows as horizontal bands
+  annotate("rect", xmin = -Inf, xmax = Inf,
+           ymin = 4, ymax = 8,   alpha = 0.1, fill = "orange") +
+  annotate("rect", xmin = -Inf, xmax = Inf,
+           ymin = 18, ymax = 22, alpha = 0.1, fill = "steelblue") +
+  scale_x_date(date_labels = "%b %d", date_breaks = "1 week") +
+  labs(
+    x     = "Date",
+    y     = "Hour of Day",
+    title = "Predicted BANS Calling Probability — Bowley Pond 2025",
+    subtitle = "Orange band = Dawn survey window  |  Blue band = Dusk survey window"
+  ) +
+  theme_minimal(base_size = 13) +
+  theme(panel.grid = element_blank())
+
+```
+
+```{r}
+#| warning: false
+#| echo: false
+#| eval: true
+#| include: true
+#| code-fold: true
+#| fig-cap: Heatmap of predicted probability of detection of Bank swallow at all monitoring sites.
+#| label: fig-all-heat
+
+bans_rec_all <- bans_aru |>          
+  group_by(recording_id, recording_date_time, location) |>
+  summarise(
+    bans_present = as.integer(any(species_code == "BANS")),
+    .groups = "drop"
+  ) |>
+  mutate(
+    doy  = yday(recording_date_time),
+    hour = hour(recording_date_time)
+  )
+
+mod_bans_all <- gam(
+  bans_present ~
+    s(doy,  bs = "tp", k = 10) +
+    s(hour, bs = "cc", k = 10) +
+    ti(doy, hour, bs = c("tp", "cc")),
+  family = binomial,
+  data   = bans_rec_all,
+  method = "REML"
+)
+
+# --- 3. Prediction grid ---
+doy_min_all <- min(bans_rec_all$doy)
+doy_max_all <- max(bans_rec_all$doy)
+
+newdat_all <- expand.grid(
+  doy  = doy_min_all:doy_max_all,
+  hour = 0:23
+)
+
+newdat_all$pred <- predict(
+  mod_bans_all,
+  newdata = newdat_all,
+  type    = "response"
+)
+
+# --- 4. Convert doy back to readable dates for x-axis ---
+newdat_all <- newdat_all |>
+  mutate(date = as.Date(doy))
+
+
+ggplot(newdat_all, aes(doy, hour, fill = pred)) +
+  geom_raster() +
+  scale_fill_viridis_c(
+    limits = c(0, 1),
+    name   = "Predicted\nProbability",
+    option = "magma"
+  ) +
+  scale_y_continuous(
+    breaks = c(0, 4, 8, 12, 16, 18, 20, 22),
+    labels = c("00:00", "04:00", "08:00", "12:00",
+               "16:00", "18:00", "20:00", "22:00")
+  ) +
+  scale_x_continuous(
+    breaks = c(121, 135, 152, 166, 182, 196, 213, 227, 244),
+    labels = c("May 1", "May 15", "Jun 1", "Jun 15",
+               "Jul 1", "Jul 15", "Aug 1", "Aug 15", "Sep 1")
+  ) +
+  annotate("rect", xmin = -Inf, xmax = Inf,
+           ymin = 4,  ymax = 8,  alpha = 0.08, fill = "orange") +
+  annotate("rect", xmin = -Inf, xmax = Inf,
+           ymin = 18, ymax = 22, alpha = 0.08, fill = "steelblue") +
+  labs(
+    x        = "Date",
+    y        = "Hour of Day",
+    title    = "Predicted BANS Calling Probability",
+    subtitle = "Orange = Dawn  |  Blue = Dusk"
+  ) +
+  theme_minimal(base_size = 13) +
+  theme(panel.grid = element_blank())
+
+```
+
 
 ## Amphibians
 

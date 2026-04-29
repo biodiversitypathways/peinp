@@ -1236,7 +1236,7 @@ total_bans |>
   cols_label(
     location        = "Location ID",
     site_name       = "Site",
-    survey_period   = "Survey Period",
+    survey_period = "Survey Period",
     hrs_collected   = "Hours collected",
     hrs_analyzed    = "Hours analyzed",
     pct_analyzed    = "% analyzed",
@@ -1248,12 +1248,6 @@ total_bans |>
     method         = "numeric",
     palette        = c("#f7f7f7", "#4A6FA5"),
     domain         = c(0, 100)
-  ) |>
-  data_color(
-    columns  = bans_detections,
-    method   = "numeric",
-    palette  = c("#f7f7f7", "#F4A460"),
-    domain   = c(0, max(total_bans$bans_detections, na.rm = TRUE))
   ) |>
   tab_style(
     style     = cell_text(weight = "bold"),
@@ -1269,26 +1263,11 @@ total_bans |>
     row_group.font.weight     = "bold",
     table.font.size           = px(13)
   ) |>
-  # Per-year group subtotals
-  summary_rows(
-    groups  = everything(),
-    columns = c(hrs_collected, hrs_analyzed, bans_detections),
-    fns     = list(Total = ~sum(., na.rm = TRUE)),
-    fmt     = ~fmt_number(., decimals = 0)
-  ) |>
-  summary_rows(
-    groups  = everything(),
-    columns = pct_analyzed,
-    fns     = list(Total = ~mean(., na.rm = TRUE)),  # mean makes more sense than sum for %
-    fmt     = ~fmt_number(., decimals = 1, pattern = "{x}%")
-  ) |>
-  tab_style(
-    style     = cell_text(weight = "bold", color = "white"),
-    locations = cells_summary()
-  ) |>
-  tab_style(
-    style     = cell_fill(color = "#4A6FA5"),
-    locations = cells_summary()
+  data_color(
+    columns  = bans_detections,
+    method   = "numeric",
+    palette  = c("#f7f7f7", "#F4A460"),
+    domain   = c(0, max(total_bans$bans_detections, na.rm = TRUE))
   )
 ```
 

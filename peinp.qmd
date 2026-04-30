@@ -65,7 +65,7 @@ library(gt)
 #wt_auth()
 
 load('pei.RData')
-save.image('pei.RData')
+#save.image('pei.RData')
 #cirrus_penp_recs  <- readRDS('penpcirrus.RDS')
 ```
 

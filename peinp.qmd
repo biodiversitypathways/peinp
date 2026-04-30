@@ -1504,11 +1504,17 @@ ggplot(newdat_all, aes(doy, hour, fill = pred)) +
 
 windows <- tribble(
   ~label,                   ~start, ~end,   ~fill,
-  "Spring migration",        110,    145,    "#74C2E1",  # late Apr – late May
-  "Breeding",                145,    200,    "#F4A261",  # late May – mid Aug
-  "Post-breeding / roost",   200,    240,    "#E76F51",  # mid Aug – mid Sep
-  "Fall migration",          240,    270,    "#74F5E1"   # mid Sep – mid Oct
-)
+  "Spring migration",        110,    145,    "#74C2E1",
+  "Breeding",                145,    200,    "#F4A261",
+  "Post-breeding / roost",   200,    240,    "#E76F51",
+  "Fall migration",          240,    270,    "#74F5E1"
+) |>
+  mutate(label = factor(label, levels = c(
+    "Spring migration",
+    "Breeding",
+    "Post-breeding / roost",
+    "Fall migration"
+  )))
 
 fit <- gam(bans_present ~ s(doy, k = 10), 
            data = bans_rec_all, 
@@ -1538,8 +1544,16 @@ ggplot() +
   scale_fill_manual(values = setNames(windows$fill, windows$label),
                     name = NULL) +
   # Raw rug of detections
-  geom_rug(data = filter(bans_rec_all, bans_present == 1),
-           aes(x = doy), colour = "grey30", alpha = 0.3, sides = "b") +
+  geom_rug(
+  data = bans_rec_all,
+  aes(x = doy, colour = factor(bans_present)),
+  alpha = 0.4,
+  sides = "b"
+) +
+scale_colour_manual(
+  values = c("0" = "#F4A3A3", "1" = "green"),
+  name = NULL
+) +
   # GAM smooth + CI
   geom_ribbon(data = pred_df, aes(x = doy, ymin = lwr, ymax = upr),
               fill = "black", alpha = 0.15) +

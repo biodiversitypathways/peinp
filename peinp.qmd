@@ -65,7 +65,7 @@ library(gt)
 #wt_auth()
 
 load('pei.RData')
-#save.image('pei.RData')
+save.image('pei.RData')
 #cirrus_penp_recs  <- readRDS('penpcirrus.RDS')
 ```
 
@@ -564,7 +564,7 @@ In 2025, we refined our processing approach using dynamic spectrogram settings (
 
 To address the question of whether ARUs can detect roosting-associated activity, detections were examined by year and site to account for variation in deployment configuration across monitoring seasons. Call counts per recording, rather than binary presence, were used to characterize detection intensity during dawn (04:00–08:00) and dusk (19:00–22:00) survey periods, the windows most likely to capture pre-roost and post-roost vocalizations. Sites monitored in multiple years under different configurations (e.g., Bowley Pond, where one unit was deployed in 2023 and three units in 2025) were examined separately to explore whether detector density affected detection rates or call volume during these periods.
 
-To characterize the temporal distribution of Bank Swallow calling activity, ARU recordings were converted to binary presence/absence records at the individual recording level. Each recording was assigned a day of year and hour of day derived from its timestamp. A generalized additive model (GAM) with a binomial response was fit using the mgcv package in R, with smooth terms for day of year (thin plate regression spline, k = 10), hour of day (cyclic cubic spline, k = 10), and a tensor product interaction term to capture shifting diel patterns across the season. Model parameters were estimated using restricted maximum likelihood (REML). Predicted calling probabilities were generated across a full grid of all hour-by-date combinations within the survey window and visualized as a heatmap, with dawn (04:00–08:00) and dusk (18:00–22:00) survey periods highlighted for reference.
+To characterize the temporal distribution of Bank Swallow calling activity, ARU recordings were converted to binary presence/absence records at the individual recording level. Each recording was assigned a day of year and hour of day derived from its timestamp. A generalized additive model (GAM) with a binomial response was fit using the `mgcv` package in R, with smooth terms for day of year (thin plate regression spline, **k** = 10), hour of day (cyclic cubic spline, **k** = 10), and a tensor product interaction term to capture shifting diel patterns across the season. Model parameters were estimated using restricted maximum likelihood (REML). Predicted calling probabilities were generated across a full grid of all hour-by-date combinations within the survey window and visualized as a heatmap, with dawn (04:00–08:00) and dusk (18:00–22:00) survey periods highlighted for reference.
 
 ![Dynamic spectrogram and project settings in WildTrax](assets/project-dynamic.png){#fig-project-dynamic}
 
@@ -1194,7 +1194,7 @@ tbl_analyzed <- bans_aru |>
   filter(location %in% detector_config$location) |>
   filter(task_is_complete == TRUE) |>
   mutate(year = year(recording_date_time)) |>
-  group_by(location, year) |>
+  group_by(location, year) |> 
   summarise(hrs_analyzed = round(sum(task_duration) / 3600, 1), .groups = "drop")
 
 tbl_detections <- bans_aru |>
@@ -1232,7 +1232,7 @@ total_bans <- all_recs |>
   left_join(tbl_detections, by = c("location", "year")) |>
   mutate(
     site_name       = site_names[location],
-    pct_analyzed    = round((hrs_analyzed / hrs_collected) * 100, 0),
+    pct_analyzed    = round((hrs_analyzed / hrs_collected) * 100, 2),
     hrs_analyzed    = replace_na(hrs_analyzed, 0),
     pct_analyzed    = replace_na(pct_analyzed, 0),
     bans_detections = replace_na(bans_detections, 0)
@@ -1252,12 +1252,19 @@ total_bans |>
     bans_detections = "BANS detections"
   ) |>
   summary_rows(
-    groups    = everything(),
-    columns   = c(hrs_collected, hrs_analyzed, bans_detections),
-    fns       = list(Total = ~sum(., na.rm = TRUE)),
-    formatter = fmt_number,
-    decimals  = 1
-  ) |>
+  groups    = everything(),
+  columns   = c(hrs_collected, hrs_analyzed, bans_detections),
+  fns       = list(Total = ~sum(., na.rm = TRUE)),
+  formatter = fmt_number,
+  decimals  = 1
+) |>
+summary_rows(
+  groups    = everything(),
+  columns   = pct_analyzed,
+  fns       = list(Total = ~round((sum(hrs_analyzed, na.rm = TRUE) / sum(hrs_collected, na.rm = TRUE) * 100),2)),
+  formatter = fmt_number,
+  decimals  = 2
+) |>
   data_color(
     columns        = pct_analyzed,
     target_columns = pct_analyzed,
@@ -1318,7 +1325,6 @@ Further breaking down responses at Bowley Pond in 2025, @fig-bans-bowley-day des
 #| echo: false
 #| eval: true
 #| include: true
-#| code-fold: true
 #| fig-cap: "Bank Swallow detections at Bowley Pond over the season, faceted by detector unit. Bars show total calls detected per day."
 #| label: fig-bans-bowley-doy
 
@@ -1385,7 +1391,7 @@ wt_classifier_threshold(eval)
 ggplot(eval, aes(x=recall, y=precision, colour=classifier)) + geom_smooth() + theme_bw() + xlim(0,1) + ylim(0,1) + xlab("Classifier Recall") + ylab("Classifier Precision")
 ```
 
-Finally the predicted heatmap of detection at Bowley Pond (@fig-bowley-heat) and for all Bank swallow monitoring locations (@fig-all-heat).
+Finally the predicted heatmap of detection at Bowley Pond (@fig-bowley-heat) and for all Bank swallow monitoring locations (@fig-all-heat). The precision-recall curves demonstrate that BirdNET v2.1 outperforms Hawkears v1.0.8 across most operating points, particularly at moderate to high recall thresholds. BirdNET v2.1 achieves peak precision of approximately 0.53 at a recall of ~0.30, maintaining relatively stable precision (~0.50) across the mid-recall range (0.25–0.60) before declining gradually to ~0.37 at full recall. This plateau suggests the classifier sustains acceptable detection quality even as sensitivity increases. HawkEars v1.0.8 peaks earlier and lower, reaching ~0.45 precision at recall ~0.20, then declines more steeply and consistently. By recall = 1.0, precision drops sharply to ~0.17, roughly half that of BirdNET at the same threshold, indicating a substantially higher false positive rate when the classifier is tuned for maximum sensitivity.
 
 ```{r}
 #| warning: false
@@ -1551,6 +1557,66 @@ ggplot(newdat_all, aes(doy, hour, fill = pred)) +
 
 ```
 
+```{r}
+
+windows <- tribble(
+  ~label,                   ~start, ~end,   ~fill,
+  "Spring migration",        110,    145,    "#74C2E1",  # late Apr – late May
+  "Breeding",                145,    225,    "#F4A261",  # late May – mid Aug
+  "Post-breeding / roost",   225,    255,    "#E76F51",  # mid Aug – mid Sep
+  "Fall migration",          255,    290,    "#74C2E1"   # mid Sep – mid Oct
+)
+
+fit <- gam(bans_present ~ s(doy, k = 10), 
+           data = bans_rec_all, 
+           family = binomial)
+
+pred_grid <- tibble(doy = seq(min(bans_rec_all$doy), 
+                               max(bans_rec_all$doy), 
+                               by = 1))
+
+# Predict outside mutate
+preds <- predict(fit, newdata = pred_grid, type = "response", se.fit = TRUE)
+
+pred_df <- pred_grid |>
+  mutate(
+    fit = preds$fit,
+    se  = preds$se.fit,
+    lwr = fit - 1.96 * se,
+    upr = fit + 1.96 * se
+  )
+
+# Plot
+ggplot() +
+  # Phenology windows
+  geom_rect(data = windows,
+            aes(xmin = start, xmax = end, ymin = 0, ymax = Inf, fill = label),
+            alpha = 0.25, inherit.aes = FALSE) +
+  scale_fill_manual(values = setNames(windows$fill, windows$label),
+                    name = NULL) +
+  # Raw rug of detections
+  geom_rug(data = filter(bans_rec_all, bans_present == 1),
+           aes(x = doy), colour = "grey30", alpha = 0.3, sides = "b") +
+  # GAM smooth + CI
+  geom_ribbon(data = pred_df, aes(x = doy, ymin = lwr, ymax = upr),
+              fill = "black", alpha = 0.15) +
+  geom_line(data = pred_df, aes(x = doy, y = fit),
+            colour = "black", linewidth = 1) +
+  scale_x_continuous(
+    breaks = c(91, 121, 152, 182, 213, 244, 274),
+    labels = c("Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct")
+  ) +
+  scale_y_continuous(labels = scales::percent_format()) +
+  labs(
+    title    = "Bank Swallow — probability of detection over season",
+    subtitle = "Atlantic Canada  |  GAM smooth ± 95% CI",
+    x = NULL, y = "P(detection)"
+  ) +
+  theme_bw(base_size = 12) +
+  theme(legend.position = "bottom")
+
+```
+
 
 ## Amphibians
 
@@ -1602,9 +1668,7 @@ amphs_only %>%
 
 ## Community species responses
 
-Considering the recent (2022) natural disturbance effects seen in the Park, species richness and diversity stayed relatively stable. Individuals nesting in conifer dominant stands likely moved to more suitable habitat outside the park, suggesting the potential utility of metapopulation analysis through passive acoustic monitoring outside of the park via citizen science participation.
-
-Further analysis may utilize dynamic occupancy models (@mackenzie2009modeling), multi-species multi-season occupancy models (@devarajan2020multi), or community shifts (@oksanen2010canonical) to describe richness and diversity while accounting for decreases in species that may rely on specific habitat structures within the park. Additional geospatial assets could improve the accuracy of modelling apporaches as well. Nevertheless, this study demostrates the efficacy of autonomous recording units (ARUs) as a powerful tool for monitoring climatic and habitat shifts with a relatively low sample size and area coverage. 
+Considering the recent (2022) natural disturbance effects seen in the Park, species richness and diversity stayed relatively stable. Individuals nesting in conifer dominant stands likely moved to more suitable habitat outside the park, suggesting the potential utility of metapopulation analysis through passive acoustic monitoring outside of the park via citizen science participation. Further analysis may utilize dynamic occupancy models (@mackenzie2009modeling), multi-species multi-season occupancy models (@devarajan2020multi), or community shifts (@oksanen2010canonical) to describe richness and diversity while accounting for decreases in species that may rely on specific habitat structures within the park. Additional geospatial assets could improve the accuracy of modelling apporaches as well. Nevertheless, this study demostrates the efficacy of autonomous recording units (ARUs) as a powerful tool for monitoring climatic and habitat shifts with a relatively low sample size and area coverage. 
 
 ## Bank swallows
 

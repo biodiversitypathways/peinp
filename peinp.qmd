@@ -125,7 +125,7 @@ pei_main <- pei_main |>
 
 # Land Acknowledgement
 
-In the spirit of Reconciliation, wen acknowledge that the land upon which this data was gathered is unceeded Mi'kmaq territory. Epekwitk (Prince Edward Island), Mi'kma'ki, is covered by the historic Treaties of Peace and Friendship. We pay our respects to the Indigenous Mi'kmaq People who have occupied this Island for over 12,000 years; past, present and future.
+In the spirit of Reconciliation, we acknowledge that the land upon which this data was gathered is unceeded Mi'kmaq territory. Epekwitk (Prince Edward Island), Mi'kma'ki, is covered by the historic Treaties of Peace and Friendship. We pay our respects to the Indigenous Mi'kmaq People who have occupied this Island for over 12,000 years; past, present and future.
 
 # Introduction
 
@@ -150,12 +150,12 @@ The objectives of this report are to:
 
 Data were collected during the spring and summer seasons from `r min(years)` to `r max(years)`. A total of `r pei_locs |> st_drop_geometry() |> select(location) |> distinct() |> tally()` locations were surveyed over the seven-year period:
 
--   29 locations as part of the forest songbird monitoring program (code: `PENP-*`) with ARUs recording during the morning hours,
--   6 for Bank Swallow Monitoring (code: `PENP-BS-*` and `BANS-*`) with ARUs placed strategically beside ponds recording in the evening,
--   2 locations deployed in First Nations communities (`ASC-1, LXI-1`) to complement the forest songbird and evening schedules,
--   And one location (`PENP-E1`), which was to examine the effects of a single public event
+-   31 locations as part of the forest songbird monitoring program (code: `PENP-*`) with ARUs recording during the morning hours,
+-   6 for Bank Swallow Monitoring (code: `PENP-BS-*` and `BANS-*`) with ARUs placed strategically beside ponds recording in the morning and evening hours,
+-   2 locations deployed in First Nations communities (`ASC-1, LXI-1`) to complement the forest songbird schedules,
+-   And one location (`PENP-E1`), which was to examine the effects of a single public event in 2022
 
-Locations were surveyed on rotation with `r length(repeats)` locations (`r repeats`) surveyed each year. A detailed list of all survey years can be found in Table 1 (@tbl-loc-summary) and illustrated in Figure 1 (@fig-aru-monitoring-locations). ARUs were deployed at the beginning of the breeding season in April-May, and rotated locations until their final retrieval in July-August. At the forest songbird locations (`PENP-*`), the ARUs were set to record for 30 minutes continuously every hour for four hours, starting one hour before dawn and ending three hours after dawn. For Bank Swallow Monitoring locations (`PENP-BS`,`BANS-`), recordings were made every 5 minutes for a duration of 3 minutes each from 1.5 hours before dusk to 1.5 hours after dusk. On average, each ARU recorded for
+Locations were surveyed on rotation with `r length(repeats)` locations (`r repeats`) surveyed each year. A detailed list of all survey years can be found in @tbl-loc-summary and illustrated in @fig-aru-monitoring-locations. ARUs were deployed at the beginning of the breeding season in April-May, and rotated locations until their final retrieval in July-August. At the forest songbird locations (`PENP-*`), the ARUs were set to record for 30 minutes continuously every hour for four hours, starting one hour before dawn and ending three hours after dawn. For Bank Swallow Monitoring locations (`PENP-BS`,`BANS-`), recordings were made every 20 minutes for a duration of 15 minutes each during dawn and dusk hours 1.5 hours.
 
 ```{r}
 #| warning: false
@@ -177,7 +177,7 @@ repeats <- pei_locs |>
   group_by(location) |>
   summarise(count = n_distinct(year)) |>
   ungroup() |>
-  filter(count == 6) |>
+  filter(count == 7) |>
   select(location) |>
   distinct() |>
   pull()
@@ -368,27 +368,9 @@ kable(locs_summary %>%
   ))
 ```
 
-```{r}
-#| warning: false
-#| echo: false
-#| eval: true
-#| message: false
-#| include: true
-#| label: tbl-obvs-and-covs
-#| tbl-cap: Site covariates for each forest songbird monitoring (PENP-*) location. Landcover is measured as proportion cover at 150 meter radius surrounding the ARU categorized into anthropogenic (pavement, soy), open (grass, sand dune, bare soil), deciduous (red maple, white birch, alder, poplar) and conifer (white spruce, black spruce, balsam fir) and wetlands.
-
-covs_all <- covs %>%
-  mutate_at(vars(landcover_proportion, coast_distance), ~round(., 2)) |>
-  pivot_wider(names_from = landcover, values_from = landcover_proportion, values_fill = 0) |>
-  rename("Distance from coast (m)" = coast_distance)
-
-kable(covs_all)
-
-```
-
 ## Data management
 
-A total of 12456 recordings were collected (see @fig-recs-collect). From 2019 - 2021, data were transferred via hard drive to the University of Alberta in Edmonton, where they are redundantly stored on a server known as Cirrus. The recordings were standardized to ensure adherence to the naming convention of `LOCATION_DATETIME`, such as `PENP-1-1_20230625_053500.wav`. The remaining recordings (2022 - 2025) were directly uploaded to WildTrax by Parks Canada staff and can be downloaded from the platform's Recording tab, accessible under Manage \> Download list of recordings.
+A total of 12456 recordings were collected (see @fig-recs-collect). From 2019 - 2021, data were transferred via hard drive to the University of Alberta in Edmonton, where they are redundantly stored on a server known as Cirrus. The recordings were standardized to ensure adherence to the naming convention of `LOCATION_DATETIME`, such as `PENP-1-1_20230625_053500.wav`. The remaining recordings (2022 - 2025) were directly uploaded to [WildTrax](https://wildtrax.ca).
 
 ```{r}
 #| warning: false
@@ -434,9 +416,8 @@ A total of 12456 recordings were collected (see @fig-recs-collect). From 2019 - 
 #| results: hide
 #| fig-align: center
 #| fig-height: 8
-#| fig-cap: Ridgeplot of recordings collected for each location over each survey year
+#| fig-cap: Heatmap of recordings collected for each location over each survey year
 #| label: fig-recs-collect
-
 
 all_recs |>
   filter(!grepl('KRUM',location)) |>
@@ -452,7 +433,7 @@ all_recs |>
 
 ## Community data processing
 
-The principal goal for data processing was to describe the acoustic community of species heard at locations while choosing a large enough subset of recordings for analyses. To ensure balanced replication, for each location and year surveyed, four randomly selected recordings were processed for 3-minutes between the hours of 4:00 AM - 7:59 AM ideally on four separate dates (see @tbl-loc-repl). Four recordings will ensure that we have the minimum number of samples for a simple occupancy analysis (@mackenzie2002estimating and @imperfect-occu). Tags are made using count-removal (see @farnsworth2002removal, @time-removal) where tags are only made at the time of first detection of each individual heard on the recordings. In case a species was overly abundant a TMTT ('too many to tag') flag was used (see @tbl-tmtt). `r round(nrow(tmtt_tags)/nrow(pei_main),2)*100`% of the total tags were TMTT but were subsequently converted to numeric using `wildrtrax::wt_replace_tmtt`. We also verified that all tags that were created were checked by a second observer (n = `r verified_tags |> select(Proportion) |> slice(3) |> pull()`) to ensure accuracy of detections (see @tbl-verified). Amphibian abundance was estimated at the time of first detection using the [North American Amphibian Monitoring Program](https://www.usgs.gov/centers/eesc/science/north-american-amphibian-monitoring-program) with abundance of species being estimated on the scale of "calling intensity index" (CI) of 1 - 3. Mammals such as Red Squirrel, were also noted on the recordings. After the data are processed in WildTrax, the [wildrtrax](https://abbiodiversity.github.io/wildrtrax/) package is use to download the data into a standard format prepared for analysis. The `wt_download_report` function downloads the data directly to a R framework for easy manipulation (see [wildrtrax APIs](https://abbiodiversity.github.io/wildrtrax/articles/apis.html)).
+The principal goal for community data processing was to describe all species and individuals heard on each recording while choosing a large enough subset of recordings for analyses. To ensure balanced replication, for each location and year surveyed, four randomly selected recordings were processed for 3-minutes between the hours of 4:00 AM - 7:59 AM ideally on four separate dates (see @tbl-loc-repl). Four recordings will ensure that we have the minimum number of samples for a simple occupancy analysis (@mackenzie2002estimating and @imperfect-occu). Tags are made using count-removal (see @farnsworth2002removal, @time-removal) where tags are only made at the time of first detection of each individual heard on the recordings by drawing a box around the signal (@macphail2026avian). In case a species was overly abundant a TMTT ('too many to tag') flag was used (see @tbl-tmtt). `r round(nrow(tmtt_tags)/nrow(pei_main),2)*100`% of the total tags were TMTT but were subsequently converted to numeric using `wildrtrax::wt_replace_tmtt`. We also verified that all tags that were created were checked by a second observer (n = `r verified_tags |> select(Proportion) |> slice(3) |> pull()`) to ensure accuracy of detections (see @tbl-verified). Amphibian abundance was estimated at the time of first detection using the [North American Amphibian Monitoring Program](https://www.usgs.gov/centers/eesc/science/north-american-amphibian-monitoring-program) with abundance of species being estimated on the scale of "calling intensity index" (CI) of 1 - 3. Mammals such as Red Squirrel, were also noted on the recordings. After the data are processed in WildTrax, the [wildrtrax](https://abbiodiversity.github.io/wildrtrax/) package is use to download the data into a standard format prepared for analysis. The `wt_download_report` function downloads the data directly to a R framework for easy manipulation (see [wildrtrax APIs](https://abbiodiversity.github.io/wildrtrax/articles/apis.html)). Species were assigned to guilds using the [Birds of North America](https://birdsna.org), [Elton Traits Database](https://esajournals.onlinelibrary.wiley.com/doi/10.1890/13-1917.1) and bird guidebooks (@tbl-guilds).
 
 ```{r}
 #| warning: false
@@ -556,15 +537,9 @@ kable(guilds)
 
 ![Bank swallow (C) Environment and Climate Change Canada](./assets/bans.png)
 
-Visual scanning is the concept of visually examining spectrograms in order to find a signal within an audio recording. Visual scanning can be a useful processing method allowing trained users to process recordings much faster than traditional listening. It has been used for detecting different taxa (amphibians: @vis-scan-amphs, mammals: @aru-vs-cams-wolves) with comparable biological metrics, as well as helping to maximize species detection in large acoustic monitoring data sets (@all-the-scans). WildTrax's project settings and dynamic spectrogram settings in the processing interface allow users to upload many recordings, while also allowing frequency-limited or time-limited spectrograms. These changes are easily made by adjusting project settings in WildTrax (see @fig-project-dynamic). Bank Swallow (Riparia riparia) are federally listed as threatened in Canada (see Government of Canada) and provincially. They produce distinctive, broadband vocalizations that are readily identifiable on a spectrogram, making them well-suited to visual scanning workflows.
+Bank Swallow (*Riparia riparia*) are federally listed as threatened in Canada and produce distinctive, broadband vocalizations that are readily identifiable on a spectrogram. ARUs were placed near ponds, which may support roosting and pre-migratory staging aggregations in late summer. Documenting the timing and density of vocalizations during dawn and dusk periods can reveal whether ARUs capture acoustic signatures consistent with roosting behaviour, such as sustained high call-rate events associated with group entry or departure from wetland sites. All targeted recordings were reviewed by a trained observer using visual scanning, a method in which spectrograms are examined rather than listened to, allowing faster processing with comparable biological accuracy (@vis-scan-amphs; @aru-vs-cams-wolves; @all-the-scans). We refined processing using dynamic spectrogram settings in WildTrax (@fig-project-dynamic), constraining the frequency range to the 95% CI of Bank Swallow vocalizations (2,000–7,500 Hz) and expanding the time window (1× → 2×) to reduce visual noise and expedite detection. To complement visual scanning and reduce false negatives, we evaluated two automated classifiers, BirdNET v2.1 (@kahl2021birdnet) and HawkEars v1.0.8 (@huus2025hawkears), against the human-verified detection record using precision-recall analysis. Classifier outputs were overlaid directly on spectrograms in WildTrax, allowing reviewers to apply expert judgment where classifier confidence was low. 
 
-ARUs were placed near ponds where Bank Swallow are known to forage and roost, as these habitats may support pre-migratory staging aggregations in late summer. Documenting pond use, and in particular the timing and density of vocalizations during dawn and dusk periods, can inform whether ARU deployments are capable of capturing acoustic signatures consistent with roosting behaviour, such as sustained high call-rate events associated with group entry or departure from wetland sites. All targeted recordings were reviewed by a trained observer using visual scanning, with human detections serving as the primary record of Bank Swallow presence.
-
-In 2025, we refined our processing approach using dynamic spectrogram settings (see @fig-project-dynamic), constraining the frequency range to the 95% CI of Bank Swallow vocalizations (2000-7500 Hz) while expanding the time window (1x -> 2x), reducing visual noise and expediting detection. To complement visual scanning and further reduce false negatives, we evaluated two automated classifiers, BirdNET v2.1 (@kahl2021birdnet) and HawkEars v1.0.8 (@huus2025hawkears), against the human-verified detection record. Classifier outputs were overlaid directly on spectrograms in WildTrax, allowing reviewers to cross-reference detections and apply expert judgment where classifier confidence was low. Precision-recall analysis was used to evaluate classifier performance relative to the human record, providing a basis for assessing whether either classifier could serve as a reliable detection tool for this species and behaviour in future seasons.
-
-To address the question of whether ARUs can detect roosting-associated activity, detections were examined by year and site to account for variation in deployment configuration across monitoring seasons. Call counts per recording, rather than binary presence, were used to characterize detection intensity during dawn (04:00–08:00) and dusk (19:00–22:00) survey periods, the windows most likely to capture pre-roost and post-roost vocalizations. Sites monitored in multiple years under different configurations (e.g., Bowley Pond, where one unit was deployed in 2023 and three units in 2025) were examined separately to explore whether detector density affected detection rates or call volume during these periods.
-
-To characterize the temporal distribution of Bank Swallow calling activity, ARU recordings were converted to binary presence/absence records at the individual recording level. Each recording was assigned a day of year and hour of day derived from its timestamp. A generalized additive model (GAM) with a binomial response was fit using the `mgcv` package in R, with smooth terms for day of year (thin plate regression spline, **k** = 10), hour of day (cyclic cubic spline, **k** = 10), and a tensor product interaction term to capture shifting diel patterns across the season. Model parameters were estimated using restricted maximum likelihood (REML). Predicted calling probabilities were generated across a full grid of all hour-by-date combinations within the survey window and visualized as a heatmap, with dawn (04:00–08:00) and dusk (18:00–22:00) survey periods highlighted for reference.
+Detections were examined by year and location to account for variation in deployment configuration across monitoring seasons. Call counts per recording, rather than binary presence, were used to characterize detection intensity during dawn (04:00–08:00) and dusk (19:00–22:00) periods. Sites monitored under different configurations across years (e.g., Bowley Pond: one unit in 2023, three in 2025) were examined separately to explore whether detector density affected detection rates or call volume. To characterize the temporal distribution of calling activity, recordings were converted to binary presence/absence records and assigned a day of year and hour of day from their timestamps. A generalized additive model (GAM) with a binomial response was fit using `mgcv` in R, with smooth terms for day of year (thin plate regression spline, k = 10), hour of day (cyclic cubic spline, k = 10), and a tensor product interaction to capture shifting diel patterns across the season (REML estimation).
 
 ![Dynamic spectrogram and project settings in WildTrax](assets/project-dynamic.png){#fig-project-dynamic}
 
@@ -628,7 +603,23 @@ Species richness, diversity and occupancy were calculated using the `r nrow(locs
 
 For testing species occupancy, we selected locations with a minimum of four dawn visits for each year across all five years, focusing on forest obligate species for ecological relevance (see @tbl-bird-guilds). Utilizing a single-season single-species occupancy model from @mackenzie2002estimating, we calculated the predicted occupancy of species at all locations surveyed in each year across years. Site-specific covariates included the distance to ocean edge (in meters) and the proportional area of each cover type from the [Prince Edward Island 2010 Corporate Land Use Inventory](https://data.princeedwardisland.ca/Environment-and-Food/OD0144-Corporate-Landuse-Inventory-2010/tc7z-7rpy) at 150 meter radius surrounding the ARU categorized into anthropogenic (pavement, soy), open (grass, sand dune, bare soil), deciduous (red maple, white birch, alder, poplar) and conifer (white spruce, black spruce, balsam fir). Observation covariates incorporated day of the year, hour, observer, and a quadratic term for both day of year ($doy^{2}$) and hour ($hr^{2}$). See @tbl-obvs-and-covs for more information. Despite variations in processing methodology between 2019 - 2021 (1SPM - species-individual detected per minute, i.e. repeat sampling each minute for 3 minute) and subsequent years (2022 - 2025; 1SPT), we maintained consistency by exclusively utilizing the time to the first detection of individuals from the 1SPM recordings. Model predictions were generated, with goodness-of-fit testing using methods from @occu-fit and the best model selected based on AIC and through `MuMIn::dregde`, `MuMIn::get.models` and `MuMIn::model.sel`. If more than one model existed, the average model was used using `MuMIn::model.avg`. The final predictions were then made and plotted over years and sorted by nesting guilds of species into conifer, deciduous, treed / shrubby, wetlands and open. Trends in species abundance were assessed using a normalized count, calculated as the total species count divided by the number of surveyed locations per year. We focused on a subset of species representative of the forest songbird community: `r c("BTNW","BLBW","GCKI","YRWA","MAWA","BTBW","BHVI","AMRE","REVI","MOWA","BLJA","ALFL","EAWP","WTSP","AMRO","COYE","NOPA","YEWA")`. To evaluate temporal trends in abundance over the past six years, we applied generalized linear mixed models (GLMMs) each species as well as the total count of the species over the period.
 
-------------------------------------------------------------------------
+```{r}
+#| warning: false
+#| echo: false
+#| eval: true
+#| message: false
+#| include: true
+#| label: tbl-obvs-and-covs
+#| tbl-cap: Site covariates for each forest songbird monitoring (PENP-*) location. Landcover is measured as proportion cover at 150 meter radius surrounding the ARU categorized into anthropogenic (pavement, soy), open (grass, sand dune, bare soil), deciduous (red maple, white birch, alder, poplar) and conifer (white spruce, black spruce, balsam fir) and wetlands.
+
+covs_all <- covs %>%
+  mutate_at(vars(landcover_proportion, coast_distance), ~round(., 2)) |>
+  pivot_wider(names_from = landcover, values_from = landcover_proportion, values_fill = 0) |>
+  rename("Distance from coast (m)" = coast_distance)
+
+kable(covs_all)
+
+```
 
 # Results
 
@@ -1092,64 +1083,13 @@ nocc |>
   
 ```
 
-```{r}
-#| warning: false
-#| echo: false
-#| eval: false
-#| include: false
-#| results: false
-#| message: false
-
-coast_model <- glm(COYE ~ recording_date_time + coast_distance, offset=offstz$COYE.off, data=pei_wide_plus)
-
-pei_wide <- pei_main %>%
-  mutate(individual_count = abundance) |>
-  wt_make_wide(sound = "all")
-  
-offstz <- pei_wide %>%
-  wt_qpad_offsets(species = "all", version = 3, together = F)
-
-pei_wide_plus <- pei_wide %>%
-  mutate(recording_date_time = yday(recording_date_time)) %>%
-  inner_join(., distance_to_coast)
-
-my_qpad_model <- glm(OVEN ~ recording_date_time, offset=offstz$OVEN.off, data=pei_wide_plus)
-
-# Create a data frame for predictions
-predictions <- data.frame(
-  recording_date_time = seq(min(pei_wide_plus$recording_date_time), 
-                            max(pei_wide_plus$recording_date_time), length.out = 583))
-
-# Make predictions using the model
-predictions$predicted_abundance <- predict(my_qpad_model, data = predictions, type = "response")
-
-ggplot(predictions, aes(x=recording_date_time,y=predicted_abundance)) +
-  geom_point() +
-  geom_smooth() +
-  theme_bw()
-
-# Create the ggplot
-ggplot(pei_wide_plus, aes(x = recording_date_time, y = OVEN)) +
-  geom_point(alpha = 0.5) +  # Scatter plot of actual data
-  geom_smooth() +
-  labs(title = "Abundance vs. Recording Date Time",
-       x = "Recording Date Time",
-       y = "Abundance") +
-  theme_minimal()
-
-```
-
 ## Bank swallows
 
 ::: {.callout-note collapse="true" style="background-color: #f4f4f4; padding: 20px;"}
 Some of these analyses are still a work-in-progress. Check back soon for updates and additional details.
 :::
 
-Bank Swallow vocalizations were detected across multiple survey seasons at two primary pond locations within Prince Edward Island National Park (@tbl-bans-sites). A total of 61 detections were recorded across all years combined, with the majority (61; 100% of multi-unit detections) occurring in 2025. No detections were recorded in 2021 across five sites totalling 202.5 hours of recording and 17.0 hours analyzed. A small number of detections were recorded at Clarke's Pond in 2022 (n = 3; 291.9 hours collected, 28.2 analyzed) and 2024 (n = 2; 164.8 hours collected, 8.5 analyzed), and at Bowley Pond in 2023 (n = 2; 100.2 hours collected, 5.0 analyzed). 
-
-In 2025, three ARUs were deployed simultaneously around Bowley Pond (East, North, and West positions), collectively recording 339.0 hours and yielding 61 detections across 25.6 analyzed hours, representing a substantial increase relative to all prior years combined. Detection rates per analyzed hour were markedly higher in 2025 (approximately 2.4 detections/hour) compared to the single-unit deployments at Clarke's Pond in 2022 (0.11 detections/hour) and 2024 (0.24 detections/hour), and at Bowley Pond in 2023 (0.40 detections/hour).
-
-Predicted calling probability heatmaps generated from the acoustic data revealed distinct diel and seasonal structure in detected vocalizations (@fig-bowley-heat, @fig-all-heat). In the Clarke's Pond dataset, elevated predicted probability was concentrated in a narrow window around early August, primarily between approximately 16:00 and 21:00, consistent with dusk-period activity. A diffuse band of low but non-zero probability was also apparent during the dawn survey window (04:00–08:00 h) across the full survey period. At Bowley Pond in 2025, the predicted calling probability was highest during the dusk window (approximately 18:00–21:00) in the earliest portion of the survey (late July through early August), declining markedly through August. The dawn survey window showed little to no elevated probability at Bowley Pond in 2025.
+Bank Swallow vocalizations were detected across multiple survey seasons at two primary pond locations within Prince Edward Island National Park (@tbl-bans-sites). A total of `r bans_aru |> filter(species_code == "BANS") |> tally() |> pull()` unique detection events were recorded across all years combined, with the majority (`r bans_aru |> mutate(year = year(recording_date_time)) |> filter(year == 2025, species_code == "BANS") |> tally()`; `r round(bans_aru |> mutate(year = year(recording_date_time)) |> filter(year == 2025, species_code == "BANS") |> tally() / bans_aru |> mutate(year = year(recording_date_time)) |> filter(species_code == "BANS") |> tally(),2)*100`% of multi-unit detections) occurring in 2025 at Bowley Pond. `r bans_aru |> mutate(year = year(recording_date_time)) |> filter(year == 2021, species_code == "BANS") |> tally()`detections were recorded in 2021 across five sites totalling 202.5 hours of recording and 20.4 hours (10%) analyzed. A small number of detections were recorded at Clarke's Pond in 2022 (n = 3; 291.9 hours collected, 28.2% analyzed) and 2024 (n = 3; 164.8 hours collected, 15.8 hours analyzed), and at Bowley Pond in 2023 (n = 8; 100.2 hours collected, 12.0 analyzed). In 2025, three ARUs were deployed simultaneously around Bowley Pond (East, North, and West positions), collectively recording 339.0 hours and yielding 61 detections across 25.6 analyzed hours, representing a substantial increase relative to all prior years combined. Detection rates per analyzed hour were markedly higher in 2025 (approximately 2.4 detections/hour) compared to the single-unit deployments at Clarke's Pond in 2022 (0.11 detections/hour) and 2024 (0.24 detections/hour), and at Bowley Pond in 2023 (0.40 detections/hour). Predicted calling probability heatmaps generated from the acoustic data revealed distinct diel and seasonal structure in detected vocalizations (@fig-bowley-heat, @fig-all-heat) and the results of the GAM are interpreted in (@fig-breeding). In the Clarke's Pond dataset, elevated predicted probability was concentrated in a narrow window around early August, primarily between approximately 16:00 and 21:00, consistent with dusk-period activity. A diffuse band of low but non-zero probability was also apparent during the dawn survey window (04:00–08:00 h) across the full survey period. At Bowley Pond in 2025, the predicted calling probability was highest during the dusk window (approximately 18:00–21:00) in the earliest portion of the survey (late July through early August), declining markedly through August. The dawn survey window showed little to no elevated probability at Bowley Pond in 2025.
 
 ```{r}
 #| warning: false
@@ -1318,7 +1258,7 @@ bans_aru |>
   ungroup()
 ```
 
-Further breaking down responses at Bowley Pond in 2025, @fig-bans-bowley-day describes the frequency and number of calls detected across the season broken up by dawn and dusk hours of the day throughout the deployment of the recorder. Activity was centered around dusk hours with frequency of detection increasing over the evening hours. 
+Further breaking down responses at Bowley Pond in 2025, @fig-bans-bowley-doy describes the frequency and number of calls detected across the season broken up by dawn and dusk hours of the day throughout the deployment of the recorder. Activity was centered around dusk hours with frequency of detection increasing over the evening hours. 
 
 ```{r}
 #| warning: false
@@ -1366,7 +1306,7 @@ ggplot(bowley_doy, aes(x = date, fill = period)) +
 
 ```
 
-Evaluation of the performance of BirdNET and HawkEars on Bank swallow detections can be summarized in the precision-recall curve in @fig-bans-ai. 
+Evaluation of the performance of BirdNET and HawkEars on Bank swallow detections can be summarized in the precision-recall curve in @fig-bans-ai. BirdNET v2.1 consistently outperforms HawkEars v1.0.8 across most of the recall range. Precision for BirdNET rises quickly and peaks around moderate recall (~0.3–0.4), indicating a better balance between false positives and detection sensitivity. HawkEars starts relatively strong at low recall but declines steadily, with a pronounced drop at high recall, suggesting it struggles to maintain precision as more detections are included.
 
 ```{r}
 #| warning: false
@@ -1558,13 +1498,20 @@ ggplot(newdat_all, aes(doy, hour, fill = pred)) +
 ```
 
 ```{r}
+#| warning: false
+#| echo: false
+#| eval: true
+#| include: true
+#| code-fold: true
+#| fig-cap: Probability of detection of Bank swallow over breeding phase windows.
+#| label: fig-breeding
 
 windows <- tribble(
   ~label,                   ~start, ~end,   ~fill,
   "Spring migration",        110,    145,    "#74C2E1",  # late Apr – late May
-  "Breeding",                145,    225,    "#F4A261",  # late May – mid Aug
-  "Post-breeding / roost",   225,    255,    "#E76F51",  # mid Aug – mid Sep
-  "Fall migration",          255,    290,    "#74C2E1"   # mid Sep – mid Oct
+  "Breeding",                145,    200,    "#F4A261",  # late May – mid Aug
+  "Post-breeding / roost",   200,    240,    "#E76F51",  # mid Aug – mid Sep
+  "Fall migration",          240,    270,    "#74F5E1"   # mid Sep – mid Oct
 )
 
 fit <- gam(bans_present ~ s(doy, k = 10), 
@@ -1670,21 +1617,11 @@ amphs_only %>%
 
 Considering the recent (2022) natural disturbance effects seen in the Park, species richness and diversity stayed relatively stable. Individuals nesting in conifer dominant stands likely moved to more suitable habitat outside the park, suggesting the potential utility of metapopulation analysis through passive acoustic monitoring outside of the park via citizen science participation. Further analysis may utilize dynamic occupancy models (@mackenzie2009modeling), multi-species multi-season occupancy models (@devarajan2020multi), or community shifts (@oksanen2010canonical) to describe richness and diversity while accounting for decreases in species that may rely on specific habitat structures within the park. Additional geospatial assets could improve the accuracy of modelling apporaches as well. Nevertheless, this study demostrates the efficacy of autonomous recording units (ARUs) as a powerful tool for monitoring climatic and habitat shifts with a relatively low sample size and area coverage. 
 
-## Bank swallows
-
-The temporal concentration of predicted calling probability at both Clarke's Pond and Bowley Pond offers insight into the seasonal and diel activity patterns of Bank Swallows within Prince Edward Island National Park. At both sites, elevated detection probability was associated primarily with the dusk survey window, with peak activity occurring in late July through early August. This timing aligns with the post-breeding period, when adults and newly fledged young aggregate at pre-migratory roost sites before departing south (Garrison 1999, Turner 2004). The rapid decline in predicted calling probability through August at Bowley Pond in 2025 is consistent with this interpretation, likely reflecting the departure of local birds rather than a methodological artefact. Collectively, these patterns suggest that the dusk survey window may be the most acoustically productive period for detecting Bank Swallows at pond roosting sites in this region, and that surveys conducted after mid-August may substantially underestimate local presence.
-
-A central question motivating the 2025 multi-unit deployment at Bowley Pond was whether increasing the number of ARUs around a single waterbody improves detection probability relative to a single-unit design. The 2025 data are suggestive in this regard, but formal inference is constrained by the structure of the available dataset. The spatial distribution of detections across the three Bowley Pond units, East (n = 31), North (n = 14), and West (n = 16), demonstrates that calling activity was not uniformly distributed around the pond perimeter. The eastern unit captured roughly double the detections of either the north or west units, likely reflecting proximity to an active roosting or colony location. Critically, had only a single ARU been deployed at the north or west position, the majority of detections recorded by the east unit would have been missed entirely. This spatial partitioning of detections provides indirect, observational support for the hypothesis that multi-unit arrays improve detection probability at pond sites, by reducing the likelihood that birds active on the far side of a waterbody go undetected.
-
-However, these data cannot support a stronger causal claim. The marked increase in detections in 2025 relative to prior single-unit years, 61 detections versus a maximum of 3 in any previous year, is confounded by several factors that cannot be disentangled post-hoc. These include inter-site differences between Clarke's Pond and Bowley Pond (which may differ in habitat quality, colony size, or roosting suitability), inter-annual variation in Bank Swallow abundance and breeding success, differences in the proportion of hours analyzed across years, and variation in survey timing relative to the post-breeding phenology. Any one of these factors, or their combination, could account for the observed difference in detections independent of ARU number.
-
-Despite these inferential constraints, the 2025 deployment offers a useful proof of concept for future monitoring. The spatial detection asymmetry observed at Bowley Pond underscores a well-recognized limitation of single-point passive acoustic monitoring at open wetland sites: detection probability is strongly influenced by the positional relationship between the recorder and the animal (Acevedo and Villanueva-Rivera 2006, Darras et al. 2018). For colonial or roosting species such as Bank Swallows, where activity may be concentrated along specific pond margins or within emergent vegetation, a single ARU placement is unlikely to characterize the full acoustic environment of the site. A distributed array design, with units positioned at cardinal or opposing points around the waterbody, more plausibly captures the range of spatial variation in calling activity.
-
-To formally quantify the detection benefit of multi-unit over single-unit deployment, future work would benefit from a controlled experimental design, for example, simultaneous deployment of a multi-unit array alongside a designated single-unit reference recorder at the same site and season, allowing direct comparison of detection outcomes under matched conditions. Until such data are available, the 2025 Bowley Pond results are best interpreted as hypothesis-generating: consistent with a detection benefit from multi-unit deployment, but not yet sufficient to quantify its magnitude.
+The temporal concentration of predicted calling probability at Clarke’s Pond and Bowley Pond indicates that Bank Swallow activity in Prince Edward Island National Park is strongly seasonal and diel. Detection probability peaked during dusk surveys in late July to early August, aligning with the post-breeding period when adults and fledglings aggregate at pre-migratory roosts before departure (@guidebank, @power2022coastal). The rapid decline in detections at Bowley Pond through August 2025 likely reflects local departure rather than methodological bias, suggesting surveys after mid-August may underestimate presence. The 2025 multi-unit deployment at Bowley Pond provides tentative support for improved detection with multiple ARUs. Detections were unevenly distributed, with the eastern unit recording roughly twice as many as other positions, likely due to proximity to a roost. A single-unit design would have missed most detections, indicating spatial heterogeneity in calling activity. However, stronger inference is limited by confounding factors, including site differences, inter-annual variation, sampling effort, and survey timing. Despite this, results are consistent with established evidence that detection probability depends on recorder position (@acevedo2006field, @darras2018comparing), and suggest multi-unit arrays may better capture spatial variation at pond roost sites, though controlled experiments are needed for confirmation.
 
 ## Monitoring recommendations
 
-As avian species within the Park'ds forested area demonstrate a non-uniform distribution relative to habitat, the following recommendations for optimizing the efficiency and reliability of the ARU program include:
+Avian species within the Park's forested area demonstrate a non-uniform distribution relative to habitat, the following recommendations for optimizing the efficiency and reliability of the ARU program include:
 
 -   Prioritizing monitoring of historical locations, particularly emphasizing repeats at `r repeats` as baselines for evaluating ecological changes over time.
 -   Adjusting monitoring times to dawn and dusk and extending deployment periods to 4-7 days between May 15 and July 15 to maximize vocalizations during peak activity periods.

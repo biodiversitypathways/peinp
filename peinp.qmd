@@ -1339,7 +1339,7 @@ Finally the predicted heatmap of detection at Bowley Pond (@fig-bowley-heat) and
 #| eval: true
 #| include: true
 #| code-fold: true
-#| fig-cap: Heatmap of predicted probability of detection of Bank swallow at Bowley Pond in 2025 with 3 ARU detectors placed around the pond.
+#| fig-cap: Heatmap of predicted probability of detection of Bank swallow at Bowley Pond in 2025 with 3 ARU detectors placed around the pond. Orange shaded areas indicate dawn period, while blue indicates dusk period.
 #| label: fig-bowley-heat
 
 bans_rec <- bans_aru |>         
@@ -1406,9 +1406,7 @@ ggplot(newdat, aes(date, hour, fill = pred)) +
   scale_x_date(date_labels = "%b %d", date_breaks = "1 week") +
   labs(
     x     = "Date",
-    y     = "Hour of Day",
-    title = "Predicted BANS Calling Probability — Bowley Pond 2025",
-    subtitle = "Orange band = Dawn survey window  |  Blue band = Dusk survey window"
+    y     = "Hour of Day"
   ) +
   theme_minimal(base_size = 13) +
   theme(panel.grid = element_blank())
@@ -1421,7 +1419,7 @@ ggplot(newdat, aes(date, hour, fill = pred)) +
 #| eval: true
 #| include: true
 #| code-fold: true
-#| fig-cap: Heatmap of predicted probability of detection of Bank swallow at all monitoring sites.
+#| fig-cap: Heatmap of predicted probability of detection of Bank swallow at all monitoring sites. Orange shaded areas indicate dawn period, while blue indicates dusk period.
 #| label: fig-all-heat
 
 bans_rec_all <- bans_aru |>          
@@ -1488,9 +1486,7 @@ ggplot(newdat_all, aes(doy, hour, fill = pred)) +
            ymin = 18, ymax = 22, alpha = 0.08, fill = "steelblue") +
   labs(
     x        = "Date",
-    y        = "Hour of Day",
-    title    = "Predicted BANS Calling Probability",
-    subtitle = "Orange = Dawn  |  Blue = Dusk"
+    y        = "Hour of Day"
   ) +
   theme_minimal(base_size = 13) +
   theme(panel.grid = element_blank())
@@ -1503,7 +1499,7 @@ ggplot(newdat_all, aes(doy, hour, fill = pred)) +
 #| eval: true
 #| include: true
 #| code-fold: true
-#| fig-cap: Probability of detection of Bank swallow over breeding phase windows.
+#| fig-cap: Probability of detection of Bank swallow overlaid on breeding phase windows. The curve indicates the GAM smoothed model with 95% CI. Rug plot data indicates positive sampling events.
 #| label: fig-breeding
 
 windows <- tribble(
@@ -1555,8 +1551,6 @@ ggplot() +
   ) +
   scale_y_continuous(labels = scales::percent_format()) +
   labs(
-    title    = "Bank Swallow — probability of detection over season",
-    subtitle = "Atlantic Canada  |  GAM smooth ± 95% CI",
     x = NULL, y = "P(detection)"
   ) +
   theme_bw(base_size = 12) +
